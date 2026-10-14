@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: depo-yaz
+  group: telegram
   cancel-in-progress: false
 
 jobs:

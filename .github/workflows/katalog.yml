@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: depo-yaz
+  group: katalog
   cancel-in-progress: false
 
 jobs:

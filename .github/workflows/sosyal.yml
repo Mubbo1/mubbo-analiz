@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: depo-yaz
+  group: sosyal
   cancel-in-progress: false
 
 jobs:

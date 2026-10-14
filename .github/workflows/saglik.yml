@@ -1,0 +1,37 @@
+name: Sistem sağlık kontrolü
+
+# Her 6 saatte bir: otomatik işlerin verisi gecikmişse ilgili işi yeniden başlatır.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '50 */6 * * *'
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  kontrol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 300
+      - name: Gecikenleri yeniden başlat
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          now=$(date +%s)
+          kontrol() {  # dosya, en fazla saat, iş dosyası
+            t=$(git log -1 --format=%ct -- "$1" 2>/dev/null); t=${t:-0}
+            yas=$(( (now - t) / 3600 ))
+            if [ "$yas" -ge "$2" ]; then
+              calisan=$(gh run list --workflow "$3" --limit 1 --json status --jq '.[0].status' 2>/dev/null)
+              if [ "$calisan" = "in_progress" ] || [ "$calisan" = "queued" ]; then echo "$3: zaten çalışıyor"; else echo "$3: $yas saattir güncellenmemiş, yeniden başlatılıyor"; gh workflow run "$3" --ref main || true; fi
+            else echo "$3: güncel ($yas sa)"; fi
+          }
+          kontrol data/yeni_durum.bin 4 yeni-urun.yml
+          kontrol data/tg_durum.bin 7 telegram.yml
+          kontrol data/sosyal_gunler.json 30 sosyal.yml
+          kontrol data/katalog_durum.json 30 katalog.yml

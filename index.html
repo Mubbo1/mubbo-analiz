@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MUBBO">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>MUBBO Analiz</title>
+<style>:root{
+  --cds-gap-xs:.5rem;--cds-gap-sm:.75rem;--cds-gap-md:1rem;--cds-gap-lg:1.75rem;
+  --cds-pad-xs:.375rem;--cds-pad-sm:.5rem;--cds-pad-md:.75rem;--cds-pad-lg:1rem;
+  --cds-font-size-caption:.75rem;--cds-font-size-body:.875rem;--cds-font-size-heading:.9375rem;--cds-font-size-title:1.375rem;
+  --cds-font-weight-medium:500;--cds-radius:.5rem;--cds-ease-out:cubic-bezier(.165,.84,.44,1);--cds-dur-slow:.45s;
+  --font-anthropic-serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --font-anthropic-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --color-fg:#0b0b0b;--color-fg-muted:#7a7873;--color-bg:#f9f9f7;--color-panel:#fff;--color-border-line:rgba(11,11,11,.1);
+  --color-ok:#006300;--color-warn:#734500;--color-bad:#8e2626;
+  --cds-text-secondary:#52514e;--cds-surface-popover:#fff;--cds-shadow-popover:0 8px 24px #0000001f,0 2px 6px #00000014;--cds-border:rgba(11,11,11,.1);
+  --s1:#0b0b0b;--s2:#b23a3a;--s3:#2f62b5;--s4:#2f8f45;--s5:#c27c0e;--s6:#7445b3;--s7:#0f9a9a;--s8:#8a8780;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --color-fg:#f0efec;--color-fg-muted:#9a988f;--color-bg:#0b0b0b;--color-panel:#1a1a19;--color-border-line:rgba(255,255,255,.1);
+  --color-ok:#0ca30c;--color-warn:#db9300;--color-bad:#ec7e7e;
+  --cds-text-secondary:#c3c2b7;--cds-surface-popover:#20201f;--cds-shadow-popover:0 8px 24px #00000052,0 2px 6px #0003;--cds-border:rgba(255,255,255,.1);
+  --s1:#f0efec;--s2:#ec7e7e;--s3:#79a3ec;--s4:#5ec777;--s5:#e6a83c;--s6:#b08ae6;--s7:#4fd1d1;--s8:#a8a69e;
+  color-scheme:dark;
+}}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px;line-height:1.45}
+#dash-root{padding-inline:max(16px,min(24px,2vw));padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));max-width:1400px;margin:0 auto}
+img{max-width:100%}
+[hidden]{display:none!important}
+button,select,input{font:inherit;color:inherit}
+select,input{background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius)}
+a{color:inherit}
+
+#giris{min-height:100vh;display:grid;place-items:center;padding:24px 16px}
+#giris form{width:min(340px,100%);display:grid;gap:12px}
+#giris .g-logo{font-family:var(--font-anthropic-serif);font-size:1.6rem;letter-spacing:.12em;margin-bottom:12px}
+#giris .g-logo span{font-family:var(--font-anthropic-sans);font-size:.9rem;letter-spacing:0;color:var(--color-fg-muted)}
+#giris label{font-size:.85rem;color:var(--color-fg-muted)}
+#giris input[type=password]{font:inherit;font-size:16px;padding:12px;border:1px solid var(--color-border-line);border-radius:10px;background:var(--color-panel);color:var(--color-fg)}
+#giris .g-hat{display:flex;gap:8px;align-items:center}
+#giris button{font:inherit;font-weight:600;min-height:46px;border:0;border-radius:10px;background:var(--color-fg);color:var(--color-bg);cursor:pointer}
+#giris button:disabled{opacity:.6}
+#giris-hata{color:#d9534f;min-height:1.2em;margin:0;font-size:.9rem}</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>// Giriş ekranı ve şifreli verinin çözülmesi. Parola olmadan sayfa ve veriler okunamaz.
+(function(){
+  var S = crypto.subtle, ozel = null, KEY = 'mubbo_k';
+  var b64 = function(s){ return Uint8Array.from(atob(s), function(c){ return c.charCodeAt(0); }); };
+  var enc = function(u){ var s = ''; for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s); };
+  async function gunzip(buf){
+    return await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  }
+  async function kilidiAc(hamAnahtar, kl){
+    var k = await S.importKey('raw', hamAnahtar, 'AES-GCM', false, ['decrypt']);
+    var pk = await S.decrypt({name:'AES-GCM', iv:b64(kl.iv)}, k, b64(kl.ct));   // parola yanlışsa burada hata verir
+    return await S.importKey('pkcs8', pk, {name:'RSA-OAEP', hash:'SHA-256'}, false, ['decrypt']);
+  }
+  async function turet(parola, kl){
+    var base = await S.importKey('raw', new TextEncoder().encode(parola), 'PBKDF2', false, ['deriveBits']);
+    return new Uint8Array(await S.deriveBits({name:'PBKDF2', salt:b64(kl.salt), iterations:kl.iter, hash:'SHA-256'}, base, 256));
+  }
+  async function cozBin(buf){
+    var u = new Uint8Array(buf);
+    if (u[0] !== 77 || u[1] !== 66 || u[2] !== 49) throw new Error('bozuk dosya');
+    var n = (u[3] << 8) | u[4], w = u.slice(5, 5 + n), iv = u.slice(5 + n, 17 + n);
+    var raw = await S.decrypt({name:'RSA-OAEP'}, ozel, w);
+    var k = await S.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+    return await gunzip(await S.decrypt({name:'AES-GCM', iv:iv}, k, u.slice(17 + n)));
+  }
+  // data/x.json isteklerini şifreli data/x.bin dosyasından karşılar
+  window.MB_JSON = async function(path, opt){
+    var p = path.replace(/\.json(\?|$)/, '.bin$1');
+    var r = await fetch(p, opt || {cache:'no-cache'});
+    if (!r.ok) throw new Error(r.status);
+    return JSON.parse(new TextDecoder().decode(await cozBin(await r.arrayBuffer())));
+  };
+  window.MB_CIKIS = function(){ try { localStorage.removeItem(KEY); } catch(e){} location.reload(); };
+
+  async function uygulamayiAc(){
+    var r = await fetch('app.bin?v=' + Date.now(), {cache:'no-store'});
+    var html = new TextDecoder().decode(await cozBin(await r.arrayBuffer()));
+    var root = document.getElementById('dash-root');
+    root.innerHTML = html;
+    document.getElementById('giris').remove();
+    var scripts = [].slice.call(root.querySelectorAll('script'));
+    scripts.forEach(function(old){ var s = document.createElement('script'); s.textContent = old.textContent; old.replaceWith(s); });
+  }
+  async function basla(){
+    var kl = await fetch('kilit.json', {cache:'no-cache'}).then(function(r){ return r.json(); });
+    var form = document.getElementById('giris-form'), inp = document.getElementById('giris-sifre'), hata = document.getElementById('giris-hata'), btn = form.querySelector('button');
+    var kayitli = null; try { kayitli = localStorage.getItem(KEY); } catch(e){}
+    if (kayitli) {
+      try { ozel = await kilidiAc(b64(kayitli), kl); }
+      catch(e){ try { localStorage.removeItem(KEY); } catch(e2){} }
+      if (ozel) { await uygulamayiAc(); return; }
+    }
+    document.getElementById('giris').hidden = false; inp.focus();
+    form.addEventListener('submit', async function(ev){
+      ev.preventDefault(); hata.textContent = ''; btn.disabled = true; btn.textContent = 'Açılıyor…';
+      try {
+        var ham = await turet(inp.value, kl);
+        ozel = await kilidiAc(ham, kl);
+        if (document.getElementById('giris-hatirla').checked) { try { localStorage.setItem(KEY, enc(ham)); } catch(e){} }
+        await uygulamayiAc();
+      } catch(e){
+        btn.disabled = false; btn.textContent = 'Giriş';
+        hata.textContent = ozel ? 'Sayfa açılamadı, tekrar dene.' : 'Şifre yanlış.'; inp.select();
+      }
+    });
+  }
+  if (!window.crypto || !crypto.subtle || typeof DecompressionStream !== 'function') {
+    document.addEventListener('DOMContentLoaded', function(){ document.getElementById('giris').hidden = false; document.getElementById('giris-hata').textContent = 'Bu tarayıcı çok eski; telefonu güncelleyip tekrar dene.'; });
+  } else document.addEventListener('DOMContentLoaded', function(){ basla().catch(function(e){ document.getElementById('giris').hidden = false; document.getElementById('giris-hata').textContent = 'Site yüklenemedi: ' + e.message; }); });
+})();
+</script>
+<script>window.DASH_SITE = true; window.KIMG_N = 90; window.DASH_DATASETS = ["fiyatlar", "katalog_idx", "olcumler", "puan_gerekce", "puanlar", "rakipler", "reklam_1", "reklam_2", "reklam_3", "reklam_4", "reklam_5", "reklam_6", "reklam_ozet", "sikayetler", "toptanci", "yeni_urunler"];
+// Panonun veri arayüzünün (dash) bağımsız site sürümü: veriler data/<ad>.json dosyalarından okunur.
+(function(){
+  var cache = {}, calcs = {}, subs = [], tick = null;
+  function notify(){ if (tick) return; tick = setTimeout(function(){ tick = null; subs.slice().forEach(function(f){ try { f(); } catch(e){ console.error(e); } }); }, 0); }
+  function load(id){
+    if (cache[id]) return cache[id];
+    if (window.DASH_DATASETS && window.DASH_DATASETS.indexOf(id) < 0) return {status:'loading', data:[], columns:[], meta:[]};
+    var st = cache[id] = {status:'loading', data:[], columns:[], meta:[]};
+    var q = load.bust && load.bust[id] ? '?t=' + load.bust[id] : '';
+    var p = id === 'katalog_idx'
+      ? fetch('data/katalog_durum.json?t=' + Date.now(), {cache:'no-cache'}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function(d){ return Promise.all(Object.keys(d.markalar || {}).map(function(k){ return window.MB_JSON('data/katalog/' + k + '.json').catch(function(){ return []; }); })); })
+          .then(function(parts){ return [].concat.apply([], parts); })
+          .catch(function(){ return window.MB_JSON('data/katalog_idx.json'); })
+      : window.MB_JSON('data/' + encodeURIComponent(id) + '.json' + q);
+    if (id === 'yeni_urunler') p = p.then(function(base){   // otomatik taramanın eklediği şifreli parçalar
+      return fetch('data/yeni_parcalar.json' + (q || '?t=' + Date.now()), {cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; })
+        .then(function(ls){ return Promise.all(ls.map(function(f){ return window.MB_JSON('data/yeni/' + f).catch(function(){ return []; }); })); })
+        .then(function(parts){ var seen = {}; base.forEach(function(r){ seen[r.link] = 1; }); parts.forEach(function(pt){ pt.forEach(function(r){ if (!seen[r.link]) { seen[r.link] = 1; base.push(r); } }); }); return base; });
+    });
+    p
+      .then(function(d){ if (!Array.isArray(d)) d = d.rows || d.data || d.results || d; st.status = 'ok'; st.data = d; st.columns = Array.isArray(d) && d[0] ? Object.keys(d[0]) : []; notify(); })
+      .catch(function(e){ st.status = 'error'; st.message = String(e); notify(); });
+    return st;
+  }
+  var calcCache = {};
+  window.dash = {
+    colors: ['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s6)','var(--s7)','var(--s8)'],
+    data: function(id){
+      var c = calcs[id];
+      if (c){
+        var ins = c.inputs.map(function(i){ return window.dash.data(i); });
+        if (ins.some(function(x){ return x.status !== 'ok'; })) return {status: ins.some(function(x){return x.status==='error';}) ? 'error' : 'loading', data:[]};
+        var key = ins.map(function(x){ return x.data; });
+        var prev = calcCache[id];
+        if (prev && prev.key.length === key.length && prev.key.every(function(k,i){ return k === key[i]; })) return prev.res;
+        var res; try { res = {status:'ok', data:c.fn.apply(null, key)}; } catch(e){ console.error(e); res = {status:'error', data:[], message:String(e)}; }
+        calcCache[id] = {key:key, res:res}; return res;
+      }
+      if (id === 'guncelle_tetik') return {status:'ok', data:[]};
+      return load(id);
+    },
+    onData: function(f){ subs.push(f); try { f(); } catch(e){ console.error(e); } },
+    calc: function(id, o){ calcs[id] = o; },
+    reload: function(id){ if (calcs[id] || !cache[id]) return; load.bust = load.bust || {}; load.bust[id] = Date.now();
+      var old = cache[id]; delete cache[id]; var st = load(id); if (old.status === 'ok'){ st.status = 'ok'; st.data = old.data; st.columns = old.columns; st.refreshing = true; } },
+    loader: function(){},
+    params: function(){ return {}; }, setParams: function(){}, resetParams: function(){}, refresh: function(){},
+    setLink: function(name){ try { history.replaceState(null, '', name && name !== 'anasayfa' ? '#' + name : location.pathname); } catch(e){} }
+  };
+  var w = 0; window.addEventListener('resize', function(){ if (Math.abs(innerWidth - w) > 40){ w = innerWidth; notify(); } });
+})();
+</script>
+</head>
+<body>
+<div id="dash-root"></div><div id="giris" hidden><form id="giris-form" autocomplete="on">
+<div class="g-logo">MUBBO <span>Analiz</span></div>
+<label for="giris-sifre">Şifre</label>
+<input type="password" id="giris-sifre" name="password" autocomplete="current-password" required>
+<label class="g-hat"><input type="checkbox" id="giris-hatirla" checked> Bu cihazda beni hatırla</label>
+<button type="submit">Giriş</button>
+<p id="giris-hata" role="alert"></p></form></div>
+</body>
+</html>

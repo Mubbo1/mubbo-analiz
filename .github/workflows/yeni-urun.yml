@@ -1,0 +1,33 @@
+name: Rakip yeni ürün kontrolü
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: depo-yaz
+  cancel-in-progress: false
+
+jobs:
+  kontrol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerekli paket
+        run: pip install --quiet cryptography
+      - name: Rakip siteleri tara
+        run: python3 scripts/yeni_urun.py
+      - name: Sonuçları kaydet
+        run: |
+          git config user.name "mubbo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/yeni_durum.bin data/yeni_state.json data/yeni_parcalar.json data/yeni 2>/dev/null || git add data/yeni_durum.bin data/yeni_state.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Yeni ürün kontrolü"
+          for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          exit 1

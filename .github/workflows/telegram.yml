@@ -1,0 +1,41 @@
+name: Telegram toptancı paylaşımları
+
+on:
+  workflow_dispatch:
+    inputs:
+      geri_gun:
+        description: 'Geriye dönük kaç gün toplansın (boş = sadece yeniler)'
+        required: false
+        default: ''
+  schedule:
+    - cron: '23 */3 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: depo-yaz
+  cancel-in-progress: false
+
+jobs:
+  topla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerekli paketler
+        run: pip install --quiet cryptography pillow
+      - name: Kanalları oku
+        run: python3 scripts/telegram.py
+        env:
+          GERI_GUN: ${{ github.event.inputs.geri_gun }}
+      - name: Kaydet
+        run: |
+          git config user.name "mubbo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/tg_state.json data/tg_durum.bin
+          [ -f data/tg_parcalar.json ] && git add data/tg_parcalar.json data/tg
+          git diff --cached --quiet && exit 0
+          git commit -m "Telegram paylaşımları"
+          for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          exit 1

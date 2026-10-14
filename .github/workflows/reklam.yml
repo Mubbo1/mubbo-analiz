@@ -1,0 +1,52 @@
+name: Rakip reklamları (Meta Reklam Kütüphanesi)
+
+on:
+  workflow_dispatch:
+    inputs:
+      deneme:
+        description: 'Deneme için marka adları (virgüllü); boşsa hepsi'
+        required: false
+        default: ''
+  schedule:
+    - cron: '17 */3 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reklam
+  cancel-in-progress: false
+
+jobs:
+  reklam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerekli paketler
+        run: |
+          pip install --quiet cryptography pillow playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Reklamları topla
+        env:
+          DENEME: ${{ github.event.inputs.deneme }}
+          REKLAM_DEBUG: ${{ github.event.inputs.deneme }}
+        run: |
+          if [ -n "$DENEME" ]; then python3 scripts/reklam_topla.py --deneme "$DENEME" 2>&1 | tee reklam_deneme.txt; else python3 scripts/reklam_topla.py; fi
+      - name: Deneme çıktısını kaydet
+        if: ${{ github.event.inputs.deneme != '' && github.event.inputs.deneme != null }}
+        run: |
+          git config user.name "mubbo-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reklam_deneme.txt; git commit -m "reklam deneme çıktısı" && for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+      - name: Kaydet
+        if: ${{ github.event.inputs.deneme == '' || github.event.inputs.deneme == null }}
+        run: |
+          git config user.name "mubbo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/reklam_sayfalar.json
+          git add data/reklam_sira.json
+          [ -d data/reklam_ham ] && git add -A data/reklam_ham
+          git diff --cached --quiet && exit 0
+          git commit -m "Rakip reklamları toplandı"
+          for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          exit 1

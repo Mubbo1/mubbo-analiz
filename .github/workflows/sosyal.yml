@@ -1,0 +1,33 @@
+name: Sosyal medya ölçümü
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: depo-yaz
+  cancel-in-progress: false
+
+jobs:
+  olc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerekli paket
+        run: pip install --quiet cryptography
+      - name: Hesapları ölç
+        run: python3 scripts/sosyal.py
+      - name: Kaydet
+        run: |
+          git config user.name "mubbo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sosyal data/sosyal_gunler.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Sosyal medya ölçümü"
+          for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          exit 1

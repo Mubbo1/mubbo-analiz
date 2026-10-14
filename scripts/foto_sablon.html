@@ -1,0 +1,615 @@
+<title>MUBBO Fiyat Karşılaştırma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column tool — wordmark bar, drop zone with the photo, then results grouped by competitor with the cheapest highlighted. */
+:root{
+  --bg:#f6f5f2; --panel:#ffffff; --ink:#1d1c1a; --muted:#6b6862; --line:#e2dfd8; --accent:#2f5d50; --accent-ink:#ffffff; --good:#2f7d4f; --warn:#a46a12; --bad:#b03a2e;
+  --k:#3d6fb4; --f:#c4572f; --s:#2f8f6b;
+  --display:"Fraunces", Georgia, "Times New Roman", serif; --text:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#151514;--panel:#1f1e1c;--ink:#ecebe7;--muted:#a19d95;--line:#33312d;--accent:#7cc0a9;--accent-ink:#10201b;--good:#6fcf97;--warn:#e0a84a;--bad:#ef7d70;--k:#7fa7e0;--f:#ef8a63;--s:#6fcfa8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#151514;--panel:#1f1e1c;--ink:#ecebe7;--muted:#a19d95;--line:#33312d;--accent:#7cc0a9;--accent-ink:#10201b;--good:#6fcf97;--warn:#e0a84a;--bad:#ef7d70;--k:#7fa7e0;--f:#ef8a63;--s:#6fcfa8;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--text);font-size:15px;line-height:1.5}
+.wrap{max-width:1080px;margin-inline:auto;padding:0 16px 48px}
+.bar{display:flex;align-items:baseline;gap:12px;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.word{font-family:var(--display);font-weight:600;font-size:1.5rem;letter-spacing:.14em}
+.bar small{color:var(--muted);letter-spacing:.06em}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.1;margin:0 0 8px;text-wrap:balance}
+.lead{color:var(--muted);max-width:62ch;margin:0 0 24px}
+.tool{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:720px){.tool{grid-template-columns:1fr}}
+.drop{position:relative;border:1.5px dashed var(--line);border-radius:var(--r);background:var(--panel);aspect-ratio:3/4;max-width:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;cursor:pointer;overflow:hidden}
+.drop.over{border-color:var(--accent)}
+.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:var(--panel)}
+.drop p{margin:0;color:var(--muted);font-size:.92rem}
+.drop b{display:block;color:var(--ink);font-weight:600;margin-bottom:6px}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.btn{font:inherit;font-weight:600;border:0;border-radius:999px;padding:12px 22px;background:var(--accent);color:var(--accent-ink);cursor:pointer;align-self:flex-start}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn:focus-visible,.drop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.status{border:1px solid var(--line);background:var(--panel);border-radius:var(--r);padding:14px 16px;font-size:.92rem}
+.status ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px}
+.status li{color:var(--muted)}
+.status li.on{color:var(--ink);font-weight:500}
+.status li.ok{color:var(--good)}
+.note{color:var(--muted);font-size:.85rem;margin:0}
+.desc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px}
+.desc b{font-weight:600}
+.results{margin-top:32px;display:flex;flex-direction:column;gap:24px}
+.sum{display:flex;gap:12px;flex-wrap:wrap}
+.sum div{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;min-width:10rem}
+.sum span{display:block;color:var(--muted);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+.sum strong{font-family:var(--display);font-weight:400;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.brand h2{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:600;margin:0 0 10px}
+.dot{width:.7rem;height:.7rem;border-radius:50%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:10px}
+.card{display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px}
+.card.best{border-color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}
+.card img{width:88px;height:117px;object-fit:cover;border-radius:6px;background:var(--bg)}
+.card .n{font-size:.92rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .p{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-variant-numeric:tabular-nums;margin-top:6px}
+.card .p strong{font-size:1.1rem}
+.card .p s{color:var(--muted);font-size:.85rem}
+.card .f{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:.82rem}
+.card a{color:var(--ink);text-underline-offset:3px}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:.78rem}
+.pill.same{border-color:var(--good);color:var(--good)}
+.pill.color{border-color:var(--warn);color:var(--warn)}
+.pill.cheap{background:var(--good);border-color:var(--good);color:var(--panel)}
+.brands{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:10px 12px 12px;margin:0;min-width:0}
+.brands legend{font-size:.85rem;color:var(--muted);padding:0 4px}
+.link{font:inherit;background:none;border:0;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.85rem;cursor:pointer;user-select:none;background:var(--bg)}
+.chip input{accent-color:var(--accent);margin:0}
+.chip:has(input:checked){border-color:var(--accent)}
+.chip small{color:var(--muted);font-variant-numeric:tabular-nums}
+.empty{color:var(--muted);font-size:.92rem;margin:0}
+.err{color:var(--bad)}
+@media (prefers-reduced-motion:no-preference){.status li.on::marker{animation:blink 1s infinite}@keyframes blink{50%{opacity:.3}}}
+.ty{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:12px 14px;margin-top:18px;display:grid;gap:10px}
+.ty h2{font-size:1.05rem;font-weight:600;margin:0}
+.tyl{display:grid;gap:8px}
+.tyr{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;min-width:0}
+.tyq{font-weight:600;flex:1 1 180px;min-width:0}
+.ty a{white-space:nowrap}
+.ty .note{margin:0}
+.card .bm{font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.card .why{font-size:.8rem;color:var(--muted);margin-top:6px;line-height:1.35}
+.card.sim{opacity:.92}
+.empty.strong{font-weight:600;color:var(--ink);font-size:1rem}
+.desc .note{font-size:.82rem}
+.geri{display:inline-flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;border:1px solid var(--line);border-radius:var(--r);color:var(--ink);text-decoration:none;font-size:1.15rem;margin-right:10px}
+@media (max-width:720px){.drop{aspect-ratio:auto;min-height:11rem;max-height:46vh;height:46vw}.side .row{position:sticky;bottom:0;z-index:5;background:var(--bg);padding:10px 0;border-top:1px solid var(--line)}.side{display:flex;flex-direction:column}}
+</style>
+
+<div class="wrap">
+  <header class="bar"><a class="geri" id="geri" href="https://claude.ai/artifact/WjvpdHXn9S11KDBrNikE9y" aria-label="Geri">←</a><span class="word">MUBBO</span><small>Fiyat karşılaştırması</small></header>
+
+  <h1>Bu ürün rakiplerde var mı, kaça satılıyor?</h1>
+  <p class="lead">Bir ürün fotoğrafı yükle, hangi markalarda aranacağını seç. Seçilen markaların aynı türdeki tüm ürünleri taranır; aynı ürün fiyatı, fotoğrafı ve linkiyle gösterilir; aynısı yoksa benzerleri ayrı listelenir.</p>
+
+  <section class="tool">
+    <div>
+      <label class="drop" id="drop" tabindex="0" for="file">
+        <p><b>Fotoğraf yükle</b>Dokun ya da tıkla; galeriden seç, sürükle bırak veya yapıştır</p>
+        <img id="preview" alt="Yüklenen ürün" hidden>
+      </label>
+      <input type="file" id="file" accept="image/*" hidden>
+    </div>
+    <div class="side">
+      <div class="row">
+        <button class="btn" id="go" disabled>Rakiplerde ara</button>
+        <span class="note" id="neden"></span>
+        <button class="btn ghost" id="stop" hidden>Durdur</button>
+        <button class="btn ghost" id="reset" hidden>Yeni fotoğraf</button>
+      </div>
+      <fieldset class="brands" id="brands">
+        <legend>Hangi markalarda aransın? <button type="button" class="link" id="all">Tümü</button> · <button type="button" class="link" id="none">Hiçbiri</button></legend>
+        <div class="chips" id="chips"></div>
+      </fieldset>
+      <p class="note" id="katalog-durum"></p>
+      <div class="status" id="status" hidden>
+        <ol>
+          <li id="s1">Ürün tanınıyor</li>
+          <li id="s2">Katalogda adaylar seçiliyor</li>
+          <li id="s3">Adaylar fotoğrafla tek tek karşılaştırılıyor</li>
+        </ol>
+        <p class="note" id="sure" style="margin-top:8px"></p>
+      </div>
+      <div class="desc" id="desc" hidden></div>
+      <p class="note err" id="err" hidden></p>
+    </div>
+  </section>
+
+  <section class="results" id="results" hidden></section>
+</div>
+
+<!--INLINE_DATA-->
+<script>
+const BRANDS = [
+/*BRANDS*/
+].map(([key, id, n]) => ({key, id, n, file: 'katalog_' + id + '.json', color: 'var(--accent)'}));
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const tl = (v) => v == null ? '—' : new Intl.NumberFormat('tr-TR', {maximumFractionDigits: 2}).format(v) + ' ₺';
+const fold = (s) => String(s || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/[^a-z0-9 ]/g, ' ');
+
+let catalog = [], file = null, sample = null, ctl = null, maxImg = 4, fatal = '';
+
+// ---------- Marka seçimi (bu tarayıcıda hatırlanır) ----------
+const loaded = {};
+let selected = new Set(['Ketench', 'Ferell Moda', 'Semih Kurtulmuş']);
+try { const sv = JSON.parse(localStorage.getItem('mubbo_markalar') || 'null'); if (Array.isArray(sv)) selected = new Set(sv.filter(k => BRANDS.some(b => b.key === k))); } catch (e) {}
+function saveSel() { try { localStorage.setItem('mubbo_markalar', JSON.stringify([...selected])); } catch (e) {} }
+function drawChips() {
+  const c = $('chips'); c.textContent = '';
+  for (const b of BRANDS) {
+    const lab = el('label', 'chip'); const cb = el('input'); cb.type = 'checkbox'; cb.checked = selected.has(b.key);
+    cb.addEventListener('change', () => { cb.checked ? selected.add(b.key) : selected.delete(b.key); saveSel(); update(); status(); preload(); });
+    lab.append(cb, document.createTextNode(b.key)); if (b.n) lab.append(el('small', null, String(b.n)));
+    c.append(lab);
+  }
+}
+$('all').addEventListener('click', () => { BRANDS.forEach(b => selected.add(b.key)); saveSel(); drawChips(); update(); status(); preload(); });
+$('none').addEventListener('click', () => { selected.clear(); saveSel(); drawChips(); update(); status(); });
+function status() { $('katalog-durum').textContent = selected.size ? selected.size + ' marka seçili.' : 'Aramak için en az bir marka seç.'; }
+
+// ---------- Katalog yükleme ----------
+const failedBrands = new Set();
+const KNOWN_VER = '1791709246-5c35';
+let goodBase = null; const fetchLog = [];
+function urlsFor(f) {
+  const c = [];
+  if (goodBase !== null) c.push(goodBase + f);
+  c.push(f);
+  try { c.push(new URL(f, document.baseURI).href); } catch (e) {}
+  try { const m = /\/_f\/[^/]+\//.exec(location.pathname); if (m) c.push(m[0] + f); } catch (e) {}
+  c.push('/_f/' + KNOWN_VER + '/' + f);
+  try { if (document.referrer) c.push(new URL('/_f/' + KNOWN_VER + '/' + f, document.referrer).href); } catch (e) {}
+  return [...new Set(c)];
+}
+let remoteOK = null;   // null: denenmedi, true: dosyalar iniyor, false: bu görünümde engelli → sayfa içi yazı verisi
+async function getJSON(f) {
+  if (remoteOK === false) throw new Error('uzak dosya kapalı');
+  let last;
+  for (const u of urlsFor(f).slice(0, remoteOK ? 1 : 3)) {
+    try {
+      const r = await fetch(u); if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      if (goodBase === null) goodBase = u.slice(0, u.length - f.length);
+      remoteOK = true; return data;
+    } catch (e) { last = e; if (fetchLog.length < 12) fetchLog.push(u.slice(0, 90) + ' → ' + (e && e.message || e)); }
+  }
+  if (remoteOK === null) remoteOK = false;
+  throw last || new Error('yüklenemedi');
+}
+// Sayfaya gömülü, YALNIZ YAZI içeren yedek katalog (dosya indirmenin engellendiği görünümler için)
+let inlineText = null;
+function inlineCatalog() {
+  if (!inlineText) inlineText = (async () => {
+    const b64 = $('kat-text').textContent.trim();
+    const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    if (typeof DecompressionStream !== 'function') throw new Error('Bu tarayıcı sıkıştırılmış veriyi açamıyor');
+    return JSON.parse(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
+  })();
+  return inlineText;
+}
+async function loadBrand(b) {
+  if (loaded[b.key]) return loaded[b.key];
+  loaded[b.key] = (async () => {
+    let rows;
+    try { rows = await getJSON(b.file); }
+    catch (e) { const all = await inlineCatalog(); rows = (all[b.id] || []).map(([u, f, e2, l]) => ({u, f, e: e2, l, g: ''})); }
+    const out = rows.map(x => ({...x, m: b.key, t: fold(x.u)})); b.n = out.length; failedBrands.delete(b.key); return out;
+  })().catch((e) => { delete loaded[b.key]; failedBrands.add(b.key); return []; });
+  return loaded[b.key];
+}
+async function loadBrands(sel, onProgress) {
+  let done = 0;
+  const parts = await Promise.all(sel.map(b => loadBrand(b).then(r => { done++; onProgress && onProgress(done, sel.length); return r; })));
+  return parts.flat();
+}
+// Fotoğraf seçilince seçili markaların katalogları arka planda iner; "Rakiplerde ara"ya basıldığında hazır olur.
+function preload() { if (file) BRANDS.filter(b => selected.has(b.key)).forEach(b => loadBrand(b)); }
+drawChips(); status();
+
+// ---------- Claude ----------
+(async () => {
+  sample = await claude.use('sample');
+  if (!sample) { fatal = 'Bu görünümde karşılaştırma yapılamıyor. Sayfayı Claude içinde açtığından emin ol.'; showErr(''); update(); return; }
+  const caps = await sample.limits().catch(() => null);
+  if (!caps || !caps.images) { sample = null; fatal = 'Bu görünüm fotoğraf gönderemiyor. Sayfayı claude.ai\'da ya da Claude uygulamasında aç.'; showErr(''); }
+  else maxImg = Math.max(1, caps.images.maxCount || 1);
+  update();
+  if (location.hash === '#deneme') { try { const r = await fetch('deneme.jpg'); const b = await r.blob(); setFile(new File([b], 'deneme.jpg', {type: 'image/jpeg'})); } catch (e) {} }
+})();
+
+document.getElementById('geri').addEventListener('click', (e) => { if (history.length > 1 && document.referrer) { e.preventDefault(); history.back(); } });
+function showErr(t) { const e = $('err'); const m = t || fatal; e.textContent = m; e.hidden = !m; }
+function update() {
+  $('go').disabled = !(file && selected.size && sample) || !!ctl;
+  const n = $('neden'); if (n) n.textContent = ctl ? '' : !sample ? (fatal || 'Hazırlanıyor…') : !file ? 'Önce bir ürün fotoğrafı yükle.' : !selected.size ? 'Aşağıdan en az bir marka seç.' : '';
+}
+
+// ---------- Fotoğraf ----------
+async function setFile(f) {
+  if (!f) return;
+  if (f.type && !/^image\//.test(f.type)) { showErr('Bu dosya bir fotoğraf değil.'); return; }
+  const url = URL.createObjectURL(f);
+  try { const t = new Image(); t.src = url; await t.decode(); } catch (e) { showErr('Bu fotoğraf biçimi okunamadı (ör. HEIC). Fotoğrafın ekran görüntüsünü alıp onu yükle.'); return; }
+  file = f; const p = $('preview'); p.src = url; p.hidden = false;
+  $('results').hidden = true; $('desc').hidden = true; $('status').hidden = true; showErr(''); $('reset').hidden = false; update();
+  preload();
+}
+$('file').addEventListener('change', (e) => setFile(e.target.files[0]));
+const drop = $('drop');
+drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('file').click(); } });
+['dragenter', 'dragover'].forEach(t => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', (e) => setFile(e.dataTransfer.files[0]));
+document.addEventListener('paste', (e) => { const it = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/')); if (it) setFile(it.getAsFile()); });
+$('reset').addEventListener('click', () => { file = null; $('preview').hidden = true; $('file').value = ''; $('results').hidden = true; $('desc').hidden = true; $('status').hidden = true; $('reset').hidden = true; showErr(''); update(); });
+$('stop').addEventListener('click', () => ctl?.abort());
+function step(n, state) { $('s' + n).className = state; }
+
+// ---------- Aday seçimi (tamamen sayfada, Claude'suz) ----------
+const SYN = {
+  tisort: ['tshirt', 't shirt', 'tisort'], tshirt: ['tshirt', 't shirt', 'tisort'],
+  esofman: ['esofman', 'takim', 'jogger', 'alt ust'], takim: ['takim', 'esofman', 'sortlu', 'alt ust'],
+  sweatshirt: ['sweat', 'sweatshirt', 'hoodie', 'kapusonlu'], sweat: ['sweat', 'sweatshirt', 'hoodie'],
+  jean: ['jean', 'kot', 'denim'], kot: ['kot', 'jean', 'denim'],
+  mont: ['mont', 'sisme', 'kaban', 'parka', 'ceket', 'puffer'], kaban: ['kaban', 'mont', 'palto'], trenckot: ['trenckot', 'trench', 'pardesu'],
+  ceket: ['ceket', 'blazer', 'bomber', 'mont', 'jacket', 'shacket'], gomlek: ['gomlek', 'overshirt', 'shacket'], kazak: ['kazak', 'triko', 'balikci', 'sweater'],
+  hirka: ['hirka', 'triko', 'ceket'], polo: ['polo', 'tshirt'], pantolon: ['pantolon', 'jogger', 'kargo', 'chino'], sort: ['sort', 'bermuda'],
+  yelek: ['yelek'], ayakkabi: ['ayakkabi', 'sneaker', 'bot', 'loafer']
+};
+const FAMILY = [
+  ['ceket', 'mont', 'kaban', 'hirka', 'bomber', 'parka', 'yelek', 'palto', 'trenckot', 'pardesu', 'shacket', 'overshirt', 'jacket', 'blazer', 'sweat', 'sisme', 'puffer'],
+  ['tshirt', 't shirt', 'tisort', 'polo', 'sweat', 'hoodie', 'kazak', 'triko', 'gomlek', 'atlet', 'body', 'hirka'],
+  ['pantolon', 'jean', 'kot', 'denim', 'jogger', 'esofman', 'sort', 'bermuda', 'kargo', 'chino'],
+  ['takim', 'esofman', 'alt ust', 'sortlu']
+];
+const MAT = {
+  pelus: ['pelus', 'teddy', 'welsoft', 'wellsoft', 'sherpa', 'kuzu', 'tuylu', 'borg', 'kurklu', 'kurk', 'buklet', 'boucle'],
+  triko: ['triko', 'orgu', 'knit', 'kazak', 'trikotaj'], deri: ['deri', 'leather'], suet: ['suet', 'nubuk', 'suede'],
+  kase: ['kase', 'yun', 'yunlu', 'cashmere'], keten: ['keten', 'linen'], kadife: ['kadife', 'fitilli', 'corduroy'],
+  denim: ['denim', 'jean', 'kot'], polar: ['polar', 'fleece'], sisme: ['sisme', 'puffer', 'kapitone'],
+  modal: ['modal'], scuba: ['scuba', 'dalgic'], gabardin: ['gabardin'], saten: ['saten', 'satin'], muslin: ['muslin'],
+  pamuk: ['pamuk', 'pamuklu', 'iplik']
+};
+const MATWEAK = {pelus: ['polar', 'fleece'], polar: MAT.pelus, triko: ['hirka'], kase: ['kaban', 'palto']};
+function matKey(w) { w = fold(w).trim(); for (const [k, v] of Object.entries(MAT)) if (k === w || v.includes(w)) return k; return null; }
+const COLORFAM = [
+  ['bordo', 'murdum', 'murdun', 'visne', 'sarap', 'bordeaux', 'kiremit'],
+  ['kahve', 'kahverengi', 'cikolata', 'tarcin', 'camel', 'taba', 'vizon', 'brown', 'aci kahve'],
+  ['gri', 'antrasit', 'fume', 'gumus'], ['lacivert', 'navy', 'indigo'], ['bej', 'krem', 'ekru', 'tas', 'kum', 'stone'],
+  ['haki', 'yesil', 'zeytin', 'mint', 'nefti'], ['siyah', 'black'], ['beyaz', 'white', 'kirik beyaz'], ['mavi', 'buz mavi', 'indigo'],
+  ['mor', 'lila', 'murdum'], ['kirmizi', 'nar'], ['sari', 'hardal'], ['pembe', 'pudra'], ['turuncu', 'kiremit']
+];
+function colorSig(img) {
+  const c = document.createElement('canvas'); c.width = 24; c.height = 32;
+  const x = c.getContext('2d', {willReadFrequently: true}); x.drawImage(img, 0, 0, 24, 32);
+  const d = x.getImageData(6, 6, 12, 20).data; const H = new Float32Array(16); let n = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    const r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), v = mx, s = mx ? (mx - mn) / mx : 0;
+    if (s < 0.18 || v < 0.12) H[12 + Math.min(3, Math.floor(v * 4))]++;
+    else { let h = 0; const df = mx - mn; if (mx === r) h = ((g - b) / df) % 6; else if (mx === g) h = (b - r) / df + 2; else h = (r - g) / df + 4; h = (h / 6 + 1) % 1; H[Math.floor(h * 12) % 12]++; }
+    n++;
+  }
+  for (let i = 0; i < 16; i++) H[i] /= n; return H;
+}
+const inter = (a, b) => { let s = 0; for (let i = 0; i < 16; i++) s += Math.min(a[i], b[i]); return s; };
+const RX = {};   // kelime başı + en fazla 3 harf ek (ceketi, kazaklar) — "monterey" mont sayılmaz
+const has = (t, w) => (RX[w] || (RX[w] = new RegExp('(^| )' + w.replace(/[^a-z0-9 ]/g, '') + '[a-z]{0,3}( |$)'))).test(t);
+function profile(info) {
+  const words = (arr) => arr.map(fold).flatMap(k => k.split(' ')).filter(w => w.length > 1);
+  const tur0 = words([info.kategori || '', ...(info.tur_kelimeleri || [])]);
+  const tur = [...new Set(tur0.flatMap(w => SYN[w] || [w]))].filter(w => w.length > 2);
+  const fam = [...new Set(FAMILY.filter(f => tur.some(w => f.includes(w))).flat())];
+  const mats = [...new Set([info.malzeme || '', ...(info.malzeme_kelimeleri || [])].flatMap(w => fold(w).split(' ')).map(matKey).filter(Boolean))];
+  const matWords = [...new Set(mats.flatMap(k => MAT[k]).concat(words(info.malzeme_kelimeleri || []).filter(w => w.length > 3)))];
+  const weak = [...new Set(mats.flatMap(k => MATWEAK[k] || []))].filter(w => !matWords.includes(w));
+  const col0 = words([info.renk || '', ...(info.renk_kelimeleri || [])]);
+  const cols = [...new Set(col0.flatMap(w => COLORFAM.filter(f => f.includes(w)).flat().concat([w])))];
+  const det = words([...(info.detay_kelimeleri || []), ...(info.anahtar || [])]).filter(w => w.length > 3 && !tur.includes(w) && !matWords.includes(w));
+  return {tur, fam, mats, matWords, weak, cols, det};
+}
+function otherMat(x, P) {
+  if (!P.mats.length) return false;
+  for (const [k, v] of Object.entries(MAT)) { if (P.mats.includes(k) || k === 'pamuk') continue; if (v.some(w => has(x.t, w)) && !P.matWords.some(w => has(x.t, w))) return k; }
+  return false;
+}
+function textScore(x, P) {
+  let s = 0;
+  if (P.tur.length) s += P.tur.some(w => has(x.t, w)) ? 5 : -2;
+  if (P.matWords.some(w => has(x.t, w))) s += 8; else if (P.weak.some(w => has(x.t, w))) s += 3;
+  if (otherMat(x, P)) s -= 4;
+  if (P.cols.some(w => has(x.t, w))) s += 1.5;
+  let k = 0; for (const w of P.det) if (has(x.t, w)) k += 0.4; s += Math.min(k, 2);
+  return s;
+}
+async function loadImg(src) { const i = new Image(); i.src = src; await i.decode(); return i; }
+// Yazıya göre sırala; renk imzası yalnız en iyi 300 aday için hesaplanır (binlerce görsel açılmaz)
+async function rank(info, userSig) {
+  const P = profile(info);
+  const keys = P.fam.length ? P.fam : P.tur;
+  let pool = catalog.filter(x => keys.some(w => has(x.t, w)));
+  if (pool.length < 40) pool = catalog.slice();
+  pool.forEach(x => { x.ts = textScore(x, P); });
+  pool.sort((a, b) => b.ts - a.ts);
+  const top = pool.slice(0, 300);
+  await Promise.all(top.map(async x => { if (!x.h) { try { x.h = x.g ? colorSig(await loadImg(x.g)) : null; } catch (e) { x.h = null; } } }));
+  top.forEach(x => { x.sc = x.ts + (x.h ? inter(x.h, userSig) * 4 : 0); });
+  top.sort((a, b) => b.sc - a.sc);
+  return {P, top};
+}
+
+// ---------- Büyük fotoğraflar (176 px), yalnız son kontrol için ----------
+const NSHARD = 400, shardCache = {};
+function shardOf(l) { let h = 2166136261; for (let i = 0; i < l.length; i++) { h ^= l.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h % NSHARD; }
+async function ensureBig(items) {
+  if (remoteOK === false) return;
+  const need = [...new Set(items.filter(x => !x.G).map(x => shardOf(x.l)))];
+  await Promise.all(need.map(n => shardCache[n] || (shardCache[n] = getJSON('hb/' + n + '.json').catch(() => ({})))));
+  for (const x of items) if (!x.G) { const sh = await shardCache[shardOf(x.l)]; if (sh && sh[x.l]) x.G = sh[x.l]; }
+}
+// Numaralı aday kareleri
+async function sheet(items, offset, big) {
+  const cols = big ? 4 : 6, w = big ? 210 : 132, h = big ? 280 : 176, pad = 8, lab = 24;
+  const rows = Math.ceil(items.length / cols);
+  const c = document.createElement('canvas'); c.width = cols * (w + pad) + pad; c.height = rows * (h + lab + pad) + pad;
+  const x = c.getContext('2d'); x.fillStyle = '#ffffff'; x.fillRect(0, 0, c.width, c.height); x.imageSmoothingQuality = 'high';
+  for (let i = 0; i < items.length; i++) {
+    const cx = pad + (i % cols) * (w + pad), cy = pad + Math.floor(i / cols) * (h + lab + pad);
+    try { const im = await loadImg((big && items[i].G) || items[i].g); const r = Math.min(w / im.width, h / im.height), dw = im.width * r, dh = im.height * r; x.drawImage(im, cx + (w - dw) / 2, cy + lab + (h - dh) / 2, dw, dh); } catch (e) {}
+    x.fillStyle = '#111'; x.fillRect(cx, cy, 40, lab); x.fillStyle = '#fff'; x.font = 'bold 16px sans-serif'; x.fillText(String(offset + i + 1), cx + 5, cy + 17);
+  }
+  return await new Promise(r => c.toBlob(r, 'image/jpeg', 0.9));
+}
+async function withUser(sh) {
+  const a = await loadImg(URL.createObjectURL(file)), b = await loadImg(URL.createObjectURL(sh));
+  const h = b.height, w = Math.round(a.width * h / a.height);
+  const c = document.createElement('canvas'); c.width = w + 12 + b.width; c.height = h;
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(a, 0, 0, w, h); x.drawImage(b, w + 12, 0);
+  return await new Promise(r => c.toBlob(r, 'image/jpeg', 0.9));
+}
+
+// Aynı model kodundaki diğer renkler
+const FCOL = new Set(COLORFAM.flat().concat(['aci', 'acik', 'koyu', 'bebe', 'su', 'buz', 'petrol', 'yesili', 'mavisi', 'mavi', 'tas', 'ekru', 'indigo', 'camel', 'vizon', 'lila', 'mint', 'kul', 'kum', 'gri', 'turuncu', 'kirmizi', 'sari', 'pembe', 'antrasit', 'kahverengi', 'krem']));
+function modelCode(x) {
+  if (x.m === 'Ferell Moda') {
+    const w = x.t.replace(/[0-9]+/g, ' ').split(' ').filter(Boolean);
+    while (w.length && FCOL.has(w[w.length - 1])) w.pop();
+    return w.length >= 3 ? 'F:' + w.join(' ') : null;
+  }
+  const m = x.u.match(/\((E\d{3,5})\)/i) || x.u.match(/\b([A-Z]{1,4}-?\d{3,6}(?:-\d+)?)\s*$/) || x.u.match(/\b(E?\d{4})\s*$/);
+  if (m) return x.m + ':' + m[1].toUpperCase().replace('-', '');
+  const w = x.t.replace(/[0-9]+/g, ' ').split(' ').filter(v => v && !FCOL.has(v));
+  return w.length >= 3 ? x.m + ':N:' + w.join(' ') : null;
+}
+function addSiblings(matches) {
+  const seen = new Set(matches.map(m => m.c.l)); const extra = [];
+  for (const m of matches) {
+    const code = modelCode(m.c); if (!code) continue;
+    for (const x of catalog) {
+      if (x.m !== m.c.m || seen.has(x.l) || modelCode(x) !== code) continue;
+      seen.add(x.l); extra.push({no: 0, karar: 'ayni', ayni_renk: false, guven: m.guven, neden: 'Aynı modelin başka rengi', c: x});
+    }
+  }
+  return matches.concat(extra);
+}
+
+// ---------- Arama: en fazla 4 Claude çağrısı, otomatik tekrar YOK ----------
+const SURE_YOGUN = 'Claude şu an yoğun ya da kullanım sınırına gelindi. Birkaç dakika sonra tekrar ara.';
+$('go').addEventListener('click', async () => {
+  ctl = new AbortController(); const signal = ctl.signal; update(); $('stop').hidden = false; showErr('');
+  $('status').hidden = false; $('results').hidden = true; $('desc').hidden = true;
+  const t0 = Date.now(); clearInterval(window.__tick); window.__tick = setInterval(() => { const sec = Math.round((Date.now() - t0) / 1000); $('sure').textContent = 'Geçen süre: ' + Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }, 1000);
+  $('status').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+  step(1, 'on'); step(2, ''); step(3, '');
+  $('s1').textContent = 'Ürün tanınıyor (ilk aramada Claude izin penceresi açılır, onayla)'; $('s2').textContent = 'Katalogda adaylar seçiliyor'; $('s3').textContent = 'Adaylar fotoğrafla karşılaştırılıyor';
+  const sel = BRANDS.filter(b => selected.has(b.key));
+  const katP = loadBrands(sel, (d, n) => { if ($('s2').className === 'on') $('s2').textContent = 'Kataloglar yükleniyor: ' + d + '/' + n; });
+  let info = null, same = [], similar = [], partial = '';
+  try {
+    // 1) Ürünü tanı
+    info = await sample.json(
+      'Görseldeki giyim ürününü (fotoğraftaki ANA ürünü; kişinin üzerindeki diğer parçaları değil) dikkatle tanımla. Bu bilgiyle Türk e-ticaret sitelerindeki ürün adları arasında aynı ürün aranacak. ' +
+      'Sadece şu JSON nesnesini döndür: {' +
+      '"kategori": "tek kelime ürün türü: eşofman, takım, mont, ceket, kaban, trençkot, hırka, yelek, gömlek, tişört, polo, sweatshirt, kazak, pantolon, jean, şort, ayakkabı", ' +
+      '"tur_kelimeleri": ["ürün adında geçebilecek 3-6 tür kelimesi"], ' +
+      '"malzeme": "kumaş/doku tek kelime: peluş, triko, deri, süet, kaşe, keten, kadife, denim, polar, şişme, modal, scuba, gabardin, saten, pamuk ya da boş", ' +
+      '"malzeme_kelimeleri": ["kumaşın ürün adlarındaki eş anlamlıları"], ' +
+      '"renk": "tek kelime Türkçe renk", "renk_kelimeleri": ["renk eş anlamlıları"], ' +
+      '"detaylar": ["aynı ürünü ayırt ettiren 4-8 kısa tasarım detayı: yaka, kapanma, cepler, kol/etek bitişi, kesim, logo/nakış, desen"], ' +
+      '"detay_kelimeleri": ["ürün adında geçebilecek 3-6 detay kelimesi"], ' +
+      '"trendyol": ["Trendyol için 3 kısa Türkçe arama sorgusu, spesifikten genele"], ' +
+      '"ozet": "tek cümlelik Türkçe tarif"}',
+      {images: file, signal, modelTier: 'default'}
+    );
+    step(1, 'ok'); $('s1').textContent = 'Ürün tanındı';
+    const d = $('desc'); d.hidden = false; d.textContent = '';
+    d.append(el('b', null, 'Yüklenen ürün: '), document.createTextNode((info.ozet || '') + (info.renk ? ' (' + info.renk + ')' : '')));
+    if (Array.isArray(info.detaylar) && info.detaylar.length) { d.append(el('br')); d.append(el('span', 'note', 'Bakılan detaylar: ' + info.detaylar.join(', '))); }
+
+    // 2) Adaylar: sayfada sırala + tek hızlı ad okuması
+    step(2, 'on');
+    catalog = await katP;
+    const failedNames = sel.filter(b => failedBrands.has(b.key)).map(b => b.key);
+    window.__failedBrands = failedNames;
+    if (!catalog.length) { step(2, 'err'); throw Object.assign(new Error('katalog'), {code: 'katalog', message: 'Rakip katalogları indirilemedi, arama yapılmadı. Sayfayı yenileyip tekrar dene.'}); }
+    drawChips();
+    $('s2').textContent = catalog.length + ' ürün içinde adaylar seçiliyor';
+    const userSig = colorSig(await loadImg(URL.createObjectURL(file)));
+    const {P, top} = await rank(info, userSig);
+    const detTxt = (info.detaylar || []).join('; '), matTxt = info.malzeme ? ('Kumaş/doku: ' + info.malzeme + '. ') : '';
+    let picks = [];
+    try {
+      const adList = top.slice(0, 250);
+      const res = await sample.json(
+        'Bir giyim ürününün AYNISINI rakip mağaza ürün adları arasında arıyoruz. Aranan: ' + (info.ozet || '') + '. Tür: ' + (info.kategori || '') + '. ' + matTxt + 'Renk: ' + (info.renk || '') + '. Detaylar: ' + detTxt + '. ' +
+        'Numaralı adlardan bu ürünün aynısı ya da aynı modelin başka rengi OLABİLECEKLERİ seç (tür ve adda yazıyorsa kumaş/yaka/kapanma çelişmesin; renk farklı olabilir). En fazla 30 numara. Sadece JSON dizi, örn. [4, 81]; yoksa []. Adlar: ' +
+        adList.map((c, i) => (i + 1) + ': ' + c.u.slice(0, 90)).join(' | '),
+        {signal, modelTier: 'quick'}
+      );
+      picks = (Array.isArray(res) ? res : []).map(Number).map(n => adList[n - 1]).filter(Boolean);
+    } catch (e) { if (e && e.code === 'cancelled') throw e; }
+    const withImg = (arr) => arr.filter(x => x.g);
+    const seenC = new Set(); const cands = [];
+    for (const x of withImg(picks).concat(withImg(top))) { if (!seenC.has(x)) { seenC.add(x); cands.push(x); } }
+    const noImages = !cands.length;
+    step(2, 'ok');
+
+    if (noImages) {   // dosyalar inmediyse (ör. bazı telefon görünümleri): yalnız adlardan olası eşleşmeler
+      $('s2').textContent = 'Fotoğraflar bu görünümde yüklenemedi; adlardan olası eşleşmeler gösteriliyor';
+      step(3, 'ok'); $('s3').textContent = 'Fotoğraf karşılaştırması yapılamadı';
+      similar = (picks.length ? picks : top.slice(0, 12)).map(c => ({c, karar: 'benzer', neden: 'Adı ve türü benziyor (fotoğrafla kontrol edilemedi)'}));
+      render([], similar, info); return;
+    }
+
+    // 3) Fotoğrafla karşılaştırma: tek çağrıda 60 aday (2 kare sayfası)
+    step(3, 'on');
+    const perSheet = 30, nSheets = maxImg >= 3 ? 2 : 1;
+    const scanC = cands.slice(0, perSheet * nSheets);
+    $('s2').textContent = 'Katalogdaki ' + catalog.length + ' üründen en olası ' + scanC.length + ' aday seçildi' + (picks.length ? ' (' + picks.length + ' tanesi adından)' : '');
+    $('s3').textContent = scanC.length + ' aday fotoğrafla karşılaştırılıyor (tek seferde)';
+    const sheets = []; for (let i = 0; i < scanC.length; i += perSheet) sheets.push(await sheet(scanC.slice(i, i + perSheet), i, false));
+    const imgs = maxImg >= 2 ? [file, ...sheets.slice(0, maxImg - 1)] : [await withUser(sheets[0])];
+    const firstImg = maxImg >= 2 ? 'Birinci görsel kullanıcının ürünü. Diğer görseller' : 'En soldaki büyük fotoğraf kullanıcının ürünü; sağdaki numaralı kareler';
+    const kural = 'Kullanıcının ürünü: ' + (info.ozet || '') + '. ' + matTxt + 'Ayırt edici detaylar: ' + detTxt + '. ' +
+      '"ayni": AYNI MODEL (aynı ürünün aynı ya da başka rengi) — kumaş/doku, yaka, kapanma, cepler ve kol/etek bitişi tutmalı. "benzer": aynı tür ve benzer görünüm ama bir detay farklı ya da emin değilsin. Arka plan, manken, poz ve ışık farkı önemsiz; bordo/mürdüm gibi aynı renk ailesi aynı renk sayılır. Ad farklı bir kumaş söylüyorsa "ayni" deme. ';
+    const res1 = await sample.json(
+      firstImg + ' rakip mağazaların numaralı aday ürünleri (numara her karenin sol üstünde). ' + kural +
+      'Yalnız "ayni" ve "benzer" olanları yaz (en fazla 20), diğerlerini YAZMA. Sadece JSON dizi: [{"no": 12, "karar": "ayni"|"benzer", "ayni_renk": true|false, "guven": "yuksek"|"orta", "farkli_detay": "farklı detay ya da boş", "neden": "tek cümle Türkçe"}]. Hiçbiri yoksa []. ' +
+      'Aday listesi (numara: marka · ad): ' + scanC.map((c, i) => (i + 1) + ': ' + c.m + ' · ' + c.u.slice(0, 90)).join(' | '),
+      {images: imgs, signal, modelTier: 'default'}
+    );
+    let verdicts = (Array.isArray(res1) ? res1 : []).map(m => ({...m, c: scanC[Number(m.no) - 1]})).filter(m => m.c && (m.karar === 'ayni' || m.karar === 'benzer'));
+    const apply = () => {
+      const distinct = P.mats.filter(k => k !== 'pamuk');
+      for (const v of verdicts) {
+        if (v.karar !== 'ayni') continue;
+        const om = otherMat(v.c, P);
+        if (om) { v.karar = 'benzer'; v.farkli_detay = (v.farkli_detay ? v.farkli_detay + '; ' : '') + 'adında farklı kumaş yazıyor (' + om + ')'; continue; }
+        if (distinct.length && !P.matWords.concat(P.weak).some(w => has(v.c.t, w)) && v.guven !== 'yuksek') { v.karar = 'benzer'; v.farkli_detay = (v.farkli_detay ? v.farkli_detay + '; ' : '') + 'adında ' + (info.malzeme || distinct[0]) + ' geçmiyor, emin olunamadı'; }
+      }
+      same = addSiblings(verdicts.filter(v => v.karar === 'ayni'));
+      const sameL = new Set(same.map(m => m.c.l));
+      similar = verdicts.filter(v => v.karar === 'benzer' && !sameL.has(v.c.l));
+    };
+    apply();
+    render(same, similar, info, 'Ön sonuç — son kontrol sürüyor…');   // ilk sonuçlar hemen görünür
+
+    // 4) Son kontrol: en iyi 12 aday büyük fotoğrafla (bir çağrı). Başarısız olursa ön sonuç kalır.
+    const short = verdicts.filter(v => v.karar === 'ayni').concat(verdicts.filter(v => v.karar === 'benzer')).slice(0, 12).map(v => v.c);
+    if (short.length) {
+      $('s3').textContent = 'Son kontrol: ' + short.length + ' ürün büyük fotoğrafla, detay detay';
+      try {
+        await ensureBig(short);
+        const bigSheet = await sheet(short, 0, true);
+        const vImgs = maxImg >= 2 ? [file, bigSheet] : [await withUser(bigSheet)];
+        const res2 = await sample.json(
+          firstImg + ' son kontrol için seçilmiş numaralı aday ürünler. ' + kural +
+          'Her aday için karar ver; "farkli" olanları YAZMA. Sadece JSON dizi: [{"no": 3, "karar": "ayni"|"benzer", "ayni_renk": true|false, "guven": "yuksek"|"orta", "farkli_detay": "", "neden": "tek cümle Türkçe"}]. ' +
+          'Aday listesi: ' + short.map((c, i) => (i + 1) + ': ' + c.m + ' · ' + c.u.slice(0, 90)).join(' | '),
+          {images: vImgs, signal, modelTier: 'default'}
+        );
+        const v2 = (Array.isArray(res2) ? res2 : []).map(m => ({...m, c: short[Number(m.no) - 1]})).filter(m => m.c && (m.karar === 'ayni' || m.karar === 'benzer'));
+        const shortL = new Set(short.map(c => c.l));
+        verdicts = v2.concat(verdicts.filter(v => !shortL.has(v.c.l)));
+        apply();
+      } catch (e) { if (e && e.code === 'cancelled') throw e; partial = 'Son kontrol yapılamadı (' + (e && e.code === 'rate_limited' ? 'Claude yoğun' : 'hata') + '); aşağıdaki sonuçlar ön sonuçtur.'; }
+    }
+    step(3, 'ok'); $('s3').textContent = 'Karşılaştırma bitti: ' + same.length + ' aynı, ' + similar.length + ' benzer ürün';
+    if (failedNames.length) partial = (partial ? partial + ' ' : '') + 'Yüklenemeyen kataloglar: ' + failedNames.join(', ') + '.';
+    render(same, similar, info);
+    if (partial) showErr(partial);
+  } catch (e) {
+    const code = e && e.code;
+    const msg = code === 'katalog' ? e.message
+      : code === 'cancelled' ? 'Durduruldu.'
+      : (code === 'not_granted' || code === 'sampling_disabled') ? 'Karşılaştırma için Claude kullanım izni verilmedi.'
+      : code === 'rate_limited' ? SURE_YOGUN
+      : code === 'image_rejected' ? 'Bu fotoğraf kullanılamadı. JPEG, PNG ya da WebP bir fotoğraf dene.'
+      : code === 'images_unavailable' ? 'Bu görünüm fotoğraf gönderemiyor. Sayfayı claude.ai\'da aç.'
+      : code === 'invalid_json' ? 'Cevap okunamadı. Tekrar dene.'
+      : 'Karşılaştırma tamamlanamadı (' + (code || 'hata') + '). Tekrar dene.';
+    showErr(msg);
+    if (same.length || similar.length) render(same, similar, info, 'Arama yarıda kaldı; bulunanlar gösteriliyor.');
+    console.log('[MUBBO] hata', e);
+  } finally {
+    ctl = null; $('stop').hidden = true; update(); clearInterval(window.__tick);
+  }
+});
+
+function trendyolBox(info) {
+  const qs = [...new Set((Array.isArray(info && info.trendyol) ? info.trendyol : []).map(q => String(q).trim()).filter(Boolean))].slice(0, 3);
+  if (!qs.length && info) qs.push(['erkek', info.renk, info.kategori].filter(Boolean).join(' '));
+  const box = el('section', 'ty'); box.append(el('h2', null, 'Trendyol\'da bu ürün'));
+  const list = el('div', 'tyl');
+  for (const q of qs) {
+    const row = el('div', 'tyr'); row.append(el('span', 'tyq', q));
+    const mk = (txt, sst) => { const a = el('a', null, txt); a.href = 'https://www.trendyol.com/sr?q=' + encodeURIComponent(q) + '&sst=' + sst; a.target = '_blank'; a.rel = 'noopener'; return a; };
+    row.append(mk('En çok satan ↗', 'BEST_SELLER'), mk('En ucuz ↗', 'PRICE_BY_ASC'));
+    list.append(row);
+  }
+  box.append(list, el('p', 'note', 'Trendyol sonuçlarını fotoğraf, fiyat ve linkle görmek için aynı fotoğrafı sohbette Claude\'a gönder.'));
+  return box;
+}
+function card(m, min, kind) {
+  const c = m.c; const cardEl = el('article', 'card' + (kind === 'same' && c.f != null && c.f === min ? ' best' : '') + (kind === 'sim' ? ' sim' : ''));
+  const im = el('img'); if (c.G || c.g) im.src = c.G || c.g; im.alt = c.u; cardEl.append(im);
+  const body = el('div'); body.append(el('div', 'bm', c.m)); body.append(el('div', 'n', c.u));
+  const p = el('div', 'p'); p.append(el('strong', null, tl(c.f))); if (c.e != null && c.e > c.f) p.append(el('s', null, tl(c.e))); body.append(p);
+  const tags = el('div', 'row'); tags.style.marginTop = '6px';
+  if (kind === 'same') tags.append(el('span', 'pill ' + (m.ayni_renk ? 'same' : 'color'), m.ayni_renk ? 'Aynı ürün' : 'Aynı model, farklı renk'));
+  else tags.append(el('span', 'pill', 'Benzer, aynısı değil'));
+  if (kind === 'same' && c.f != null && c.f === min) tags.append(el('span', 'pill cheap', 'En ucuz'));
+  body.append(tags);
+  const why = kind === 'sim' ? (m.farkli_detay ? 'Farkı: ' + m.farkli_detay : m.neden) : (m.neden || '');
+  if (why) body.append(el('div', 'why', why));
+  const f = el('div', 'f'); f.append(el('span', 'note', kind === 'same' ? (m.guven === 'yuksek' ? 'Eşleşme güçlü' : 'Eşleşme orta') : ''));
+  if (/^https:\/\//.test(c.l)) { const a = el('a', null, 'Ürüne git ↗'); a.href = c.l; a.target = '_blank'; a.rel = 'noopener'; f.append(a); }
+  body.append(f); cardEl.append(body); return cardEl;
+}
+function render(same, similar, info, banner) {
+  const R = $('results'); R.innerHTML = ''; R.hidden = false;
+  if (banner) R.append(el('p', 'note', banner));
+  const priced = same.filter(m => m.c.f != null);
+  const min = priced.length ? Math.min(...priced.map(m => m.c.f)) : null;
+  const max = priced.length ? Math.max(...priced.map(m => m.c.f)) : null;
+  if (same.length) {
+    const sum = el('div', 'sum');
+    const box = (label, val) => { const d = el('div'); d.append(el('span', null, label), el('strong', null, val)); return d; };
+    sum.append(box('Aynı ürün', String(same.length)), box('En düşük fiyat', tl(min)), box('En yüksek fiyat', tl(max)));
+    R.append(sum);
+    const yok = [];
+    for (const b of BRANDS.filter(b => selected.has(b.key))) {
+      const ms = same.filter(m => m.c.m === b.key).sort((a, z) => (z.ayni_renk ? 1 : 0) - (a.ayni_renk ? 1 : 0) || (a.c.f ?? 1e9) - (z.c.f ?? 1e9));
+      if (!ms.length) { yok.push(b.key); continue; }
+      const sec = el('section', 'brand'); const h = el('h2'); const dot = el('span', 'dot'); dot.style.background = b.color; h.append(dot, document.createTextNode(b.key)); sec.append(h);
+      const g = el('div', 'grid'); for (const m of ms) g.append(card(m, min, 'same')); sec.append(g); R.append(sec);
+    }
+    if (yok.length) R.append(el('p', 'empty', 'Aynısı bulunamayan markalar: ' + yok.join(', ') + '.'));
+  } else if (!banner) {
+    const fb = window.__failedBrands || [];
+    R.append(el('p', 'empty strong', fb.length ? 'Taranan markalarda bu ürünün aynısı bulunamadı. ' + fb.join(', ') + ' kataloğu yüklenemediği için taranamadı.' : 'Seçilen markalarda bu ürünün AYNISI bulunamadı.'));
+  }
+  if (similar.length) {
+    const sec = el('section', 'brand');
+    sec.append(el('h2', null, 'Benzer ürünler (aynısı değil)'));
+    sec.append(el('p', 'note', 'Aynı tür ve benzer görünüm ama en az bir detayı farklı. Fiyat fikri için gösteriliyor.'));
+    const g = el('div', 'grid');
+    similar.slice().sort((a, z) => (a.c.f ?? 1e9) - (z.c.f ?? 1e9)).slice(0, 24).forEach(m => g.append(card(m, null, 'sim')));
+    sec.append(g); R.append(sec);
+  }
+  if (info) R.append(trendyolBox(info));
+}
+</script>
+

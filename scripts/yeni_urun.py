@@ -116,7 +116,7 @@ def shopify(host):
 
 
 LOC = re.compile(r'<loc>\s*(?:<!\[CDATA\[)?\s*([^<\]\s]+)', re.I)
-SKIP = re.compile(r'\.(jpe?g|png|webp|gif|svg|pdf|css|js)(\?|$)|/(blog|haber|kategori|category|categories|collections|marka|brand|sayfa|page|pages|etiket|tag|hakkimizda|iletisim|sepet|uye|hesap|login|kampanya)(/|$)', re.I)
+SKIP = re.compile(r'\.(jpe?g|png|webp|gif|svg|pdf|css|js)(\?|$)|/(blog|haber|kategori|kategoriler|category|categories|collections|marka|brand|sayfa|sayfalar|page|pages|etiket|tag|hakkimizda|iletisim|sepet|uye|hesap|login|kampanya)(/|$)', re.I)
 
 
 def sitemap(host):
@@ -205,6 +205,13 @@ def urun_sayfasi(url):
     if f is None and not doviz:
         m = re.search(r'itemprop=["\']price["\'][^>]*content=["\']([^"\']+)', txt, re.I)
         f = fiyat(m.group(1)) if m else None
+    if f is None and not doviz:   # ErdTrend vb. ASP.NET mağazalar: <div class="fiyat2">850,00 TL</div>, eski fiyat fiyat1'de
+        m = re.search(r'<div class="fiyat2">\s*([0-9][0-9.,]*)\s*TL', txt, re.I)
+        if m:
+            f = fiyat(m.group(1))
+            m1 = re.search(r'<div class="fiyat1">\s*([0-9][0-9.,]*)\s*TL', txt, re.I)
+            e1 = fiyat(m1.group(1)) if m1 else None
+            e = e or (e1 if e1 and f and e1 > f else None)
     urun_mu = bool(p) or (meta(txt, 'og:type') or '').lower() in ('product', 'og:product') or f is not None
     if not urun_mu or not ad:
         return None

@@ -1,0 +1,23 @@
+DNS public.trendyol.com HATA [Errno -2] Name or service not known
+DNS apigw.trendyol.com 104.16.151.136
+DNS www.trendyol.com 104.16.150.136
+DNS erdtrend.com 153.56.180.158
+DNS www.erdtrend.com 153.56.180.158
+DNS auramoda.com.tr 172.67.146.207
+DNS www.auramoda.com.tr 104.21.10.222
+DNS bybasicman.com 104.26.10.190
+https://erdtrend.com/ 200 https://www.erdtrend.com/ len=217659 platform=[] bas='\r\n<!DOCTYPE html>\r\n<html xmlns="http://www.w3.org/1999/xhtml">\r\n<head><title>\r\n\tErdTrend - Erkek Giyim Mağazası - Erkek Butik\r\n</title><meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=0" /><meta name="theme-color" content="#ffffff" /><meta http-equiv="content-type" content="text/html; charset=utf-8" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" /><link rel="stylesheet" href="/Scripts/bootstrap-3.4.1/css/bootstrap.min.c'
+https://erdtrend.com/robots.txt 200 https://www.erdtrend.com/robots.txt len=27 platform=[] bas='User-agent: *\r\nAllow: /\r\n\r\n'
+https://erdtrend.com/sitemap.xml 200 https://www.erdtrend.com/sitemap.xml len=40612 platform=[] bas='\ufeff<?xml version="1.0" encoding="utf-8"?>\r\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\r\n  <url>\r\n    <loc>https://www.erdtrend.com/Default.aspx</loc>\r\n    <lastmod>2026-10-14</lastmod>\r\n    <changefreq>daily</changefreq>\r\n    <priority>1.0</priority>\r\n  </url>\r\n  <url>\r\n    <loc>https://www.erdtrend.com/Iletisim.aspx</loc>\r\n    <lastmod>2026-10-14</lastmod>\r\n    <changefreq>daily</changefreq>\r\n    <priority>0.5</priority>\r\n  </url>\r\n  <url>\r\n    <loc>https://www.erdtrend.com/YeniU'
+https://auramoda.com.tr/ HATA HTTP Error 403: Forbidden
+https://auramoda.com.tr/robots.txt HATA HTTP Error 403: Forbidden
+https://auramoda.com.tr/sitemap.xml HATA HTTP Error 403: Forbidden
+https://erdtrend.com/products.json?limit=2 HATA HTTP Error 404: Not Found
+https://auramoda.com.tr/products.json?limit=2 HATA HTTP Error 403: Forbidden
+https://apigw.trendyol.com/discovery-web-searchgw-service/v2/api/infinite-scroll/sr?mb=155222&pi=1&culture=tr-TR&userGenderId=1&channelId=1 HATA HTTP Error 403: Forbidden
+https://www.trendyol.com/sr?mid=155222 HATA HTTP Error 403: Forbidden
+https://bybasicman.com/ HATA HTTP Error 525: <none>
+SITEMAP erdtrend.com 206 ['https://www.erdtrend.com/0-yaka-ithal-ami-15332.aspx', 'https://www.erdtrend.com/0-yaka-ithal-boss-15333.aspx', 'https://www.erdtrend.com/0-yaka-ithal-burbery-15334.aspx']
+URUN https://www.erdtrend.com/0-yaka-ithal-ami-15332.aspx null
+URUN https://www.erdtrend.com/0-yaka-ithal-boss-15333.aspx null
+SITEMAP auramoda.com.tr 0 []

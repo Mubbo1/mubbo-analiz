@@ -225,6 +225,7 @@ def main():
     os.makedirs(os.path.join(DATA, 'katalog'), exist_ok=True)
     sec = sys.argv[1:]
     yeni_gorsel = {}
+    emb_is = {}   # görüntü vektörleri için iş listesi (yalnız runner'ın geçici klasörüne; depoya girmez)
     for key, marka, site, alt in MARKALAR:
         if sec and key not in sec:
             continue
@@ -251,7 +252,9 @@ def main():
                 for l, d in ex.map(g, yeni[:1000]):
                     if d:
                         yeni_gorsel[l] = d; var.add(lh(l))
-            out = [dict({'m': marka, 'u': r['u'], 'f': r['f'], 'e': r['e'], 'l': r['l']}, **({'k': 1} if r.get('kur') else {})) for r in rows]
+            out = [dict({'m': marka, 'u': r['u'], 'f': r['f'], 'e': r['e'], 'l': r['l']}, **({'k': 1} if r.get('kur') else {}),
+                        **({'g': r['gurl']} if r.get('gurl') else {})) for r in rows]
+            emb_is[key] = [[r['l'], r.get('gurl')] for r in rows]
             if alt == 'ticimax' and not any(r.get('usd') for r in rows):
                 # TL gelen gün: dolar gösterdiği günler için fiyat referansını tazele
                 json.dump({'not': marka + ' TL fiyat referansı', 'fiyat': {hashlib.sha1(yol(r['l']).encode()).hexdigest()[:10]: r['f'] for r in rows if r.get('f')}},
@@ -267,6 +270,7 @@ def main():
         ad = dt.datetime.utcnow().strftime('%Y%m%d%H%M') + '.json'
         open(os.path.join(DATA, 'kimg_ek', ad[:-5] + '.bin'), 'wb').write(sifrele(yeni_gorsel))
         ek_liste.append(ad); json.dump(ek_liste, open(ep, 'w'))
+    json.dump(emb_is, open(os.environ.get('EMB_IS', '/tmp/emb_is.json'), 'w'), ensure_ascii=False)
     durum['son'] = dt.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
     json.dump(durum, open(dp, 'w'), ensure_ascii=False, indent=0)
     json.dump(sorted(var), open(vp, 'w'), separators=(',', ':'))

@@ -7,6 +7,10 @@ on:
         description: 'Sadece bu markalar (boşlukla ayrılmış anahtarlar); boşsa hepsi'
         required: false
         default: ''
+      emb_sure:
+        description: 'Görüntü vektörleri için en fazla dakika'
+        required: false
+        default: '150'
   schedule:
     - cron: '37 3 * * *'
 
@@ -20,7 +24,7 @@ concurrency:
 jobs:
   katalog:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - name: Gerekli paketler
@@ -35,5 +39,22 @@ jobs:
           [ -f data/kimg_ek.json ] && git add data/kimg_ek.json data/kimg_ek
           git diff --cached --quiet && exit 0
           git commit -m "Rakip katalog yenileme"
+          for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          exit 1
+      - name: Görüntü vektörleri (fotoğrafla arama)
+        if: ${{ always() }}
+        env:
+          EMB_SURE: ${{ github.event.inputs.emb_sure || '150' }}
+        run: |
+          pip install --quiet onnxruntime numpy pillow
+          python3 scripts/gomme.py /tmp/emb_is.json
+      - name: Vektörleri kaydet
+        if: ${{ always() }}
+        run: |
+          git config user.name "mubbo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          [ -d data/emb ] && git add data/emb data/emb_durum.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Fotoğrafla arama vektörleri"
           for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
           exit 1

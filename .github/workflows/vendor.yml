@@ -1,0 +1,32 @@
+name: Tarayıcı kütüphanesi indir
+
+on:
+  workflow_dispatch:
+    inputs:
+      surum:
+        description: 'onnxruntime-web sürümü'
+        required: false
+        default: '1.19.2'
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: İndir
+        run: |
+          mkdir -p /tmp/p && cd /tmp/p && npm pack onnxruntime-web@${{ github.event.inputs.surum }} && tar xzf onnxruntime-web-*.tgz
+          ls package/dist > $GITHUB_WORKSPACE/vendor_liste.txt
+          mkdir -p $GITHUB_WORKSPACE/vendor/ort
+          cp package/dist/ort.wasm.min.js package/dist/ort-wasm-simd-threaded.wasm $GITHUB_WORKSPACE/vendor/ort/
+          cp package/dist/ort-wasm-simd-threaded.mjs $GITHUB_WORKSPACE/vendor/ort/ 2>/dev/null || true
+          cp package/LICENSE $GITHUB_WORKSPACE/vendor/ort/ 2>/dev/null || true
+          ls -la $GITHUB_WORKSPACE/vendor/ort
+      - name: Kaydet
+        run: |
+          git config user.name "mubbo-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vendor vendor_liste.txt; git commit -m "onnxruntime-web ${{ github.event.inputs.surum }}" && for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done

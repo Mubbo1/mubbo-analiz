@@ -1,0 +1,54 @@
+name: Görüntü modeli indir
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Hugging Face model deposu (boşsa adayları dener)'
+        required: false
+        default: ''
+      dosya:
+        description: 'onnx dosyası (örn. onnx/vision_model_quantized.onnx)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: depo-yaz
+  cancel-in-progress: false
+
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Adayları dene / indir
+        env:
+          REPO: ${{ github.event.inputs.repo }}
+          DOSYA: ${{ github.event.inputs.dosya }}
+        run: |
+          set +e
+          if [ -z "$REPO" ]; then
+            : > model_deneme.txt
+            for r in Xenova/clip-vit-base-patch32 Xenova/clip-vit-base-patch16 Xenova/fashion-clip patrickjohncyh/fashion-clip Marqo/marqo-fashionCLIP Marqo/marqo-fashionSigLIP; do
+              echo "== $r" >> model_deneme.txt
+              curl -sL "https://huggingface.co/api/models/$r" | python3 -c "import sys,json
+          try:
+            d=json.load(sys.stdin); print([s['rfilename'] for s in d.get('siblings',[]) if 'onnx' in s['rfilename'] or 'config' in s['rfilename']])
+          except Exception as e: print('yok', e)" >> model_deneme.txt
+            done
+            git config user.name "mubbo-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add model_deneme.txt; git commit -m "model denemesi" && for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+            exit 0
+          fi
+          mkdir -p model
+          curl -sfL "https://huggingface.co/$REPO/resolve/main/$DOSYA" -o model/gorsel.onnx || exit 1
+          curl -sfL "https://huggingface.co/$REPO/resolve/main/preprocessor_config.json" -o model/on_isleme.json
+          echo "{\"repo\": \"$REPO\", \"dosya\": \"$DOSYA\"}" > model/kaynak.json
+          ls -la model
+          git config user.name "mubbo-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add model; git commit -m "Görüntü modeli: $REPO" && for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          exit 1

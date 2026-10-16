@@ -371,7 +371,15 @@
 "durum": "hata",
 "hata": "0 ürün geldi (önceki 0); eski katalog korundu",
 "hata_tarih": "2026-10-16"
+},
+"uttbasic": {
+"marka": "UTT Basic",
+"urun": 544,
+"tarih": "2026-10-16",
+"durum": "ok",
+"sure": 26,
+"yeni_gorsel": 544
 }
 },
-"son": "2026-10-16T05:50:02Z"
+"son": "2026-10-16T16:56:03Z"
 }

@@ -8,6 +8,7 @@ Katalogdan çıkan ürünler dosyadan atılır, yeni ürünler eklenir. Süre s�
 Vektörler yalnız ürün fotoğraflarının sayısal özetidir; link ya da ad içermez.
 """
 import concurrent.futures as cf
+import glob
 import hashlib
 import io
 import json
@@ -130,7 +131,7 @@ def main():
         kalan_toplam += kalan; toplam += yeni
         print(f'{key}: {len(kayit)} vektör (+{yeni}), eksik {kalan}', flush=True)
     durum = {'son': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'yeni': toplam, 'eksik': kalan_toplam,
-             'markalar': {k: len(oku(k)[1]) for k in isler}}
+             'markalar': {os.path.basename(f)[:-4]: len(oku(os.path.basename(f)[:-4])[1]) for f in sorted(glob.glob(os.path.join(EMB, '*.bin')))}}
     json.dump(durum, open(os.path.join(DATA, 'emb_durum.json'), 'w'), ensure_ascii=False)
     print('bitti:', toplam, 'yeni vektör,', kalan_toplam, 'eksik', f'{(time.time() - t0) / 60:.1f} dk')
 

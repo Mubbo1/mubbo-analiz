@@ -15,12 +15,12 @@ jobs:
       - name: Gerekli paketler
         run: pip install --quiet cryptography
       - name: İade sayfalarını topla
-        run: python3 scripts/iade_tara.py
+        run: python3 scripts/iade_tara.py && python3 scripts/iade_ek.py
       - name: Kaydet
         run: |
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/iade_ham.bin
+          git add data/iade_ham.bin data/iade_ek.bin
           git diff --cached --quiet && exit 0
           git commit -m "Rakip iade koşulları toplandı"
           for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done

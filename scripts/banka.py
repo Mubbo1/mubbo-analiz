@@ -25,7 +25,7 @@ KART = [('Bonus', r'\bbonus'), ('World', r'\bworld(?:card)?\b'), ('Maximum', r'\
         ('Paraf', r'\bparaf\b'), ('CardFinans', r'card ?finans'), ('Advantage', r'\badvantage\b'), ('Bankkart', r'\bbankkart'),
         ('Saglam Kart', r'sa[gğ]lam ?kart'), ('Miles&Smiles', r'miles ?& ?smiles'), ('Troy', r'\btroy\b')]
 BANKA = [('Ziraat Bankası', r'ziraat'), ('Halkbank', r'halk ?bank'), ('VakıfBank', r'vak[ıi]f ?bank'), ('İş Bankası', r'(?:i|İ|ı)[sş] ?bank'),
-         ('Garanti BBVA', r'garanti'), ('Akbank', r'\bakbank'), ('Yapı Kredi', r'yap[ıi] ?kredi'), ('QNB', r'\bqnb|finansbank'),
+         ('Garanti BBVA', r'garanti ?bbva|garanti bankas|garantibbva'), ('Akbank', r'\bakbank'), ('Yapı Kredi', r'yap[ıi] ?kredi'), ('QNB', r'\bqnb|finansbank'),
          ('Denizbank', r'deniz ?bank'), ('TEB', r'\bteb\b'), ('ING', r'\bi̇?ng\b|ing bank'), ('HSBC', r'\bhsbc'), ('Kuveyt Türk', r'kuveyt'),
          ('Albaraka', r'albaraka'), ('Türkiye Finans', r't[üu]rkiye finans'), ('Şekerbank', r'[şs]ekerbank'), ('Anadolubank', r'anadolubank'),
          ('Fibabanka', r'fibabanka'), ('Odeabank', r'odeabank'), ('Citibank', r'citibank'), ('Enpara', r'enpara')]
@@ -123,11 +123,22 @@ def tek(marka, host):
                 if p:
                     r['paytr'] = p; r['kaynak'] = 'PayTR taksit tablosu'
         ham = '\n'.join(sayfalar)
-        r['kartlar'] = ad_bul(KART, tum + ' ' + ekler + ' ' + (r.get('paytr') or {}).get('metin', ''))
+        # banka / kart adları yalnız görsel adlarında ya da taksit-kart-banka sözcüklerinin yakınında aranır (yanlış eşleşmeyi önler)
+        yakin = ' '.join(tum[max(0, m.start() - 150): m.end() + 150] for m in re.finditer(r'taksit|kredi kart|banka|ödeme se[çc]enek|odeme', tum, re.I))
+        baglam = ekler + ' ' + yakin + ' ' + (r.get('paytr') or {}).get('metin', '')
+        r['kartlar'] = ad_bul(KART, baglam)
         if not r['bankalar']:
-            r['banka_adlari'] = ad_bul(BANKA, tum + ' ' + ekler)
+            r['banka_adlari'] = ad_bul(BANKA, baglam)
         r['kurulus'] = ad_bul(KURULUS, tum + ' ' + ekler + ' ' + ' '.join(re.findall(r'src=["\']([^"\']+)', ham)))
-        r['ifadeler'] = list(dict.fromkeys(' '.join(x.split()) for x in IFADE.findall(tum)))[:8]
+        ifa = []
+        for x in IFADE.findall(tum):
+            x = ' '.join(x.split()).strip(' -•|')
+            if len(x) > 140:   # kayan yazı tekrarları: ifadenin geçtiği kısa parça
+                m = re.search(r'.{0,50}(?:\d{1,2} ?taksit|vade fark[ıi]?s[ıi]z|pe[şs]in fiyat[ıi]na|faizsiz).{0,40}', x, re.I)
+                x = m.group(0).strip(' -•|') if m else x[:140]
+            if not any(x.lower() in y.lower() or y.lower() in x.lower() for y in ifa):
+                ifa.append(x)
+        r['ifadeler'] = ifa[:6]
         r['kapida'] = bool(re.search(r'kap[ıi]da [öo]deme', tum, re.I))
         r['havale'] = bool(re.search(r'havale|\beft\b', tum, re.I))
         if not r['kaynak']:

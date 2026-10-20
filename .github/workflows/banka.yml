@@ -1,27 +1,33 @@
-name: Rakip banka araştırması
+name: Rakip bankalar ve taksitler
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '20 12 * * 1'   # her pazartesi 15.20 TR
 
 permissions:
   contents: write
 
+concurrency:
+  group: depo-yaz
+  cancel-in-progress: false
+
 jobs:
   banka:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - name: Gerekli paketler
         run: pip install --quiet cryptography
-      - name: Banka bilgilerini topla
-        run: python3 scripts/banka_tara3.py
+      - name: Banka ve taksit bilgilerini topla
+        run: python3 scripts/banka.py
       - name: Kaydet
         run: |
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/banka_ham4.json
+          git add data/banka.bin
           git diff --cached --quiet && exit 0
-          git commit -m "Rakip banka bilgileri toplandı"
+          git commit -m "Rakip banka ve taksit bilgileri güncellendi"
           for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
           exit 1

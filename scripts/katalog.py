@@ -157,14 +157,15 @@ def harita(site):
     def bir(u):
         try:
             r = yu.urun_sayfasi(u)
-            if not r or r.get('stok') is False:   # stokta olmayan ürün katalogdan çıkarılır
+            if not r:
                 return None
             f = r['fiyat']; k = None
             if f is None and r.get('doviz') and r['doviz'][0] and r['doviz'][1] == 'USD':
                 kp = os.path.join(DATA, 'kur_son.json')
                 if os.path.exists(kp):   # dolar gösteren site: bugünkü kurla çevrildi (yaklaşık)
                     f = round(r['doviz'][0] * json.load(open(kp))['kur'], 2); k = True
-            return {'u': r['urun'], 'f': f, 'e': r.get('eski_fiyat'), 'l': re.sub(r'(https?://[^/]+)/en/', r'\1/', r['link']), 'gurl': r.get('gorsel'), 'cat': '', 'kur': k}
+            return {'u': r['urun'], 'f': f, 'e': r.get('eski_fiyat'), 'l': re.sub(r'(https?://[^/]+)/en/', r'\1/', r['link']), 'gurl': r.get('gorsel'), 'cat': '', 'kur': k,
+                    'stokyok': r.get('stok') is False}
         except Exception:
             return None
     with cf.ThreadPoolExecutor(8) as ex:
@@ -241,6 +242,13 @@ def main():
             onceki = eski.get('urun') or 0
             if not rows or (onceki and len(rows) < onceki * 0.5):
                 raise RuntimeError(f'{len(rows)} ürün geldi (önceki {onceki}); eski katalog korundu')
+            # stokta olmayan ürünler katalogdan çıkarılır (sayfası açılıp tükendiği görülenler; yukarıdaki kontrole sayılır)
+            stokyok = sum(1 for r in rows if r.get('stokyok'))
+            rows = [r for r in rows if not r.get('stokyok')]
+            if not rows:
+                raise RuntimeError('stokta ürün kalmadı görünüyor; eski katalog korundu')
+            if stokyok:
+                print(f'  {key}: {stokyok} stokta olmayan ürün çıkarıldı', flush=True)
             # yeni ürünlerin görselleri (en fazla 1000 / marka / gün)
             yeni = [r for r in rows if lh(r['l']) not in var and r.get('gurl')]
             def g(r):

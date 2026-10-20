@@ -276,23 +276,19 @@
 },
 "gangown": {
 "marka": "Gangown",
-"urun": 2497,
+"urun": 744,
 "tarih": "2026-10-20",
-"durum": "hata",
-"sure": 588,
-"yeni_gorsel": 2,
-"hata": "744 ürün geldi (önceki 2497); eski katalog korundu",
-"hata_tarih": "2026-10-20"
+"durum": "ok",
+"sure": 708,
+"yeni_gorsel": 0
 },
 "void": {
 "marka": "VOID TR",
-"urun": 2851,
+"urun": 545,
 "tarih": "2026-10-20",
-"durum": "hata",
-"sure": 1219,
-"yeni_gorsel": 1,
-"hata": "549 ürün geldi (önceki 2851); eski katalog korundu",
-"hata_tarih": "2026-10-20"
+"durum": "ok",
+"sure": 1170,
+"yeni_gorsel": 0
 },
 "wunder": {
 "marka": "Wunder",
@@ -352,13 +348,11 @@
 },
 "zaee": {
 "marka": "Zaee Giyim",
-"urun": 991,
+"urun": 463,
 "tarih": "2026-10-20",
-"durum": "hata",
-"sure": 354,
-"yeni_gorsel": 4,
-"hata": "463 ürün geldi (önceki 991); eski katalog korundu",
-"hata_tarih": "2026-10-20"
+"durum": "ok",
+"sure": 301,
+"yeni_gorsel": 2
 },
 "zafoni": {
 "marka": "Zafoni",
@@ -389,5 +383,5 @@
 "yeni_gorsel": 4
 }
 },
-"son": "2026-10-20T17:47:02Z"
+"son": "2026-10-20T18:25:00Z"
 }

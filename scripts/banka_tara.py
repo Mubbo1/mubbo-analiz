@@ -82,6 +82,8 @@ def main():
                 if b:
                     r['sayfalar'].append({'url': uu, 'bulgu': b})
                 if u == urun:
+                    r['ham'] = [hh[max(0, m.start() - 200): m.start() + 300] for m in re.finditer(r'aksit|nstallment|BankaLogo|bankalogo|iyzi|paytr|Odeme|payment', hh)][:40]
+                    r['uclar'] = sorted(set(re.findall(r'["\'](/(?:api|Urun|urun|Product|Taksit|Sepet)[A-Za-z/_.-]*)', hh)))[:200]
                     pid = re.search(r'(?:productId|ProductId|urunId|UrunID)["\']?\s*[:=]\s*["\']?(\d+)', hh)
                     r['urun_id'] = pid.group(1) if pid else None
             r['api'] = sorted(api)

@@ -36,10 +36,10 @@
 },
 "piedraman": {
 "marka": "Piedraman",
-"urun": 83,
+"urun": 79,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 17,
+"sure": 10,
 "yeni_gorsel": 0
 },
 "madmext": {
@@ -76,10 +76,10 @@
 },
 "forer": {
 "marka": "Forer Wear",
-"urun": 223,
+"urun": 145,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 70,
+"sure": 22,
 "yeni_gorsel": 0
 },
 "nomarc": {
@@ -100,10 +100,10 @@
 },
 "deepsea": {
 "marka": "DeepSEA",
-"urun": 1438,
+"urun": 883,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 228,
+"sure": 326,
 "yeni_gorsel": 0
 },
 "no362": {
@@ -124,19 +124,19 @@
 },
 "bytagayman": {
 "marka": "Bytagayman",
-"urun": 233,
+"urun": 185,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 107,
+"sure": 23,
 "yeni_gorsel": 0
 },
 "manstro": {
 "marka": "The Manstro",
-"urun": 297,
+"urun": 286,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 112,
-"yeni_gorsel": 5
+"sure": 41,
+"yeni_gorsel": 0
 },
 "hafka": {
 "marka": "Hafka Giyim",
@@ -278,88 +278,94 @@
 "marka": "Gangown",
 "urun": 2497,
 "tarih": "2026-10-20",
-"durum": "ok",
+"durum": "hata",
 "sure": 588,
-"yeni_gorsel": 2
+"yeni_gorsel": 2,
+"hata": "744 ürün geldi (önceki 2497); eski katalog korundu",
+"hata_tarih": "2026-10-20"
 },
 "void": {
 "marka": "VOID TR",
 "urun": 2851,
 "tarih": "2026-10-20",
-"durum": "ok",
+"durum": "hata",
 "sure": 1219,
-"yeni_gorsel": 1
+"yeni_gorsel": 1,
+"hata": "549 ürün geldi (önceki 2851); eski katalog korundu",
+"hata_tarih": "2026-10-20"
 },
 "wunder": {
 "marka": "Wunder",
-"urun": 3349,
+"urun": 3113,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 771,
-"yeni_gorsel": 0
+"sure": 907,
+"yeni_gorsel": 17
 },
 "bylondon": {
 "marka": "By London Butik",
-"urun": 1219,
+"urun": 1003,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 95,
-"yeni_gorsel": 3
+"sure": 111,
+"yeni_gorsel": 0
 },
 "erdtrend": {
 "marka": "ErdTrend",
 "urun": 141,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 43,
+"sure": 48,
 "yeni_gorsel": 0
 },
 "kaft": {
 "marka": "Kaft",
-"urun": 305,
+"urun": 274,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 52,
+"sure": 51,
 "yeni_gorsel": 0
 },
 "tarzyeri": {
 "marka": "Tarz Yeri",
-"urun": 2132,
+"urun": 2134,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 749,
-"yeni_gorsel": 20
+"sure": 793,
+"yeni_gorsel": 6
 },
 "tommylife": {
 "marka": "Tommylife",
-"urun": 2152,
+"urun": 1858,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 711,
-"yeni_gorsel": 10
+"sure": 842,
+"yeni_gorsel": 0
 },
 "voltaj": {
 "marka": "Voltaj Giyim",
-"urun": 836,
+"urun": 807,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 131,
+"sure": 136,
 "yeni_gorsel": 0
 },
 "zaee": {
 "marka": "Zaee Giyim",
 "urun": 991,
 "tarih": "2026-10-20",
-"durum": "ok",
+"durum": "hata",
 "sure": 354,
-"yeni_gorsel": 4
+"yeni_gorsel": 4,
+"hata": "463 ürün geldi (önceki 991); eski katalog korundu",
+"hata_tarih": "2026-10-20"
 },
 "zafoni": {
 "marka": "Zafoni",
-"urun": 1954,
+"urun": 1383,
 "tarih": "2026-10-20",
 "durum": "ok",
-"sure": 1318,
+"sure": 529,
 "yeni_gorsel": 0
 },
 "bybasicman": {
@@ -383,5 +389,5 @@
 "yeni_gorsel": 4
 }
 },
-"son": "2026-10-20T06:10:36Z"
+"son": "2026-10-20T17:47:02Z"
 }

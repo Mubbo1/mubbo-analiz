@@ -136,6 +136,8 @@ def tek(marka, host):
             if len(x) > 140:   # kayan yazı tekrarları: ifadenin geçtiği kısa parça
                 m = re.search(r'.{0,50}(?:\d{1,2} ?taksit|vade fark[ıi]?s[ıi]z|pe[şs]in fiyat[ıi]na|faizsiz).{0,40}', x, re.I)
                 x = m.group(0).strip(' -•|') if m else x[:140]
+            if re.search(r'[{}"]|textLink', x):
+                continue
             if not any(x.lower() in y.lower() or y.lower() in x.lower() for y in ifa):
                 ifa.append(x)
         r['ifadeler'] = ifa[:6]

@@ -1,0 +1,15 @@
+name: Fotoğrafla arama testi
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Paketler
+        run: pip install --quiet onnxruntime pillow numpy
+      - name: Test
+        run: python3 scripts/foto_test.py

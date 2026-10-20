@@ -39,18 +39,21 @@ sonuc = {'ayni': [], 'bozuk': [], 'baska_foto': []}
 for o in ornek:
     h = g.hsh(o['l'])
     if h not in idx: print('vektör yok', o['k']); continue
-    try: im = Image.open(io.BytesIO(al(o['g'])))
+    try: im = Image.open(io.BytesIO(al(o["g"]))).convert("RGB")
     except Exception as e: print('indirilemedi', o['k']); continue
     tests = [('ayni', im), ('bozuk', boz(im))]
     u2 = ikinci(o['l'])
     if u2:
-        try: tests.append(('baska_foto', Image.open(io.BytesIO(al(u2)))))
+        try: tests.append(("baska_foto", Image.open(io.BytesIO(al(u2))).convert("RGB")))
         except Exception: pass
     for ad, x in tests:
-        q = m([onisle(x)])[0].astype(np.float32); q /= np.linalg.norm(q)
-        s = V @ q; sira = int((s > s[idx[h]]).sum()) + 1
-        sonuc[ad].append(sira)
-    print(o['k'], [(a, sonuc[a][-1]) for a, _ in tests], flush=True)
+        try:
+            q = m([onisle(x)])[0].astype(np.float32); q /= np.linalg.norm(q)
+            s = V @ q; sira = int((s > s[idx[h]]).sum()) + 1
+            sonuc[ad].append(sira)
+        except Exception as e:
+            print('hata', ad, e)
+    print(o['k'], flush=True)
 for a, r in sonuc.items():
     r = np.array(r)
     if len(r): print(f'{a}: n={len(r)} ilk1 %{100*np.mean(r<=1):.0f} ilk5 %{100*np.mean(r<=5):.0f} ilk20 %{100*np.mean(r<=20):.0f} ortanca {np.median(r)}')

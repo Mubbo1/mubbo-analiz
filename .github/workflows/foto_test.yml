@@ -13,7 +13,7 @@ jobs:
         run: pip install --quiet onnxruntime pillow numpy cryptography
       - name: Test
         run: |
-          python3 scripts/foto_test.py > data/foto_test_sonuc.txt 2>&1 || true
+          python3 scripts/gorsel_test.py > data/foto_test_sonuc.txt 2>&1 || true
           tail -5 data/foto_test_sonuc.txt
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

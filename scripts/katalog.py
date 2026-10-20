@@ -157,7 +157,7 @@ def harita(site):
     def bir(u):
         try:
             r = yu.urun_sayfasi(u)
-            if not r:
+            if not r or r.get('stok') is False:   # stokta olmayan ürün katalogdan çıkarılır
                 return None
             f = r['fiyat']; k = None
             if f is None and r.get('doviz') and r['doviz'][0] and r['doviz'][1] == 'USD':

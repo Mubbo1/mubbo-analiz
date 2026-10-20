@@ -105,9 +105,10 @@ def shopify(host):
             return None
         for p in ps:
             link = f'https://{host}/products/{p["handle"]}'
-            v = (p.get('variants') or [{}])[0]
+            vs = p.get('variants') or [{}]
+            v = ([x for x in vs if x.get('available', True)] or vs)[0]
             img = (p.get('images') or [{}])
-            out[link] = {'urun': p.get('title'), 'fiyat': fiyat(v.get('price')),
+            out[link] = {'urun': p.get('title'), 'fiyat': fiyat(v.get('price')), 'stok': any(x.get('available', True) for x in vs),
                          'eski_fiyat': fiyat(v.get('compare_at_price')),
                          'gorsel': (img[0] or {}).get('src') if img else None}
         if len(ps) < 250:
@@ -178,6 +179,27 @@ def jsonld_product(txt):
     return None
 
 
+TUKENDI = re.compile(r'outofstock|out of stock|soldout|sold out|discontinued|t[üu]kendi|stokta yok|oos\b', re.I)
+
+
+def stok_var(p, txt):
+    """Ürün satışta mı? JSON-LD offers.availability ya da meta product:availability'e bakar; bilgi yoksa True."""
+    of = p.get('offers') if p else None
+    ofs = of if isinstance(of, list) else ([of] if isinstance(of, dict) else [])
+    alt = []
+    for o in ofs:
+        if isinstance(o, dict) and isinstance(o.get('offers'), list):   # AggregateOffer
+            alt += [x for x in o['offers'] if isinstance(x, dict)]
+    ofs = alt or ofs
+    av = [str(o.get('availability') or '') for o in ofs if isinstance(o, dict) and o.get('availability')]
+    if av:
+        return any(not TUKENDI.search(a) for a in av)
+    m = meta(txt, 'product:availability', 'og:availability', 'availability')
+    if m:
+        return not TUKENDI.search(m)
+    return True
+
+
 def urun_sayfasi(url):
     txt, son = get(url, 'text/html')
     p = jsonld_product(txt)
@@ -219,7 +241,7 @@ def urun_sayfasi(url):
     if isinstance(gorsel, str) and gorsel.startswith('//'):
         gorsel = 'https:' + gorsel
     return {'urun': ad[:200], 'fiyat': f, 'eski_fiyat': e, 'doviz': dv, 'gorsel': gorsel if isinstance(gorsel, str) and gorsel.startswith('http') else None,
-            'link': son or url}
+            'link': son or url, 'stok': stok_var(p, txt)}
 
 
 # ---------- bir marka ----------
@@ -250,7 +272,7 @@ def kontrol(marka, host, eski):
                 r = dict(r, link=u)
             else:
                 r = urun_sayfasi(u)
-            if r:
+            if r and r.get('stok', True) is not False:   # stokta olmayan ürün gösterilmez
                 bulunan.append(dict(r, marka=marka))
         except Exception:
             continue

@@ -1,0 +1,112 @@
+{
+ "Ketench": {
+  "idler": [
+   "7",
+   "18",
+   "26",
+   "27",
+   "28",
+   "29",
+   "30",
+   "31"
+  ],
+  "urun_kartid": [
+   "7"
+  ],
+  "js": [
+   "https://assets.ticimax.cloud/Version/v8.13.847/0/bundles/ticimax.jquery.min.js?v=8.13.847.0.132202",
+   "https://ketench.com/api/SiteSettings/GetGlobalModelJS?v=8.13.847.0.132202.tr.try.0.0.0",
+   "https://www.googletagmanager.com/gtag/js?id=G-W8QP6GRMDS",
+   "https://code.jivosite.com/widget/dQzq9BoAIw",
+   "https://www.googletagmanager.com/gtag/js?id=G-W8QP6GRMDS",
+   "https://assets.ticimax.cloud/Version/v8.13.847/0/plugins/cookieconsent/cookieconsent-config-3-0-1.js?v=8.13.847.0.132202",
+   "https://static.ticimax.cloud/64217/CustomCss/ticimax/Temp.js?v=8.13.847.0.132202",
+   "https://assets.ticimax.cloud/Version/v8.13.847/0/bundles/ticimax.structureV2.min.js?v=8.13.847.0.132202",
+   "https://assets.ticimax.cloud/Version/v8.13.847/0/bundles/ticimax.handlebar.min.js?v=8.13.847.0.132202",
+   "https://assets.ticimax.cloud/Version/v8.13.847/0/bundles/ticimax.globalV2.min.js?v=8.13.847.0.132202",
+   "https://assets.ticimax.cloud/Version/v8.13.847/0/bundles/ticimax.quickViewV2.min.js?v=8.13.847.0.132202",
+   "https://assets.ticimax.cloud/Version/v8.13.847/0/bundles/ticimax.productdetail.min.js?v=8.13.847.0.132202"
+  ],
+  "uclar": [
+   "#divTaksitAciklama",
+   "#scriptPayTRTaksit",
+   "&taksit=",
+   ").append(u)):(f={Amount:n,MaxInstallment:t,CurrencyCode:i},$.get(sablonYolu+",
+   ").html(a):n.minimumTaksitTutariStr!=null&&n.minimumTaksitTutari>0?$(",
+   ").html(fiyatFormat(n/productDetailModel.maxInstallment,u));urunTaksitSecenekParams.fiyat=n;havaleIndirimi>0?$(",
+   ").html(n.minimumTaksitTutariStr):$(",
+   ",t,i,r)},getBankInstallments:function(t,i,r){n(",
+   ".taksitMain",
+   "Choosed_Installment_Option\\",
+   "Click_InstallmentOptions\\",
+   "Installments\\",
+   "https://www.paytr.com/odeme/taksit-tablosu/v2?token=",
+   "paytr_taksit_tablosu",
+   "scriptPayTRTaksit"
+  ],
+  "deneme": [],
+  "html_taksit": [
+   "duGiriniz\":\"Lütfen yukarıda yazan sayıları yandaki kutuya giriniz.\",\"UrunDetay_UrunTavsiye\":\"Diğer Renk Seçenekleri\",\"UrunDetay_Etiketler\":\"Etiketler\",\"UrunDetay_UrunGoruntulemeSayisi1\":\"Bu Ürün\",\"UrunDetay_UrunGoruntumemeSayisi2\":\"kere görüntülendi\",\"UrunDetay_ToplamStokAdedi\":\"Toplam Stok Adedi\",\"TaksitSecenekleri_TaksitTutari\":\"Taksit Tutarı\",\"TaksitSecenekleri_ToplamTutar\":\"Toplam Tutar\",\"Global_CikisYap\":\"Çıkış Yap\",\"Global_Hosgeldiniz\":\"Hoşgeldiniz\",\"UyeGiris_UyeBilgileri\":\"Üye Bilgileri\",\"UrunListesi_SepeteEkle\":\"Sepete Ekle\",\"UrunListesi_UcretsizKargo\":\"Ücretsiz Kargo\",\"UrunListesi_YeniUrun\":\"Yeni Ürün\",\"UrunListesi_FirsatUrunu\":\"Fırsat Ürünü\",\"UrunListesi_OzelFirsat\":\"Özel Fırsat\",\"KendinTasarla_Metin\":\"Metin\",\"KendinTasarla_Resim\":\"Resim\",\"KendinTasarla_Sekil\":\"Şekil\",\"KendinTasarla_AnahatBoyutu\":\"Anahat Boyutu\",\"KendinTasarla_Saydamlik\":\"Saydamlık\",\"KendinTasarla_Filtreler\":\"F",
+   "i kutuya giriniz.\",\"UrunDetay_UrunTavsiye\":\"Diğer Renk Seçenekleri\",\"UrunDetay_Etiketler\":\"Etiketler\",\"UrunDetay_UrunGoruntulemeSayisi1\":\"Bu Ürün\",\"UrunDetay_UrunGoruntumemeSayisi2\":\"kere görüntülendi\",\"UrunDetay_ToplamStokAdedi\":\"Toplam Stok Adedi\",\"TaksitSecenekleri_TaksitTutari\":\"Taksit Tutarı\",\"TaksitSecenekleri_ToplamTutar\":\"Toplam Tutar\",\"Global_CikisYap\":\"Çıkış Yap\",\"Global_Hosgeldiniz\":\"Hoşgeldiniz\",\"UyeGiris_UyeBilgileri\":\"Üye Bilgileri\",\"UrunListesi_SepeteEkle\":\"Sepete Ekle\",\"UrunListesi_UcretsizKargo\":\"Ücretsiz Kargo\",\"UrunListesi_YeniUrun\":\"Yeni Ürün\",\"UrunListesi_FirsatUrunu\":\"Fırsat Ürünü\",\"UrunListesi_OzelFirsat\":\"Özel Fırsat\",\"KendinTasarla_Metin\":\"Metin\",\"KendinTasarla_Resim\":\"Resim\",\"KendinTasarla_Sekil\":\"Şekil\",\"KendinTasarla_AnahatBoyutu\":\"Anahat Boyutu\",\"KendinTasarla_Saydamlik\":\"Saydamlık\",\"KendinTasarla_Filtreler\":\"Filtreler\",\"KendinTasarla_GriTonlama\":\"Gri Tonlama",
+   "ydedildi.\",\"UrunDetay_UrunKampanyaSatir1_Aciklama1\":\"TL ve üzeri alışverişlerinizde bu ürünü\",\"UrunDetay_UrunKampanyaSatir1_Aciklama2\":\"TL`ye alabilirsiniz.\",\"UrunDetay_UrunKampanyaSatir2_Aciklama\":\"Özel fırsat ürünleri 1 sepette sadece {0} adet satın alınabilir.\",\"Sepet_Guncelle\":\"Güncelle\",\"Odeme_TaksitSecenekleri\":\"Taksit Seçenekleri\",\"Sepet_UrunNotu\":\"Ürün Notu\",\"HediyeKuponlarim_Tab_AktifHediyeCeklerim\":\"Aktif Hediye Çeklerim\",\"HediyeKuponlarim_Tab_AktifOlacakHediyeCeklerim\":\"Aktif Olacak Hediye Çeklerim\",\"HediyeKuponlarim_Tab_Tumu\":\"Tümü\",\"ParaPuanlarim_HediyeCekiOlustur\":\"Hediye Çeki Oluştur\",\"ParaPuanlarim_TLDegeriniGiriniz\":\"Lütfen [PARABIRIMI] değerini giriniz.\",\"SiparisTamamlandi_AnasayfaDon\":\"Anasayfaya Dön\",\"SiparisTamamlandi_HesabinizdakiToplamParaPuan\":\"Hesabınızdaki toplam Parapuan\",\"SiparisTamamlandi_Kampanyalar\":\"Kampanyalar\",\"SiparisTamamlandi_ParaPuanKazandiniz\":\"Para",
+   "ük veya ona eşit bir değer girin.\",\"Validation_MinimumDeger\":\"Lütfen {0} değerinden büyük veya ona eşit bir değer girin.\",\"Sepet_UyariSepetiTemizle\":\"Sepetinizdeki ürünler silinecektir. Devam etmek istiyor musunuz?\",\"Validation_TelefonKontrolEdiniz\":\"Lütfen Telefon Numaranızı Kontrol Ediniz\",\"Odeme_TaksitSecenekleriBilgilendirme\":\"Taksit seçenekleri, kredi kartı bilgilerinizi girdikten sonra gelecektir.\",\"IadeTaleplerim_IadeAdedi\":\"İade Adedi\",\"IadeTaleplerim_IadeTutari\":\"İade Tutarı\",\"IadeTaleplerim_ToplamIadeTutari\":\"Toplam İade Tutarı\",\"Sepet_Item_KampanyaTanimi\":\"Kampanya\",\"Odeme_HediyeCekiKullanımLimitiDolmustur\":\"Kullandığınız hediye çekinin kullanım limiti dolmuştur.\",\"Odeme_SiparisTutarUyari\":\"Ödeme yapabilmek için sipariş tutarınız 0`dan büyük olmalıdır.\",\"Sepet_FavoriUrunleriniz\":\"Favori Ürünleriniz\",\"SiparisTamamla_EkVergiTutari\":\"İlave Vergi\",\"Validation_PostaKoduGiriniz\":\"Lü",
+   "_HopiKullanmakIcinTikla\":\"Hopi'ni kullanmak için tıkla\",\"Sepet_OncedenEklediginizUrunler\":\"Önceden Eklediğiniz Ürünler\",\"Sepet_OncedenEklenenUrunler\":\"Önceden Eklediğiniz Ürünler\",\"Sepet_OnerilenUrunler\":\"Onerilen Ürünler\",\"Sepet_Sec\":\"Seç\",\"Sepet_TahminiTeslimSuresi\":\"Tahmini Teslim Süresi\",\"Sepet_TaksitSeceneklerineGoreBol\":\"Sepeti Taksit Seçeneklerine Göre Böl\",\"Sepet_UcretsizKargoBilgilendirme\":\"Ücretsiz kargo hakkınız sepetinize uygulandı\",\"Sepet_UrunBulunamadi\":\"Sepetinizde Ürün Bulunamadı\",\"Sepet_UrunUyariLimiti\":\"Sepetinize en fazla {0} ürün ekleyebilirsiniz. Bu ürünü eklemek için sepetinizi güncellemeniz gerekmektedir.\",\"Sepet_ZubizuHediyeCeki\":\"Zubizu Hediye Çeki\",\"Sepetim_SepeteEklenmeyenUrunler\":\"Sepete Eklenemeyen Ürün(ler)\",\"Sepetim_StokYokPopupBaslik\":\"SEPETİNİZDEKİ ÜRÜNLER TÜKENDİ!\",\"Sepetim_StokYokPopupMesaj\":\"Alışverişe devam et, yeni fırsatları yakala.\",\"SifremiUnuttum"
+  ]
+ },
+ "Ferell Moda": {
+  "hata": "HTTP Error 404: Not Found"
+ },
+ "Semih Kurtulmuş": {
+  "idler": [
+   "56",
+   "181",
+   "182"
+  ],
+  "urun_kartid": [
+   "56"
+  ],
+  "js": [
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/ticimax.jquery.min.js?v=8.13.825.0.124645",
+   "https://semihkurtulmusfashion.com/api/SiteSettings/GetGlobalModelJS?v=8.13.825.0.124645.tr.try.0.0.0",
+   "https://www.googletagmanager.com/gtag/js?id=G-85CG80QP70",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/tici-bundle-angular-06042017.min.js?v=8.13.825.0.124645",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/tici-bundle-controller-06042017.js?v=8.13.825.0.124645",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/jqueryui/datetimeLang/datepicker-tr.js?v=8.13.825.0.124645",
+   "https://cdn.etasio.com/scripts/apps/loader.js",
+   "https://assets.ticimax.cloud/v8100/App_Themes/nova3/Temp.js?v=8.13.825.0.124645",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/ticimax.structureV2.min.js?v=8.13.825.0.124645",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/ticimax.handlebar.min.js?v=8.13.825.0.124645",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/ticimax.globalV2.min.js?v=8.13.825.0.124645",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/ticimax.quickViewV2.min.js?v=8.13.825.0.124645",
+   "https://assets.ticimax.cloud/Version/v8.13.825/0/bundles/ticimax.productdetail.min.js?v=8.13.825.0.124645"
+  ],
+  "uclar": [
+   "#divTaksitAciklama",
+   "#scriptPayTRTaksit",
+   "&taksit=",
+   ").append(u)):(f={Amount:n,MaxInstallment:t,CurrencyCode:i},$.get(sablonYolu+",
+   ").html(a):n.minimumTaksitTutariStr!=null&&n.minimumTaksitTutari>0?$(",
+   ").html(fiyatFormat(n/productDetailModel.maxInstallment,u));urunTaksitSecenekParams.fiyat=n;havaleIndirimi>0?$(",
+   ").html(n.minimumTaksitTutariStr):$(",
+   ",t,i,r)},getBankInstallments:function(t,i,r){n(",
+   ".taksitMain",
+   "/api/bank/GetBankInstallments",
+   "https://www.paytr.com/odeme/taksit-tablosu/v2?token=",
+   "paytr_taksit_tablosu",
+   "scriptPayTRTaksit"
+  ],
+  "deneme": [
+   {
+    "u": "/api/bank/GetBankInstallments?productId=56",
+    "t": "{\"bankInstallments\":[],\"isError\":false,\"errorMessage\":null,\"errorCode\":null,\"model\":null,\"logRequest\":null,\"logResponse\":null}"
+   }
+  ],
+  "html_taksit": [
+   "ksitAylikTutar\":\"Aylık T.\",\"Odeme_SwiftKodu\":\"Swift Kodu\",\"Odeme_TahsilEdilecekTutar\":\"Ödenecek Tutar\",\"Global_DosyaSec\":\"Dosya Seç\",\"Global_DosyaSecilmedi\":\"Dosya Seçilmedi\",\"Smskodtelefon_gelmedimi\":\"Kod Telefonunuza Gelmedimi\",\"Odeme_TaksitSayisi\":\"Taksit S.\",\"Odeme_SubeKodu\":\"Şube Kodu:\",\"Odeme_TaksitSecenekleri\":\"Taksit Seçenekleri\",\"Odeme_TaksitSecenekleriBilgilendirme\":\"Taksit seçenekleri, kredi kartı bilgilerinizi girdikten sonra gelecektir.\",\"Odeme_TeslimatSaatiUyari\":\"Siparişinizde seçili kargoya ait teslimat limiti dolmuştur.\",\"OdemeDurumlari_IadeEdilmis\":\"İade Edilmiş\",\"OdemeDurumlari_IptalEdilmis\":\"İptal Edilmiş\",\"OdemeDurumlari_OdemeBekliyor\":\"Ödeme Bekliyor\",\"OdemeDurumlari_OdemeTalepEdildi\":\"Ödeme Talep Edildi\",\"OdemeDurumlari_OnayBekliyor\":\"Onay Bekliyor\",\"OdemeDurumlari_Onaylandi\":\"Onaylandı\",\"OdemeSistemi_DenizBank_Mesaj_ServiseUlasilamadi\":\"Bank servisine ulaşılamadı.",
+   "wift Kodu\",\"Odeme_TahsilEdilecekTutar\":\"Ödenecek Tutar\",\"Global_DosyaSec\":\"Dosya Seç\",\"Global_DosyaSecilmedi\":\"Dosya Seçilmedi\",\"Smskodtelefon_gelmedimi\":\"Kod Telefonunuza Gelmedimi\",\"Odeme_TaksitSayisi\":\"Taksit S.\",\"Odeme_SubeKodu\":\"Şube Kodu:\",\"Odeme_TaksitSecenekleri\":\"Taksit Seçenekleri\",\"Odeme_TaksitSecenekleriBilgilendirme\":\"Taksit seçenekleri, kredi kartı bilgilerinizi girdikten sonra gelecektir.\",\"Odeme_TeslimatSaatiUyari\":\"Siparişinizde seçili kargoya ait teslimat limiti dolmuştur.\",\"OdemeDurumlari_IadeEdilmis\":\"İade Edilmiş\",\"OdemeDurumlari_IptalEdilmis\":\"İptal Edilmiş\",\"OdemeDurumlari_OdemeBekliyor\":\"Ödeme Bekliyor\",\"OdemeDurumlari_OdemeTalepEdildi\":\"Ödeme Talep Edildi\",\"OdemeDurumlari_OnayBekliyor\":\"Onay Bekliyor\",\"OdemeDurumlari_Onaylandi\":\"Onaylandı\",\"OdemeSistemi_DenizBank_Mesaj_ServiseUlasilamadi\":\"Bank servisine ulaşılamadı.\",\"OdemeSistemi_IPara3DGetWay_Mesaj_CevapAlinam",
+   "\"Sepetten Çıkar\",\"Sepet_SepetiTemizle\":\"Sepeti Temizle\",\"Sepet_PuanKullanimIptalEt\":\"Puan Kullanımı İptal Et\",\"Sepet_Sec\":\"Seç\",\"Sepet_SepetToplami\":\"Sepet Toplamı\",\"Sepet_SiparisOzeti\":\"Sipariş Özeti\",\"Sepet_SiparisTutari\":\"Sipariş Tutarı\",\"Sepet_TahminiTeslimSuresi\":\"Tahmini Teslim Süresi\",\"Sepet_TaksitSeceneklerineGoreBol\":\"Sepeti Taksit Seçeneklerine Göre Böl\",\"Validation_SmsSureSiniri\":\"Kodunuzun süresi dolmuştur. Yeni bir kod gönderilmiştir. Lütfen yeni kod ile deneyiniz.\",\"Sepet_UrunNotu\":\"Ürün Notu\",\"Sepet_UrunOzellestirmeTutari\":\"Ürün Özelleştirme Tutarı\",\"Sepet_TanimliHediyeCeklerim\":\"Tanımlı Hediye Çeklerim\",\"Sepet_UrunBulunamadi\":\"Sepetinizde Ürün Bulunamadı\",\"Sepet_UcretsizKargoBilgilendirme\":\"Ücretsiz kargo hakkınız sepetinize uygulandı\",\"Sepet_ZubizuHediyeCeki\":\"Zubizu Hediye Çeki\",\"Sepetim_SepeteEklenmeyenUrunler\":\"Sepete Eklenemeyen Ürün(ler)\",\"Sepetim_StokYokPopupBaslik",
+   ",\"KargomSendeKargoDurumuKontrol\":\"Sipariş durumu iadeye uygun olmadığı için işlem gerçekleşmedi.\",\"StokAlarmListem_StokAlarmListenizBos\":\"Stok Alarm Listeniz Boş !\",\"PriceRanges\":\"Fiyat Aralıkları\",\"Global_SiparisNo\":\"Sipariş No\",\"Global_Tutar\":\"Tutar\",\"HediyeKuponlarim_Baslik\":\"Hediye Kuponlarım\",\"TaksitSecenekleri_ToplamTutar\":\"Toplam Tutar\",\"UyelikBilgilerim_DenemeSuresi_Asilmamistir\":\"Sms gönderim süresi dolduktan sonra tekrar gönderim sağlayabilirsiniz.\",\"Sepet_UrunOndalikliSayiHata\":\"Sepete Eklenen Ürün Adedi Ondalıklı Sayı Olduğundan Sepete Eklenememektedir.\",\"BALANCEUSAGE_NOT_ALLOWED\":\"Bakiye kullanımına izin verilmedi. Lütfen Tekrar Deneyiniz.\",\"TamamlayiciUrunler\":\"Tamamlayıcı Ürünler\",\"Tedarikci_Listesi_Tedarikcilerimiz\":\"Tedarikçilerimiz\",\"TelefonBultenAyril_ButtonAyril\":\"Sms üyeliğinden ayrıl\",\"TelefonBultenAyril_SmsSilindi\":\"Telefon numaranız bülten listemizden silinmiştir.",
+   "Validation_MesajGiriniz\":\"Lütfen Mesajı Yazınız.\",\"Validation_GuvenlikKodu\":\"Güvenlik Kodu:\",\"Validation_GuvenlikKoduGiriniz\":\"Lütfen yukarıda yazan sayıları yandaki kutuya giriniz.\",\"Validation_YetkisizIPAdresi\":\"Yetkisiz Ip Adresi.\",\"Validation_Minimum10Karakter\":\"Minimum 10 karakter olmalıdır.\",\"TaksitSecenekleri_TaksitTutari\":\"Taksit Tutarı\",\"KendinTasarla_Resim\":\"Resim\",\"KendinTasarla_AnahatBoyutu\":\"Anahat Boyutu\",\"Validation_MevcutSifreIleYeniSifreAyniOlamaz\":\"Mevcut şifre ile yeni şifre aynı olamaz\",\"Validation_SehirSeciniz\":\"Lütfen Şehir Seçiniz.\",\"KendinTasarla_Saydamlik\":\"Saydamlık\",\"Odeme_CariKrediOdeme\":\"Cari Kredisinden\",\"Validation_Seciniz\":\"Seçiniz\",\"Validation_ResimSeciniz\":\"Lütfen Yüklemek İstediğiniz Resim(leri) seçin\",\"Global_KategoriyeGit\":\"Kategoriye Git\",\"Validation_SifreGiriniz\":\"Lütfen Şifrenizi Giriniz..\",\"Validation_SifreGirinizTekrar\":\"Lütfen Yeni Şifre (Tekrar"
+  ]
+ }
+}

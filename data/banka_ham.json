@@ -1,0 +1,72 @@
+{
+ "Ketench": {
+  "sayfalar": [
+   {
+    "url": "https://ketench.com",
+    "bulgu": []
+   },
+   {
+    "url": "https://ketench.com/erkek-kargo-cepli-gabardin-baggy-pantolon-su-yesilie1001-td544",
+    "bulgu": [
+     "Havale ile Ödeme"
+    ]
+   },
+   {
+    "url": "https://ketench.com/gizlilik-sozlesmesi",
+    "bulgu": [
+     "Kapıda ödemelerde kendisine bildirildiği halde kargosunu teslim almayan müşterilerimiz yazışmalarla birlikte firmamızın tahsilat birimine Kargo ücretini gidiş dönüş ödemek üzere yönlendirelerek Kargo ücreti faturalandırılır."
+    ]
+   },
+   {
+    "url": "https://ketench.com/mesafeli-satis-sozlesmesi",
+    "bulgu": [
+     "4.4- SATICI, sözleşme konusu ürünün sağlam, eksiksiz, siparişte belirtilen niteliklere uygun ve varsa garanti belgeleri ve kullanım klavuzları ile teslim edilmesinden sorumludur.",
+     "4.8- Garanti belgesi ile satılan ürünlerden olan veya olmayan ürünlerin arızalı veya bozuk olanlar, garanti şartları içinde gerekli onarımın yapılması için SATICI'ya gönderilebilir, bu takdirde kargo giderleri SATICI tarafından karşılanacaktır."
+    ]
+   }
+  ],
+  "urun_id": "7",
+  "api": []
+ },
+ "Ferell Moda": {
+  "sayfalar": [
+   {
+    "url": "https://www.ferellmoda.com",
+    "bulgu": []
+   }
+  ],
+  "api": []
+ },
+ "Semih Kurtulmuş": {
+  "sayfalar": [
+   {
+    "url": "https://semihkurtulmusfashion.com",
+    "bulgu": [
+     "Değişim Garantisi",
+     "7 gün içerisinde değişim garantisi"
+    ]
+   },
+   {
+    "url": "https://semihkurtulmusfashion.com/krem-urban-mont",
+    "bulgu": [
+     "Kapıda Ödeme Nakit",
+     "Kapıda Ödeme Kredi Kartı"
+    ]
+   },
+   {
+    "url": "https://semihkurtulmusfashion.com/gizlilik-guvenlik",
+    "bulgu": [
+     "Mağazamızın Müşteri Hizmetleri’ne, herhangi bir siparişinizle ilgili olarak göndereceğiniz e-postalarda, asla kredi kartı numaranızı veya şifrelerinizi yazmayınız. E-postalarda yer alan bilgiler üçüncü şahıslar tarafından görülebilir. Firmamız e-postalarınızdan aktarılan bilgilerin güvenliğini hiçbir koşulda garanti edemez."
+    ]
+   },
+   {
+    "url": "https://semihkurtulmusfashion.com/mesafeli-satis-sozlesmesi",
+    "bulgu": [
+     "Alıcının, kredi kartı ile ve taksitle alışveriş yapması durumunda siteden seçmiş olduğu taksit biçimi geçerlidir. Taksitlendirme işlemlerinde, alıcı ile kart sahibi banka arasında imzalamış bulunan sözleşmenin ilgili hükümleri geçerlidir. Kredi kartı ödeme tarihi banka ile alıcı arasındaki sözleşme hükümlerince belirlenir. Alıcı, ayrıca bankanın gönderdiği hesap özetinden taksit sayısını ve ödemelerini takip edebilir."
+    ]
+   }
+  ],
+  "urun_id": "56",
+  "api": []
+ }
+}

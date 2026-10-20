@@ -1,0 +1,32 @@
+{
+ "Ferell Moda": [
+  {
+   "q": "Amount=1000&MaxInstallment=12&CurrencyCode=TRY",
+   "t": "{\"bankInstallments\":[],\"isError\":false,\"errorMessage\":null,\"errorCode\":null,\"model\":null,\"logRequest\":null,\"logResponse\":null}"
+  },
+  {
+   "q": "amount=1000&maxInstallment=12&currencyCode=TRY",
+   "t": "{\"bankInstallments\":[],\"isError\":false,\"errorMessage\":null,\"errorCode\":null,\"model\":null,\"logRequest\":null,\"logResponse\":null}"
+  },
+  {
+   "q": "Amount=1000&MaxInstallment=12&CurrencyCode=TL",
+   "t": "{\"bankInstallments\":[],\"isError\":false,\"errorMessage\":null,\"errorCode\":null,\"model\":null,\"logRequest\":null,\"logResponse\":null}"
+  },
+  {
+   "q": "Amount=100&MaxInstallment=12&CurrencyCode=USD",
+   "t": "{\"bankInstallments\":[],\"isError\":false,\"errorMessage\":null,\"errorCode\":null,\"model\":null,\"logRequest\":null,\"logResponse\":null}"
+  },
+  {
+   "q": "Amount=100&MaxInstallment=12&CurrencyCode=EUR",
+   "t": "{\"bankInstallments\":[],\"isError\":false,\"errorMessage\":null,\"errorCode\":null,\"model\":null,\"logRequest\":null,\"logResponse\":null}"
+  },
+  {
+   "q": "Amount=1000&MaxInstallment=12&CurrencyCode=TRY&culture=tr-TR",
+   "t": "{\"bankInstallments\":[],\"isError\":false,\"errorMessage\":null,\"errorCode\":null,\"model\":null,\"logRequest\":null,\"logResponse\":null}"
+  },
+  {
+   "q": "POST",
+   "hata": "HTTP Error 405: Method Not Allowed"
+  }
+ ]
+}

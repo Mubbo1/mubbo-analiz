@@ -1,0 +1,87 @@
+vektör 45162
+[0;93m2026-10-20 20:32:33.442704758 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+abluka [('ayni', 1), ('bozuk', 1)]
+abluka [('ayni', 1), ('bozuk', 1)]
+badbear [('ayni', 1), ('bozuk', 1)]
+badbear [('ayni', 1), ('bozuk', 1)]
+bpm [('ayni', 1), ('bozuk', 1)]
+bpm [('ayni', 1), ('bozuk', 1), ('baska_foto', 443)]
+bylondon [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+bylondon [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+bytagayman [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+bytagayman [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+catch [('ayni', 1), ('bozuk', 1)]
+catch [('ayni', 1), ('bozuk', 1)]
+davidgerenzo [('ayni', 1), ('bozuk', 1), ('baska_foto', 4)]
+davidgerenzo [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+deepsea [('ayni', 170), ('bozuk', 161), ('baska_foto', 139)]
+deepsea [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+erdtrend [('ayni', 1), ('bozuk', 1)]
+erdtrend [('ayni', 1), ('bozuk', 1)]
+ferell [('ayni', 1), ('bozuk', 1)]
+ferell [('ayni', 1), ('bozuk', 1)]
+flaw [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+flaw [('ayni', 1), ('bozuk', 1), ('baska_foto', 771)]
+forer [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+forer [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+gangown [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+gangown [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+giesto [('ayni', 1), ('bozuk', 1)]
+giesto [('ayni', 1), ('bozuk', 1)]
+grimelange [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+grimelange [('ayni', 1), ('bozuk', 1), ('baska_foto', 2)]
+hafka [('ayni', 1), ('bozuk', 1)]
+hafka [('ayni', 1), ('bozuk', 1)]
+juniorcrime [('ayni', 1), ('bozuk', 1)]
+juniorcrime [('ayni', 1), ('bozuk', 1)]
+kaft [('ayni', 1), ('bozuk', 1)]
+kaft [('ayni', 1), ('bozuk', 1)]
+ketench [('ayni', 1), ('bozuk', 1)]
+ketench [('ayni', 1), ('bozuk', 1)]
+labels [('ayni', 1), ('bozuk', 1)]
+labels [('ayni', 1), ('bozuk', 1)]
+lazzy [('ayni', 1), ('bozuk', 1)]
+lazzy [('ayni', 1), ('bozuk', 1)]
+livioferri [('ayni', 1), ('bozuk', 1)]
+livioferri [('ayni', 1), ('bozuk', 1)]
+madmext [('ayni', 1), ('bozuk', 1)]
+madmext [('ayni', 1), ('bozuk', 1)]
+manstro [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+manstro [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+no362 [('ayni', 1), ('bozuk', 1), ('baska_foto', 619)]
+no362 [('ayni', 1), ('bozuk', 1), ('baska_foto', 3)]
+nomarc [('ayni', 1), ('bozuk', 1)]
+nomarc [('ayni', 1), ('bozuk', 1)]
+outfitman [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+outfitman [('ayni', 1), ('bozuk', 1), ('baska_foto', 1)]
+papel [('ayni', 1), ('bozuk', 1)]
+papel [('ayni', 1), ('bozuk', 1)]
+piedraman [('ayni', 1), ('bozuk', 1), ('baska_foto', 29)]
+piedraman [('ayni', 1), ('bozuk', 1)]
+Traceback (most recent call last):
+  File "/home/runner/.local/lib/python3.12/site-packages/PIL/ImagePalette.py", line 187, in getcolor
+    return self.colors[color]
+           ~~~~~~~~~~~^^^^^^^
+KeyError: (255, 255, 255)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/work/mubbo-analiz/mubbo-analiz/scripts/foto_test.py", line 44, in <module>
+    tests = [('ayni', im), ('bozuk', boz(im))]
+                                     ^^^^^^^
+  File "/home/runner/work/mubbo-analiz/mubbo-analiz/scripts/foto_test.py", line 27, in boz
+    im = ImageOps.expand(im, border=(30, 120, 30, 160), fill='white'); o = io.BytesIO(); im.convert('RGB').save(o, 'JPEG', quality=55); return Image.open(io.BytesIO(o.getvalue()))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/PIL/ImageOps.py", line 561, in expand
+    out = _new_with_fill(image, (width, height), fill)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/PIL/ImageOps.py", line 379, in _new_with_fill
+    color = palette.getcolor(color, image)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/PIL/ImagePalette.py", line 190, in getcolor
+    index = self._new_color_index(image, e)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/PIL/ImagePalette.py", line 161, in _new_color_index
+    raise ValueError(msg) from e
+ValueError: cannot allocate more than 256 colors

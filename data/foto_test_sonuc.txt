@@ -1,97 +1,185 @@
-vektör 45162
-[0;93m2026-10-20 20:35:53.760443030 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
-abluka
-abluka
-badbear
-badbear
-bpm
-bpm
-bylondon
-bylondon
-bytagayman
-bytagayman
-catch
-catch
-davidgerenzo
-davidgerenzo
-deepsea
-deepsea
-erdtrend
-erdtrend
-ferell
-ferell
-flaw
-flaw
-forer
-forer
-gangown
-gangown
-giesto
-giesto
-grimelange
-grimelange
-hafka
-hafka
-juniorcrime
-juniorcrime
-kaft
-kaft
-ketench
-ketench
-labels
-labels
-lazzy
-lazzy
-livioferri
-livioferri
-madmext
-madmext
-manstro
-manstro
-no362
-no362
-nomarc
-nomarc
-outfitman
-outfitman
-papel
-papel
-piedraman
-piedraman
-respire
-respire
-semih
-semih
-slatra
-slatra
-streetbox
-streetbox
-studio8
-studio8
-tarzcool
-tarzcool
-tarzyeri
-tarzyeri
-thechamp
-thechamp
-tommylife
-tommylife
-tudors
-tudors
-uttbasic
-uttbasic
-vamos
-vamos
-void
-void
-voltaj
-voltaj
-wunder
-wunder
-zaee
-zaee
-zafoni
-zafoni
-ayni: n=92 ilk1 %99 ilk5 %99 ilk20 %99 ortanca 1.0
-bozuk: n=92 ilk1 %99 ilk5 %99 ilk20 %99 ortanca 1.0
-baska_foto: n=44 ilk1 %61 ilk5 %80 ilk20 %80 ortanca 1.0
+abluka yok 200 image/webp 5682 OK
+abluka ref 200 image/webp 5682 OK
+abluka yok 200 image/webp 13164 OK
+abluka ref 200 image/webp 13164 OK
+badbear yok 200 image/jpeg 157752 OK
+badbear ref 200 image/jpeg 157752 OK
+badbear yok 200 image/jpeg 20002 OK
+badbear ref 200 image/webp 9822 OK
+bpm yok 200 image/webp 102324 OK
+bpm ref 200 image/webp 102324 OK
+bpm yok 200 image/jpeg 99382 OK
+bpm ref 200 image/jpeg 99382 OK
+bylondon yok 200 image/png 364800 OK
+bylondon ref 200 image/png 364800 OK
+bylondon yok 200 image/png 527483 OK
+bylondon ref 200 image/png 527483 OK
+bytagayman yok 200 image/webp 15656 OK
+bytagayman ref 200 image/webp 15656 OK
+bytagayman yok 200 image/webp 86558 OK
+bytagayman ref 200 image/webp 86558 OK
+catch yok 200 image/jpeg 24449 OK
+catch ref 200 image/jpeg 24449 OK
+catch yok 200 image/webp 14074 OK
+catch ref 200 image/webp 14074 OK
+davidgerenzo yok 200 image/webp 11824 OK
+davidgerenzo ref 200 image/webp 11824 OK
+davidgerenzo yok 200 image/webp 14644 OK
+davidgerenzo ref 200 image/webp 14644 OK
+deepsea yok 200 image/jpeg 120915 OK
+deepsea ref 200 image/jpeg 120915 OK
+deepsea yok 200 image/jpeg 114081 OK
+deepsea ref 200 image/jpeg 114081 OK
+erdtrend yok 200 image/png 1619917 OK
+erdtrend ref 200 image/png 1619917 OK
+erdtrend yok 200 image/jpeg 65343 OK
+erdtrend ref 200 image/jpeg 65343 OK
+ferell yok 200 image/webp 48818 OK
+ferell ref 200 image/webp 48818 OK
+ferell yok 200 image/webp 33476 OK
+ferell ref 200 image/webp 33476 OK
+flaw yok 200 image/jpeg 492033 OK
+flaw ref 200 image/jpeg 492033 OK
+flaw yok 200 image/jpeg 290383 OK
+flaw ref 200 image/jpeg 290383 OK
+forer yok 200 image/webp 8302 OK
+forer ref 200 image/webp 8302 OK
+forer yok 200 image/webp 21958 OK
+forer ref 200 image/webp 21958 OK
+gangown yok 200 image/webp 33676 OK
+gangown ref 200 image/webp 33676 OK
+gangown yok 200 image/webp 40322 OK
+gangown ref 200 image/webp 40322 OK
+giesto yok 200 image/jpeg 21929 OK
+giesto ref 200 image/jpeg 21929 OK
+giesto yok 200 image/webp 11484 OK
+giesto ref 200 image/webp 11484 OK
+grimelange yok 200 image/webp 61726 OK
+grimelange ref 200 image/webp 61726 OK
+grimelange yok 200 image/jpeg 80926 OK
+grimelange ref 200 image/jpeg 80926 OK
+hafka yok 200 image/jpeg 230648 OK
+hafka ref 200 image/jpeg 230648 OK
+hafka yok 200 image/webp 25686 OK
+hafka ref 200 image/webp 25686 OK
+juniorcrime yok 200 image/webp 16444 OK
+juniorcrime ref 200 image/webp 16444 OK
+juniorcrime yok 200 image/jpeg 25285 OK
+juniorcrime ref 200 image/jpeg 25285 OK
+kaft yok 200 image/webp 5476 OK
+kaft ref 200 image/webp 5476 OK
+kaft yok 200 image/webp 5046 OK
+kaft ref 200 image/webp 5046 OK
+ketench yok 200 image/jpeg 23907 OK
+ketench ref 200 image/jpeg 23907 OK
+ketench yok 200 image/webp 16952 OK
+ketench ref 200 image/webp 16952 OK
+labels yok 200 image/webp 31140 OK
+labels ref 200 image/webp 31140 OK
+labels yok 200 image/webp 28764 OK
+labels ref 200 image/webp 28764 OK
+lazzy yok 200 image/webp 44358 OK
+lazzy ref 200 image/webp 44358 OK
+lazzy yok 200 image/webp 13048 OK
+lazzy ref 200 image/webp 13048 OK
+livioferri yok 200 image/webp 32250 OK
+livioferri ref 200 image/webp 32250 OK
+livioferri yok 200 image/webp 44582 OK
+livioferri ref 200 image/webp 44582 OK
+madmext yok 200 image/webp 22016 OK
+madmext ref 200 image/webp 22016 OK
+madmext yok 200 image/webp 21572 OK
+madmext ref 200 image/webp 21572 OK
+manstro yok 200 image/webp 4858 OK
+manstro ref 200 image/webp 4858 OK
+manstro yok 200 image/webp 4182 OK
+manstro ref 200 image/webp 4182 OK
+no362 yok 200 image/jpeg 468000 OK
+no362 ref 200 image/jpeg 468000 OK
+no362 yok 200 image/webp 50710 OK
+no362 ref 200 image/webp 50710 OK
+nomarc yok 200 image/webp 24160 OK
+nomarc ref 200 image/webp 24160 OK
+nomarc yok 200 image/jpeg 39557 OK
+nomarc ref 200 image/jpeg 39557 OK
+outfitman yok 200 image/jpeg 2269033 OK
+outfitman ref 200 image/jpeg 2269033 OK
+outfitman yok 200 image/jpeg 216471 OK
+outfitman ref 200 image/jpeg 216471 OK
+papel yok 200 image/jpeg 54792 OK
+papel ref 200 image/jpeg 54792 OK
+papel yok 200 image/webp 25172 OK
+papel ref 200 image/webp 25172 OK
+piedraman yok 200 image/webp 123342 OK
+piedraman ref 200 image/webp 123342 OK
+piedraman yok 200 image/webp 155562 OK
+piedraman ref 200 image/webp 155562 OK
+respire yok 200 image/webp 92908 OK
+respire ref 200 image/webp 92908 OK
+respire yok 200 image/webp 18334 OK
+respire ref 200 image/webp 18334 OK
+semih yok 200 image/webp 49156 OK
+semih ref 200 image/webp 49156 OK
+semih yok 200 image/webp 43588 OK
+semih ref 200 image/webp 43588 OK
+slatra yok 200 image/webp 22896 OK
+slatra ref 200 image/webp 22896 OK
+slatra yok 200 image/jpeg 54599 OK
+slatra ref 200 image/jpeg 54599 OK
+streetbox yok 200 image/webp 12792 OK
+streetbox ref 200 image/webp 12792 OK
+streetbox yok 200 image/webp 12810 OK
+streetbox ref 200 image/webp 12810 OK
+studio8 yok 200 image/jpeg 49396 OK
+studio8 ref 200 image/jpeg 49396 OK
+studio8 yok 200 image/webp 35064 OK
+studio8 ref 200 image/webp 35064 OK
+tarzcool yok 200 image/webp 22800 OK
+tarzcool ref 200 image/webp 22800 OK
+tarzcool yok 200 image/jpeg 77341 OK
+tarzcool ref 200 image/jpeg 77341 OK
+tarzyeri yok 200 image/png 1531540 OK
+tarzyeri ref 200 image/png 1531540 OK
+tarzyeri yok 200 image/png 1384846 OK
+tarzyeri ref 200 image/png 1384846 OK
+thechamp yok 200 image/webp 15460 OK
+thechamp ref 200 image/webp 15460 OK
+thechamp yok 200 image/webp 10118 OK
+thechamp ref 200 image/webp 10118 OK
+tommylife yok 200 image/jpeg 104329 OK
+tommylife ref 200 image/avif 5429 OK
+tommylife yok 200 image/jpeg 63930 OK
+tommylife ref 200 image/avif 5429 OK
+tudors yok 200 image/webp 16872 OK
+tudors ref 200 image/webp 16872 OK
+tudors yok 200 image/jpeg 54051 OK
+tudors ref 200 image/jpeg 54051 OK
+uttbasic yok 200 image/webp 31270 OK
+uttbasic ref 200 image/webp 31270 OK
+uttbasic yok 200 image/jpeg 40955 OK
+uttbasic ref 200 image/jpeg 40955 OK
+vamos yok 200 image/webp 12622 OK
+vamos ref 200 image/webp 12622 OK
+vamos yok 200 image/webp 19886 OK
+vamos ref 200 image/webp 19886 OK
+void yok 200 image/webp 6006 OK
+void ref 200 image/webp 6006 OK
+void yok 200 image/webp 5664 OK
+void ref 200 image/webp 5664 OK
+voltaj yok 200 image/jpeg 43968 OK
+voltaj ref 200 image/jpeg 43968 OK
+voltaj yok 200 image/jpeg 29042 OK
+voltaj ref 200 image/jpeg 29042 OK
+wunder yok 200 image/webp 4244 OK
+wunder ref 200 image/webp 4244 OK
+wunder yok 200 image/webp 7576 OK
+wunder ref 200 image/webp 7576 OK
+zaee yok 200 image/webp 25422 OK
+zaee ref 200 image/webp 25422 OK
+zaee yok 200 image/webp 16126 OK
+zaee ref 200 image/webp 16126 OK
+zafoni yok 200 image/webp 72374 OK
+zafoni ref 200 image/webp 72374 OK
+zafoni yok 200 image/jpeg 157148 OK
+zafoni ref 200 image/jpeg 157148 OK
+toplam iyi 184 kötü 0

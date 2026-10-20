@@ -139,6 +139,22 @@ a{color:inherit}
           .then(function(parts){ return [].concat.apply([], parts); })
           .catch(function(){ return window.MB_JSON('data/katalog_idx.json'); })
       : window.MB_JSON('data/' + encodeURIComponent(id) + '.json' + q);
+    if (id === 'toptanci') p = p.then(function(base){   // Telegram eşleşmeleri: toptancının attığı ürünün aynısı rakipte satılıyor
+      return window.MB_JSON('data/tg_sonuc.json?t=' + Date.now()).catch(function(){ return []; }).then(function(tg){
+        var gor = {}; base.forEach(function(r){ if (r.link) gor[r.link] = 1; }); var ek = [];
+        (tg || []).slice().sort(function(a, b){ return String(a.tarih).localeCompare(String(b.tarih)); }).forEach(function(t){
+          (t.ayni || []).forEach(function(m){
+            if (!m || !m.link || gor[m.link]) return; gor[m.link] = 1;
+            var gun = t.tarih ? new Date(t.tarih).toLocaleDateString('tr-TR', {day: 'numeric', month: 'long', year: 'numeric'}) : '';
+            ek.push({marka: m.marka, model: m.urun, urun: m.urun, gorsel: m.gorsel, fiyat: m.fiyat, link: m.link,
+              toptanci: (t.toptanci || t.kanal) + ' (Telegram toptancısı)', durum: 'Telegram eşleşmesi',
+              kanit: (t.toptanci || t.kanal) + ' bu ürünü ' + gun + ' tarihinde Telegram kanalında paylaştı' + (t.ozet ? ' (' + t.ozet + ')' : '') + '; fotoğraflar aynı model.',
+              kaynak_ad: 'Telegram paylaşımı', kaynak_link: t.post, eslesme_gorsel: t.foto, eslesme_ad: (t.ozet || 'Toptancı ürünü') + ' — ' + (t.toptanci || t.kanal), eslesme_link: t.post});
+          });
+        });
+        return ek.concat(base);
+      });
+    });
     if (id === 'yeni_urunler') p = p.then(function(base){   // otomatik taramanın eklediği şifreli parçalar
       return fetch('data/yeni_parcalar.json' + (q || '?t=' + Date.now()), {cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; })
         .then(function(ls){ return Promise.all(ls.map(function(f){ return window.MB_JSON('data/yeni/' + f).catch(function(){ return []; }); })); })

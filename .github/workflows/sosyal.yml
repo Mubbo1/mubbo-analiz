@@ -3,7 +3,7 @@ name: Sosyal medya ölçümü
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 6 * * *'
+    - cron: '40 15 * * *'   # 18.40 TR
 
 permissions:
   contents: write

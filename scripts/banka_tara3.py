@@ -3,7 +3,7 @@
 import json, os, sys, urllib.parse, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import yeni_urun as yu
-KOK = {'Ketench': 'https://ketench.com', 'Ferell Moda': 'https://www.ferellmoda.com', 'Semih Kurtulmuş': 'https://semihkurtulmusfashion.com'}
+KOK = {'Ferell Moda': 'https://www.ferellmoda.com'}
 def al(url, data=None):
     h = {'User-Agent': yu.UA, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'Accept-Language': 'tr-TR,tr;q=0.9'}
     if data is not None: h['Content-Type'] = 'application/json'
@@ -13,7 +13,7 @@ out = {}
 for m, k in KOK.items():
     out[m] = []
     for q in ['Amount=1000&MaxInstallment=12&CurrencyCode=TRY', 'amount=1000&maxInstallment=12&currencyCode=TRY', 'Amount=1000&MaxInstallment=12&CurrencyCode=TL',
-              'Amount=1000&MaxInstallment=0&CurrencyCode=TRY', 'Amount=1000']:
+              'Amount=100&MaxInstallment=12&CurrencyCode=USD', 'Amount=100&MaxInstallment=12&CurrencyCode=EUR', 'Amount=1000&MaxInstallment=12&CurrencyCode=TRY&culture=tr-TR']:
         try:
             t = al(k + '/api/bank/GetBankInstallments?' + q); out[m].append({'q': q, 't': t[:20000]})
             if '"bankInstallments":[]' not in t: break
@@ -24,4 +24,4 @@ for m, k in KOK.items():
     except Exception as e:
         out[m].append({'q': 'POST', 'hata': str(e)[:100]})
     print(m, [len(x.get('t', '')) for x in out[m]], flush=True)
-json.dump(out, open(os.path.join(yu.DATA, 'banka_ham3.json'), 'w'), ensure_ascii=False, indent=1)
+json.dump(out, open(os.path.join(yu.DATA, 'banka_ham4.json'), 'w'), ensure_ascii=False, indent=1)

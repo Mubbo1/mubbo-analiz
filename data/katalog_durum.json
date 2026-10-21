@@ -327,8 +327,8 @@
 "urun": 2127,
 "tarih": "2026-10-21",
 "durum": "ok",
-"sure": 774,
-"yeni_gorsel": 0
+"sure": 655,
+"yeni_gorsel": 4
 },
 "tommylife": {
 "marka": "Tommylife",
@@ -383,5 +383,5 @@
 "yeni_gorsel": 1
 }
 },
-"son": "2026-10-21T16:18:49Z"
+"son": "2026-10-21T16:33:05Z"
 }

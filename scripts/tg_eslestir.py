@@ -275,6 +275,11 @@ def yaz(path):
                         'ayni': ayni, 'benzer': [b for b in es(s.get('benzer', []), 'benzer') if b['link'] not in gor]}
     rows = sorted(eski.values(), key=lambda r: r['tarih'] or '', reverse=True)
     open(os.path.join(DATA, 'tg_sonuc.bin'), 'wb').write(sifrele(rows, ozel))
+    # Toptancılar sayfası için hafif kopya: yalnız rakipte aynısı bulunanlar, ek fotoğraflar ve benzerler olmadan (site hızlı açılsın)
+    hafif = [{k: r[k] for k in ('tarih', 'toptanci', 'kanal', 'ozet', 'post', 'foto', 'ayni') if k in r} for r in rows if r.get('ayni')]
+    open(os.path.join(DATA, 'tg_toptan.bin'), 'wb').write(sifrele(hafif, ozel))
+    # Telegram sayfası için ek fotoğrafsız liste (yarı boyut)
+    open(os.path.join(DATA, 'tg_liste.bin'), 'wb').write(sifrele([{k: v for k, v in r.items() if k != 'fotolar'} for r in rows], ozel))
     try:
         from datetime import datetime, timezone
         hepsi = urunler(ozel); bitti = {r['id'] for r in rows}

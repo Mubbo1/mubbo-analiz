@@ -134,13 +134,13 @@ a{color:inherit}
     var st = cache[id] = {status:'loading', data:[], columns:[], meta:[]};
     var q = load.bust && load.bust[id] ? '?t=' + load.bust[id] : '';
     var p = id === 'katalog_idx'
-      ? fetch('data/katalog_durum.json?t=' + Date.now(), {cache:'no-cache'}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      ? fetch('data/katalog_durum.json', {cache:'no-cache'}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
           .then(function(d){ return Promise.all(Object.keys(d.markalar || {}).map(function(k){ return window.MB_JSON('data/katalog/' + k + '.json').catch(function(){ return []; }); })); })
           .then(function(parts){ return [].concat.apply([], parts); })
           .catch(function(){ return window.MB_JSON('data/katalog_idx.json'); })
       : window.MB_JSON('data/' + encodeURIComponent(id) + '.json' + q);
     if (id === 'toptanci') p = p.then(function(base){   // Telegram eşleşmeleri: toptancının attığı ürünün aynısı rakipte satılıyor
-      return window.MB_JSON('data/tg_sonuc.json?t=' + Date.now()).catch(function(){ return []; }).then(function(tg){
+      return window.MB_JSON('data/tg_toptan.json').catch(function(){ return window.MB_JSON('data/tg_sonuc.json'); }).catch(function(){ return []; }).then(function(tg){
         var gor = {}; base.forEach(function(r){ if (r.link) gor[r.link] = 1; }); var ek = [];
         (tg || []).slice().sort(function(a, b){ return String(a.tarih).localeCompare(String(b.tarih)); }).forEach(function(t){
           (t.ayni || []).forEach(function(m){
@@ -156,7 +156,7 @@ a{color:inherit}
       });
     });
     if (id === 'yeni_urunler') p = p.then(function(base){   // otomatik taramanın eklediği şifreli parçalar
-      return fetch('data/yeni_parcalar.json' + (q || '?t=' + Date.now()), {cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; })
+      return fetch('data/yeni_parcalar.json' + (q || ''), {cache:'no-cache'}).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; })
         .then(function(ls){ return Promise.all(ls.map(function(f){ return window.MB_JSON('data/yeni/' + f).catch(function(){ return []; }); })); })
         .then(function(parts){ var seen = {}; base.forEach(function(r){ seen[r.link] = 1; }); parts.forEach(function(pt){ pt.forEach(function(r){ if (!seen[r.link]) { seen[r.link] = 1; base.push(r); } }); }); return base; });
     });

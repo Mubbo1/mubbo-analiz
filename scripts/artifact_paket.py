@@ -16,8 +16,15 @@ for f in glob.glob(os.path.join(DATA, 'kimg', '*.bin')) + glob.glob(os.path.join
     try: img.update(t.coz(f, o))
     except Exception as e: print('görsel okunamadı', f, e)
 ozet = []
+import datetime as _dt
+_durum = json.load(open(os.path.join(DATA, 'katalog_durum.json'))).get('markalar', {})
+_sinir = (_dt.datetime.utcnow() - _dt.timedelta(days=1)).strftime('%Y-%m-%d')
+def _guncel(key):   # stok bilgisi 1 günden eskiyse (sitesi açılmıyor) bu rakip alınmaz
+    m = _durum.get(key) or {}
+    return m.get('durum') == 'ok' or (m.get('tarih') or '') >= _sinir
 for f in sorted(glob.glob(os.path.join(DATA, 'katalog', '*.bin'))):
     key = os.path.basename(f)[:-4]
+    if not _guncel(key): print('atlandı (stok bilgisi eski):', key); continue
     try: rows = t.coz(f, o)
     except Exception as e: print('katalog okunamadı', key, e); continue
     dim, vek = g.oku(key)

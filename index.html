@@ -135,7 +135,12 @@ a{color:inherit}
     var q = load.bust && load.bust[id] ? '?t=' + load.bust[id] : '';
     var p = id === 'katalog_idx'
       ? fetch('data/katalog_durum.json', {cache:'no-cache'}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
-          .then(function(d){ return Promise.all(Object.keys(d.markalar || {}).map(function(k){ return window.MB_JSON('data/katalog/' + k + '.json').catch(function(){ return []; }); })); })
+          .then(function(d){
+            // stok bilgisi 1 günden eski olan (sitesi açılmayan) rakipler gösterilmez: stokta mı bilinemiyor
+            var sinir = new Date(Date.now() - 864e5).toISOString().slice(0, 10), eski = [];
+            var keys = Object.keys(d.markalar || {}).filter(function(k){ var m = d.markalar[k]; var ok = m.durum === 'ok' || (m.tarih && m.tarih >= sinir); if (!ok) eski.push(m.marka); return ok; });
+            window.MB_STALE = eski;
+            return Promise.all(keys.map(function(k){ return window.MB_JSON('data/katalog/' + k + '.json').catch(function(){ return []; }); })); })
           .then(function(parts){ return [].concat.apply([], parts); })
           .catch(function(){ return window.MB_JSON('data/katalog_idx.json'); })
       : window.MB_JSON('data/' + encodeURIComponent(id) + '.json' + q);

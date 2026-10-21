@@ -194,6 +194,9 @@ def stok_var(p, txt):
     av = [str(o.get('availability') or '') for o in ofs if isinstance(o, dict) and o.get('availability')]
     if av:
         return any(not TUKENDI.search(a) for a in av)
+    st = re.findall(r'"in_stock"\s*:\s*(true|false)', txt or '')   # T-Soft benzeri: beden/renk bazında stok (Tarz Yeri)
+    if st:
+        return 'true' in st
     m = meta(txt, 'product:availability', 'og:availability', 'availability')
     if m:
         return not TUKENDI.search(m)

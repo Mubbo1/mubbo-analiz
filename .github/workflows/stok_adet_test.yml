@@ -1,0 +1,16 @@
+name: Stok adedi testi
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install --quiet cryptography pillow
+      - run: |
+          python3 scripts/stok_adet_test.py > data/stok_adet_sonuc.txt 2>&1 || true
+          git config user.name "mubbo-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/stok_adet_sonuc.txt && git commit -m "Stok adedi testi" && for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done

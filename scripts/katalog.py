@@ -71,8 +71,7 @@ def ticimax(site):
         ps = d.get('products') or []
         toplam = toplam or d.get('totalProductCount')
         for p in ps:
-            if not p.get('inStock', True):
-                continue
+            stokyok = not p.get('inStock', True)   # tükenenler satış tahmini için sayılır, katalogdan sonra çıkarılır
             usd = bool(re.search(r'[$€£]', str(p.get('productSellPriceStr') or '')))
             yabanci = yabanci or usd
             sell, cart, mk = tl(p.get('productSellPriceStr')), tl(p.get('productCartPriceStr')), tl(p.get('marketPriceStr'))
@@ -80,7 +79,7 @@ def ticimax(site):
                 f, e = cart, sell
             else:
                 f, e = sell, (mk if mk and sell and mk > sell else None)
-            out.append({'u': p.get('name'), 'f': f, 'e': e, 'l': site + p.get('url', ''), 'gurl': urllib.parse.urljoin(site + '/', p.get('imageThumbPath') or p.get('imagePath') or '') or None, 'cat': p.get('category') or '', 'usd': usd})
+            out.append({'u': p.get('name'), 'f': f, 'e': e, 'l': site + p.get('url', ''), 'gurl': urllib.parse.urljoin(site + '/', p.get('imageThumbPath') or p.get('imagePath') or '') or None, 'cat': p.get('category') or '', 'usd': usd, 'adet': 0 if stokyok else p.get('totalStockAmount'), 'stokyok': stokyok})
         if not ps or (toplam and n * 100 >= toplam) or n > 200:
             break
         n += 1
@@ -213,6 +212,32 @@ def sifrele(obj):
     return b'MB1' + struct.pack('>H', len(w)) + w + iv + AESGCM(k).encrypt(iv, gzip.compress(json.dumps(obj, ensure_ascii=False, separators=(',', ':')).encode(), 9), None)
 
 
+def satis_tahmini(key, marka, rows, bugun):
+    """Stok adedini açık veren sitelerde (Ticimax: totalStockAmount) dünkü stokla bugünkünün farkından satış tahmini.
+    Stok artışları (yeni mal girişi) sayılmaz; azalış = satılan adet. data/satis/<anahtar>.json: önceki gün stokları (ürün linkinin özeti -> adet).
+    data/satis_gun/<tarih>_<saat>.bin (şifreli): [{tarih, marka, adet, ciro, urun_sayisi, en_cok: [[ad, adet, fiyat], ...]}], liste: data/satis_gun.json"""
+    st = {lh(r['l']): (r.get('adet'), r.get('f'), r.get('u')) for r in rows if r.get('adet') is not None}
+    if len(st) < max(5, len(rows) * 0.5):
+        return
+    os.makedirs(os.path.join(DATA, 'satis'), exist_ok=True)
+    yp = os.path.join(DATA, 'satis', key + '.json')
+    once = json.load(open(yp)) if os.path.exists(yp) else None
+    json.dump({'tarih': bugun, 'stok': {h: v[0] for h, v in st.items()}}, open(yp, 'w'), separators=(',', ':'))
+    if not once or once.get('tarih') == bugun:
+        return
+    satilan = []
+    for h, (adet, f, ad) in st.items():
+        o = once['stok'].get(h)
+        if o is not None and adet is not None and o > adet and o - adet < 500:   # 500+ ani düşüş: stok düzeltmesi sayılır
+            satilan.append((ad, int(o - adet), f or 0))
+    satilan.sort(key=lambda x: -x[1])
+    SATIS.append({'tarih': bugun, 'onceki': once.get('tarih'), 'marka': marka, 'adet': sum(x[1] for x in satilan),
+                  'ciro': round(sum(x[1] * x[2] for x in satilan)), 'urun_sayisi': len(satilan), 'en_cok': [list(x) for x in satilan[:15]]})
+
+
+SATIS = []
+
+
 def lh(l):
     return hashlib.sha1(yu.norm(l).encode()).hexdigest()[:10]
 
@@ -244,6 +269,7 @@ def main():
                 raise RuntimeError(f'{len(rows)} ürün geldi (önceki {onceki}); eski katalog korundu')
             # stokta olmayan ürünler katalogdan çıkarılır (sayfası açılıp tükendiği görülenler; yukarıdaki kontrole sayılır)
             stokyok = sum(1 for r in rows if r.get('stokyok'))
+            tum_rows = rows
             rows = [r for r in rows if not r.get('stokyok')]
             if not rows:
                 raise RuntimeError('stokta ürün kalmadı görünüyor; eski katalog korundu')
@@ -268,6 +294,7 @@ def main():
                 json.dump({'not': marka + ' TL fiyat referansı', 'fiyat': {hashlib.sha1(yol(r['l']).encode()).hexdigest()[:10]: r['f'] for r in rows if r.get('f')}},
                           open(os.path.join(DATA, 'kur_ref_' + refkey(site) + '.json'), 'w'))
             open(os.path.join(DATA, 'katalog', key + '.bin'), 'wb').write(sifrele(out))
+            satis_tahmini(key, marka, tum_rows, bugun)
             durum['markalar'][key] = {'marka': marka, 'urun': len(out), 'tarih': bugun, 'durum': 'ok', 'sure': round(time.time() - t0), 'yeni_gorsel': len([r for r in yeni[:1000] if r['l'] in yeni_gorsel])}
             print(f'{key}: {len(out)} ürün', flush=True)
         except Exception as e:
@@ -279,6 +306,12 @@ def main():
         open(os.path.join(DATA, 'kimg_ek', ad[:-5] + '.bin'), 'wb').write(sifrele(yeni_gorsel))
         ek_liste.append(ad); json.dump(ek_liste, open(ep, 'w'))
     json.dump(emb_is, open(os.environ.get('EMB_IS', '/tmp/emb_is.json'), 'w'), ensure_ascii=False)
+    if SATIS:
+        os.makedirs(os.path.join(DATA, 'satis_gun'), exist_ok=True)
+        ad = dt.datetime.utcnow().strftime('%Y%m%d%H%M') + '.json'
+        open(os.path.join(DATA, 'satis_gun', ad[:-5] + '.bin'), 'wb').write(sifrele(SATIS))
+        lp = os.path.join(DATA, 'satis_gun.json'); ls = json.load(open(lp)) if os.path.exists(lp) else []
+        json.dump(ls + [ad], open(lp, 'w'))
     durum['son'] = dt.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
     json.dump(durum, open(dp, 'w'), ensure_ascii=False, indent=0)
     json.dump(sorted(var), open(vp, 'w'), separators=(',', ':'))

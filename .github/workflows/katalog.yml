@@ -36,6 +36,8 @@ jobs:
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/katalog data/katalog_durum.json data/kimg_var.json data/kur_*.json
+          [ -d data/satis ] && git add data/satis
+          [ -d data/satis_gun ] && git add data/satis_gun data/satis_gun.json
           [ -f data/kimg_ek.json ] && git add data/kimg_ek.json data/kimg_ek
           git diff --cached --quiet && exit 0
           git commit -m "Rakip katalog yenileme"

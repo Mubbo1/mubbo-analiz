@@ -116,7 +116,7 @@
 },
 "semih": {
 "marka": "Semih Kurtulmuş",
-"urun": 803,
+"urun": 796,
 "tarih": "2026-10-21",
 "durum": "ok",
 "sure": 11,
@@ -151,7 +151,7 @@
 "urun": 1172,
 "tarih": "2026-10-21",
 "durum": "ok",
-"sure": 18,
+"sure": 16,
 "yeni_gorsel": 12
 },
 "livioferri": {
@@ -379,9 +379,9 @@
 "urun": 535,
 "tarih": "2026-10-21",
 "durum": "ok",
-"sure": 12,
+"sure": 14,
 "yeni_gorsel": 1
 }
 },
-"son": "2026-10-21T16:33:05Z"
+"son": "2026-10-21T17:56:29Z"
 }

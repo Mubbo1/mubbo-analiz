@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 import yeni_urun as yu   # site haritası ve ürün sayfası okuyucuları
 
 MARKALAR = [  # anahtar, marka, site, altyapı
-    ('ketench', 'Ketench', 'https://ketench.com', 'ticimax'), ('uttbasic', 'UTT Basic', 'https://www.uttbasic.com', 'ticimax'), ('ferell', 'Ferell Moda', 'https://www.ferellmoda.com', 'ticimax'),
+    ('ketench', 'Ketench', 'https://ketench.com', 'ticimax'), ('uttbasic', 'UTT Basic', 'https://www.uttbasic.com', 'ticimax'), ('toriasman', 'Torias Man', 'https://toriasman.com', 'ticimax'), ('ferell', 'Ferell Moda', 'https://www.ferellmoda.com', 'ticimax'),
     ('semih', 'Semih Kurtulmuş', 'https://semihkurtulmusfashion.com', 'ticimax'), ('madmext', 'Madmext', 'https://www.madmext.com', 'ticimax'),
     ('tudors', 'Tudors', 'https://www.tudors.com', 'ticimax'), ('hafka', 'Hafka Giyim', 'https://www.hafkagiyim.com', 'ticimax'),
     ('nomarc', 'NOMARC', 'https://www.nomarc.com.tr', 'ticimax'), ('no362', 'No 362 Clo', 'https://www.no362clo.com', 'ticimax'),

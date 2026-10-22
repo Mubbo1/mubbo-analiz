@@ -46,11 +46,20 @@ UA = yu.UA
 
 def get(url, accept='application/json'):
     req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': accept, 'Accept-Language': 'tr-TR,tr;q=0.9', 'X-Requested-With': 'XMLHttpRequest'})
-    with urllib.request.urlopen(req, timeout=40) as r:
-        b = r.read()
-        if b[:2] == b'\x1f\x8b':
-            b = gzip.decompress(b)
-        return b.decode('utf-8', 'replace')
+    for deneme in range(3):   # zaman aşımı / geçici hata: iki kez daha dene (Madmext 21 Ekim'de zaman aşımına düştü)
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                b = r.read()
+                if b[:2] == b'\x1f\x8b':
+                    b = gzip.decompress(b)
+                return b.decode('utf-8', 'replace')
+        except urllib.error.HTTPError as e:
+            if e.code < 500 or deneme == 2:
+                raise
+        except Exception:
+            if deneme == 2:
+                raise
+        time.sleep(5 * (deneme + 1))
 
 
 def tl(s):

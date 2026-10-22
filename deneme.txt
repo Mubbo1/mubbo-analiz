@@ -1,19 +1,6 @@
-ANA https://www.toriasman.com -> https://www.toriasman.com 590196
-  iz: ticimax
-  iz: ikas
-/api/product/GetProductList?PageSize=2 HATA HTTP Error 500: Internal Server Error
-/products.json?limit=2 HATA HTTP Error 404: Not Found
-SITEMAP 763
-URUN https://toriasman.com null
-URUN https://toriasman.com/-ithal-su-gecirmez-oversize-ceket-siyah {"urun": "İTHAL SU GEÇİRMEZ OVERSİZE CEKET SİYAH", "fiyat": 1599.9, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/-ithal-su-gecirmez-oversize-ceket-siya-ec340-.jpeg", "link": "https://toriasman.com/-ithal-su-gecirmez-oversize-ceket-siyah
-URUN https://toriasman.com/-ithal-su-gecirmez-oversize-ceket-tas-gri {"urun": "İTHAL SU GEÇİRMEZ OVERSİZE CEKET TAŞ GRİ", "fiyat": 1599.9, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/-ithal-su-gecirmez-oversize-ceket-tas--466-40.jpeg", "link": "https://toriasman.com/-ithal-su-gecirmez-oversize-ceket-tas
-URUN https://toriasman.com/-ozel-aksesuarli-kisakol-gomlek-haki-yesil {"urun": "Özel Aksesuarlı Kısakol Gömlek Haki Yeşil", "fiyat": 375.0, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/-ozel-aksesuarli-kisakol-gomlek-haki-y-007c-4.jpeg", "link": "https://toriasman.com/-ozel-aksesuarli-kisakol-gomlek-haki-
-URUN https://toriasman.com/-u5-regular-fit-gomlek-krem {"urun": "U5 Regular Fit Gömlek Krem", "fiyat": 300.0, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/-u5-regular-fit-gomlek-krem-70a5-4.png", "link": "https://toriasman.com/-u5-regular-fit-gomlek-krem", "stok": true}
-URUN https://toriasman.com/100-keten-oversize-sortlu-takim-camel {"urun": "TRS %100 KETEN OVERSİZE ŞORTLU TAKIM CAMEL", "fiyat": 899.9, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/100-keten-oversize-sortlu-takim-camel-752-44.jpeg", "link": "https://toriasman.com/100-keten-oversize-sortlu-takim-camel
-URUN https://toriasman.com/100-keten-oversize-sortlu-takim-ekru {"urun": "TRS %100 KETEN OVERSİZE ŞORTLU TAKIM EKRU", "fiyat": 899.9, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/100-keten-oversize-sortlu-takim-ekru-a-8bfd.jpeg", "link": "https://toriasman.com/100-keten-oversize-sortlu-takim-ekru", 
-URUN https://toriasman.com/100-keten-oversize-sortlu-takim-siyah {"urun": "TRS %100 KETEN OVERSİZE ŞORTLU TAKIM SİYAH", "fiyat": 899.9, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/100-keten-oversize-sortlu-takim-siyah-a-b546.jpeg", "link": "https://toriasman.com/100-keten-oversize-sortlu-takim-siyah
-URUN https://toriasman.com/100-pamuk-seritli-bisiklet-yaka-triko-bej {"urun": "%100 Pamuk Şeritli Bisiklet Yaka Triko Bej", "fiyat": 250.0, "eski_fiyat": null, "doviz": null, "gorsel": "https://static.ticimax.cloud/68320/uploads/urunresimleri/buyuk/100-pamuk-seritli-bisiklet-yaka-triko--0d-723.jpeg", "link": "https://toriasman.com/100-pamuk-seritli-bisiklet-yaka-trik
-URUN https://toriasman.com/2-urun-100-tl-indirim null
-URUN https://toriasman.com/3-adet-1000 null
-URUN https://toriasman.com/3-adet-1500-tl null
-FIYATLI 8/12
+https://toriasman.com 722 urun, stokta 722
+{"u": "BİSİKLET YAKA FİTİLLİ SWEATSHİRT", "f": 412.41, "e": 641.58, "l": "https://toriasman.com/bisiklet-yaka-fitilli-sweatshirt-15", "adet": 6.0, "stokyok": false}
+{"u": "Pamuk Örme Kumaş Uzun Kol Fitilli Gömlek", "f": 250.0, "e": 750.0, "l": "https://toriasman.com/pamuk-orme-kumas-uzun-kol-fitilli-gomlek", "adet": 39.0, "stokyok": false}
+{"u": "YILBAŞI ÖZEL TRİKO", "f": 549.91, "e": 550.0, "l": "https://toriasman.com/yilbasi-ozel-triko", "adet": 696.0, "stokyok": false}
+{"u": "Premium Slimfit Klasik Kumaş Pantolon Siyah", "f": 549.9, "e": 899.9, "l": "https://toriasman.com/premium-slimfit-klasik-kumas-pantolon-siyah", "adet": 11994.0, "stokyok": false}
+{"u": "Premium Slimfit Klasik Kumaş Pantolon Gri", "f": 549.9, "e": 899.9, "l": "https://toriasman.com/premium-slimfit-klasik-kumas-pantolon-gri", "adet": 11998.0, "stokyok": false}

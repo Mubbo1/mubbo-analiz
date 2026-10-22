@@ -30,8 +30,6 @@ TUR = [  # (tür, kelimeler) — kelime başı eşleşir, en fazla 3 harf ek
     ('jean', ['jean', 'jeans', 'kot', 'denim']),
     ('sort', ['sort', 'bermuda', 'shorts', 'short', 'mayo', 'swim', 'jort']),
     ('pantolon', ['pantolon', 'trousers', 'pants', 'chino', 'kargo', 'jogger', 'cargo', 'salvar']),
-    ('aksesuar', ['kemer', 'corap', 'socks', 'kravat', 'atki', 'bere', 'beanie', 'sal', 'cuzdan', 'kartlik', 'bileklik', 'kolye', 'yuzuk', 'kupe',
-                  'gozluk', 'parfum', 'boxer', 'boxers', 'sapka', 'canta', 'kol dugmesi', 'igne', 'bralette', 'brief', 'bikini', 'kombin']),
     ('ayakkabi', ['ayakkabi', 'sneaker', 'bot', 'boots', 'loafer', 'terlik', 'shoes']),
 ]
 TR = str.maketrans('çğıöşüâîû', 'cgiosuaiu')
@@ -39,8 +37,15 @@ def fold(s):
     s = (s or '').replace('İ', 'i').replace('I', 'ı').lower().translate(TR)
     s = unicodedata.normalize('NFKD', s); s = ''.join(c for c in s if not unicodedata.combining(c))
     return ' '.join(re.sub(r'[^a-z0-9]+', ' ', s).split())
+# Aksesuar (çorap, iç çamaşırı, çanta, kemer, takı, şapka...): sitedeki site_shim.js ile aynı kural; adın SON tür kelimesi aksesuarsa
+AKS = re.compile('(^| )(corap\\w*|socks?|kilot\\w*|kulot\\w*|boxers?|bralette|briefs?|bikini|sutyen\\w*|canta\\w*|bags?|backpack|sirt cantas\\w*|kemer\\w*|belts?|cuzdan\\w*|wallets?|kartlik\\w*|kravat\\w*|papyon\\w*|atki\\w*|sal|sali|bere\\w*|beanie|sapka\\w*|hats?|caps?|kep|bone|eldiven\\w*|gloves?|kolye\\w*|necklace|bileklik\\w*|bracelet|yuzuk\\w*|kupe\\w*|earrings?|gozlu\\w*|sunglasses|parfum\\w*|perfume|fragrance|saat|saati|watches|anahtarlik\\w*|keychain|kol dugme\\w*|kravat igne\\w*|igne\\w*|mendil\\w*|havlu\\w*|towel|bandana|toka|sticker|poster|kupa|mug|kilif\\w*|maske|semsiye\\w*|hediye kart\\w*|gift card|kolonya|deodorant)(?= |$)')
+GIY = re.compile('(^| )(pantolon\\w*|jeans?|kot|denim|sort\\w*|bermuda|tisort\\w*|t shirt\\w*|tshirt\\w*|gomlek\\w*|shirts?|sweat\\w*|hoodie|kazak\\w*|triko\\w*|hirka\\w*|cardigan|ceket\\w*|jacket|blazer|bomber|mont\\w*|parka|kaban\\w*|palto\\w*|coat|trenc\\w*|yelek\\w*|vest|esofman\\w*|takim\\w*|polo\\w*|ayakkabi\\w*|sneakers?|bot|botu|loafer|terlik\\w*|jogger\\w*|trousers|pants|overshirt|jorts?|salvar\\w*|atlet\\w*|tracksuit|t)(?= |$)')
+def aksesuar(ad):
+    t0 = fold(ad); a = [m.start() for m in AKS.finditer(t0)]; g = [m.start() for m in GIY.finditer(t0)]
+    return bool(a) and a[-1] > (g[-1] if g else -1)
 RX = [(k, re.compile(r'(?:^| )(' + '|'.join(re.escape(w) for w in ws) + r')[a-z]{0,3}(?= |$)')) for k, ws in TUR]
 def tur(ad):
+    if aksesuar(ad): return 'aksesuar'
     t0 = fold(ad); best, pos = '', -1
     for k, rx in RX:
         for m in rx.finditer(t0):

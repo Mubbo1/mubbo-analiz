@@ -128,6 +128,16 @@ a{color:inherit}
 (function(){
   var cache = {}, calcs = {}, subs = [], tick = null;
   function notify(){ if (tick) return; tick = setTimeout(function(){ tick = null; subs.slice().forEach(function(f){ try { f(); } catch(e){ console.error(e); } }); }, 0); }
+  // Yalnız ayakkabı, üst giyim ve alt giyim gösterilir: çorap, iç çamaşırı, çanta, kemer, takı, şapka vb. aksesuarlar ayıklanır
+  var AKS_DS = {katalog_idx: 1, yeni_urunler: 1, fiyatlar: 1, toptanci: 1};
+  var AKS = new RegExp('(^| )(corap\\w*|socks?|kilot\\w*|kulot\\w*|boxers?|bralette|briefs?|bikini|sutyen\\w*|canta\\w*|bags?|backpack|sirt cantas\\w*|kemer\\w*|belts?|cuzdan\\w*|wallets?|kartlik\\w*|kravat\\w*|papyon\\w*|atki\\w*|sal|sali|bere\\w*|beanie|sapka\\w*|hats?|caps?|kep|bone|eldiven\\w*|gloves?|kolye\\w*|necklace|bileklik\\w*|bracelet|yuzuk\\w*|kupe\\w*|earrings?|gozlu\\w*|sunglasses|parfum\\w*|perfume|fragrance|saat|saati|watches|anahtarlik\\w*|keychain|kol dugme\\w*|kravat igne\\w*|igne\\w*|mendil\\w*|havlu\\w*|towel|bandana|toka|sticker|poster|kupa|mug|kilif\\w*|maske|semsiye\\w*|hediye kart\\w*|gift card|kolonya|deodorant)( |$)');
+  function fold(s){ return String(s || '').replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase().replace(/ç/g, 'c').replace(/ğ/g, 'g').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ş/g, 's').replace(/ü/g, 'u').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
+  var GIY = /(^| )(pantolon\w*|jeans?|kot|denim|sort\w*|bermuda|tisort\w*|t shirt\w*|tshirt\w*|gomlek\w*|shirts?|sweat\w*|hoodie|kazak\w*|triko\w*|hirka\w*|cardigan|ceket\w*|jacket|blazer|bomber|mont\w*|parka|kaban\w*|palto\w*|coat|trenc\w*|yelek\w*|vest|esofman\w*|takim\w*|polo\w*|ayakkabi\w*|sneakers?|bot|botu|loafer|terlik\w*|jogger\w*|trousers|pants|overshirt|jorts?|salvar\w*|atlet\w*|tracksuit|t)(?= |$)/g;
+  function sonKonum(rx, t){ var m, son = -1; rx.lastIndex = 0; while ((m = rx.exec(t))) { son = m.index; if (m[0].length === 0) rx.lastIndex++; } return son; }
+  var AKSg = new RegExp(AKS.source.replace('( |$)', '(?= |$)'), 'g');
+  // Türkçe adlarda ürün türü sondadır: "Kemerli Pantolon" pantolon, "Pantolon Kemeri" kemer
+  function aksesuar(ad){ var t = fold(ad); var a = sonKonum(AKSg, t); return a >= 0 && a > sonKonum(GIY, t); }
+  window.MB_AKSESUAR = aksesuar;
   function load(id){
     if (cache[id]) return cache[id];
     if (window.DASH_DATASETS && window.DASH_DATASETS.indexOf(id) < 0) return {status:'loading', data:[], columns:[], meta:[]};
@@ -166,7 +176,9 @@ a{color:inherit}
         .then(function(parts){ var seen = {}; base.forEach(function(r){ seen[r.link] = 1; }); parts.forEach(function(pt){ pt.forEach(function(r){ if (!seen[r.link]) { seen[r.link] = 1; base.push(r); } }); }); return base; });
     });
     p
-      .then(function(d){ if (!Array.isArray(d)) d = d.rows || d.data || d.results || d; st.status = 'ok'; st.data = d; st.columns = Array.isArray(d) && d[0] ? Object.keys(d[0]) : []; notify(); })
+      .then(function(d){ if (!Array.isArray(d)) d = d.rows || d.data || d.results || d;
+        if (AKS_DS[id] && Array.isArray(d)) d = d.filter(function(r){ return !aksesuar(r && (r.u || r.urun || r.model || r.ad)); });
+        st.status = 'ok'; st.data = d; st.columns = Array.isArray(d) && d[0] ? Object.keys(d[0]) : []; notify(); })
       .catch(function(e){ st.status = 'error'; st.message = String(e); notify(); });
     return st;
   }

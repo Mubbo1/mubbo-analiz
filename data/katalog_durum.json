@@ -2,408 +2,394 @@
 "markalar": {
 "tudors": {
 "marka": "Tudors",
-"urun": 4774,
-"tarih": "2026-11-03",
+"urun": 4761,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 89,
-"yeni_gorsel": 10
+"sure": 186,
+"yeni_gorsel": 16
 },
 "outfitman": {
 "marka": "Outfit-Man",
-"urun": 555,
-"tarih": "2026-11-03",
+"urun": 554,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 11,
+"sure": 10,
 "yeni_gorsel": 0
 },
 "lazzy": {
 "marka": "Lazzy Shoes & Wear",
 "urun": 374,
-"tarih": "2026-11-01",
-"durum": "hata",
-"sure": 2,
-"yeni_gorsel": 0,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"tarih": "2026-11-04",
+"durum": "ok",
+"sure": 1,
+"yeni_gorsel": 0
 },
 "papel": {
 "marka": "Papel Giyim",
 "urun": 275,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 3,
+"sure": 5,
 "yeni_gorsel": 0
 },
 "piedraman": {
 "marka": "Piedraman",
 "urun": 83,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 12,
+"sure": 13,
 "yeni_gorsel": 0
 },
 "madmext": {
 "marka": "Madmext",
-"urun": 4871,
-"tarih": "2026-11-03",
+"urun": 4865,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 137,
-"yeni_gorsel": 1
+"sure": 153,
+"yeni_gorsel": 0
 },
 "ferell": {
 "marka": "Ferell Moda",
-"urun": 939,
-"tarih": "2026-11-03",
+"urun": 943,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 13,
-"yeni_gorsel": 13
+"sure": 16,
+"yeni_gorsel": 8
 },
 "davidgerenzo": {
 "marka": "David Gerenzo",
 "urun": 30,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
 "sure": 1,
 "yeni_gorsel": 0
 },
 "grimelange": {
 "marka": "Grimelange",
-"urun": 1394,
-"tarih": "2026-11-03",
+"urun": 1408,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 47,
-"yeni_gorsel": 14
+"sure": 51,
+"yeni_gorsel": 16
 },
 "forer": {
 "marka": "Forer Wear",
-"urun": 132,
-"tarih": "2026-11-03",
+"urun": 131,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 95,
+"sure": 77,
 "yeni_gorsel": 0
 },
 "nomarc": {
 "marka": "NOMARC",
-"urun": 2252,
-"tarih": "2026-11-03",
+"urun": 2257,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 68,
-"yeni_gorsel": 3
+"sure": 69,
+"yeni_gorsel": 4
 },
 "flaw": {
 "marka": "Flaw Wear",
-"urun": 813,
-"tarih": "2026-11-03",
+"urun": 861,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 14,
-"yeni_gorsel": 3
+"sure": 17,
+"yeni_gorsel": 21
 },
 "deepsea": {
 "marka": "DeepSEA",
-"urun": 908,
-"tarih": "2026-11-03",
+"urun": 913,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 144,
-"yeni_gorsel": 1
+"sure": 192,
+"yeni_gorsel": 24
 },
 "no362": {
 "marka": "No 362 Clo",
-"urun": 1385,
-"tarih": "2026-11-03",
+"urun": 1368,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 17,
-"yeni_gorsel": 36
+"sure": 18,
+"yeni_gorsel": 0
 },
 "semih": {
 "marka": "Semih Kurtulmuş",
-"urun": 812,
-"tarih": "2026-11-03",
+"urun": 823,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 10,
-"yeni_gorsel": 2
+"sure": 11,
+"yeni_gorsel": 10
 },
 "bytagayman": {
 "marka": "Bytagayman",
 "urun": 181,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 108,
-"yeni_gorsel": 1
+"sure": 101,
+"yeni_gorsel": 0
 },
 "manstro": {
 "marka": "The Manstro",
-"urun": 336,
-"tarih": "2026-11-03",
+"urun": 337,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 110,
+"sure": 126,
 "yeni_gorsel": 0
 },
 "hafka": {
 "marka": "Hafka Giyim",
-"urun": 1436,
-"tarih": "2026-11-03",
+"urun": 1438,
+"tarih": "2026-11-04",
 "durum": "ok",
 "sure": 112,
-"yeni_gorsel": 0
+"yeni_gorsel": 5
 },
 "ketench": {
 "marka": "Ketench",
-"urun": 1213,
-"tarih": "2026-11-03",
+"urun": 1207,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 14,
+"sure": 17,
 "yeni_gorsel": 0
 },
 "livioferri": {
 "marka": "Livio Ferri",
-"urun": 103,
-"tarih": "2026-11-01",
-"durum": "hata",
+"urun": 102,
+"tarih": "2026-11-04",
+"durum": "ok",
 "sure": 1,
-"yeni_gorsel": 0,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"yeni_gorsel": 2
 },
 "abluka": {
 "marka": "Abluka Online",
-"urun": 1367,
-"tarih": "2026-11-03",
+"urun": 1369,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 32,
-"yeni_gorsel": 1
+"sure": 36,
+"yeni_gorsel": 6
 },
 "badbear": {
 "marka": "Bad Bear",
 "urun": 543,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 17,
+"sure": 9,
 "yeni_gorsel": 0
 },
 "bpm": {
 "marka": "Bpm Wear",
 "urun": 1105,
 "tarih": "2026-11-03",
-"durum": "ok",
+"durum": "hata",
 "sure": 16,
-"yeni_gorsel": 0
+"yeni_gorsel": 0,
+"hata": "<urlopen error _ssl.c:1063: The handshake operation timed out>",
+"hata_tarih": "2026-11-04"
 },
 "labels": {
 "marka": "Labels Wear",
-"urun": 163,
-"tarih": "2026-11-03",
+"urun": 168,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 2,
-"yeni_gorsel": 1
+"sure": 3,
+"yeni_gorsel": 5
 },
 "respire": {
 "marka": "Respire",
-"urun": 1051,
-"tarih": "2026-11-03",
+"urun": 1047,
+"tarih": "2026-11-04",
 "durum": "ok",
 "sure": 56,
-"yeni_gorsel": 14
+"yeni_gorsel": 0
 },
 "slatra": {
 "marka": "Slatra",
 "urun": 455,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 12,
-"yeni_gorsel": 12
+"sure": 15,
+"yeni_gorsel": 8
 },
 "streetbox": {
 "marka": "Streetbox",
 "urun": 211,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
 "sure": 4,
-"yeni_gorsel": 4
+"yeni_gorsel": 0
 },
 "tarzcool": {
 "marka": "Tarz Cool",
-"urun": 269,
-"tarih": "2026-11-03",
+"urun": 271,
+"tarih": "2026-11-04",
 "durum": "ok",
 "sure": 9,
-"yeni_gorsel": 5
+"yeni_gorsel": 2
 },
 "catch": {
 "marka": "Catch Jeans",
 "urun": 612,
-"tarih": "2026-11-02",
-"durum": "hata",
-"sure": 4,
-"yeni_gorsel": 0,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"tarih": "2026-11-04",
+"durum": "ok",
+"sure": 2,
+"yeni_gorsel": 0
 },
 "giesto": {
 "marka": "Giesto",
-"urun": 1018,
-"tarih": "2026-11-02",
-"durum": "hata",
-"sure": 3,
-"yeni_gorsel": 3,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"urun": 1020,
+"tarih": "2026-11-04",
+"durum": "ok",
+"sure": 5,
+"yeni_gorsel": 5
 },
 "juniorcrime": {
 "marka": "JuniorCrime",
-"urun": 169,
-"tarih": "2026-11-02",
-"durum": "hata",
-"sure": 2,
-"yeni_gorsel": 0,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"urun": 186,
+"tarih": "2026-11-04",
+"durum": "ok",
+"sure": 3,
+"yeni_gorsel": 4
 },
 "studio8": {
 "marka": "Studio8 Online",
-"urun": 306,
-"tarih": "2026-11-01",
-"durum": "hata",
+"urun": 331,
+"tarih": "2026-11-04",
+"durum": "ok",
 "sure": 2,
-"yeni_gorsel": 0,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"yeni_gorsel": 26
 },
 "thechamp": {
 "marka": "The Champ",
-"urun": 702,
-"tarih": "2026-10-30",
-"durum": "hata",
-"sure": 11,
-"yeni_gorsel": 0,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"urun": 699,
+"tarih": "2026-11-04",
+"durum": "ok",
+"sure": 7,
+"yeni_gorsel": 1
 },
 "vamos": {
 "marka": "Vamos Clo",
-"urun": 2343,
-"tarih": "2026-10-28",
-"durum": "hata",
-"sure": 11,
-"yeni_gorsel": 3,
-"hata": "HTTP Error 429: Too Many Requests",
-"hata_tarih": "2026-11-03"
+"urun": 2398,
+"tarih": "2026-11-04",
+"durum": "ok",
+"sure": 13,
+"yeni_gorsel": 73
 },
 "gangown": {
 "marka": "Gangown",
-"urun": 728,
-"tarih": "2026-11-03",
+"urun": 726,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 686,
+"sure": 662,
 "yeni_gorsel": 0
 },
 "void": {
 "marka": "VOID TR",
-"urun": 519,
-"tarih": "2026-11-03",
+"urun": 520,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 1184,
-"yeni_gorsel": 1
+"sure": 1345,
+"yeni_gorsel": 0
 },
 "wunder": {
 "marka": "Wunder",
-"urun": 3403,
-"tarih": "2026-11-03",
+"urun": 3443,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 1288,
-"yeni_gorsel": 48
+"sure": 1362,
+"yeni_gorsel": 55
 },
 "bylondon": {
 "marka": "By London Butik",
-"urun": 878,
-"tarih": "2026-11-03",
+"urun": 865,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 77,
+"sure": 92,
 "yeni_gorsel": 0
 },
 "erdtrend": {
 "marka": "ErdTrend",
 "urun": 141,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 30,
+"sure": 34,
 "yeni_gorsel": 0
 },
 "kaft": {
 "marka": "Kaft",
-"urun": 308,
-"tarih": "2026-11-03",
+"urun": 285,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 50,
+"sure": 51,
 "yeni_gorsel": 0
 },
 "tarzyeri": {
 "marka": "Tarz Yeri",
-"urun": 2161,
-"tarih": "2026-11-03",
+"urun": 2158,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 751,
-"yeni_gorsel": 10
+"sure": 734,
+"yeni_gorsel": 0
 },
 "tommylife": {
 "marka": "Tommylife",
 "urun": 2002,
-"tarih": "2026-11-03",
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 672,
+"sure": 715,
 "yeni_gorsel": 1
 },
 "voltaj": {
 "marka": "Voltaj Giyim",
-"urun": 2041,
-"tarih": "2026-11-03",
+"urun": 2038,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 259,
+"sure": 292,
 "yeni_gorsel": 0
 },
 "zaee": {
 "marka": "Zaee Giyim",
-"urun": 515,
-"tarih": "2026-11-03",
+"urun": 510,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 340,
-"yeni_gorsel": 1
+"sure": 358,
+"yeni_gorsel": 0
 },
 "zafoni": {
 "marka": "Zafoni",
-"urun": 1500,
-"tarih": "2026-11-03",
+"urun": 1496,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 266,
+"sure": 276,
 "yeni_gorsel": 0
 },
 "bybasicman": {
 "marka": "ByBasicMan",
 "durum": "hata",
 "hata": "<urlopen error [Errno -2] Name or service not known>",
-"hata_tarih": "2026-11-03"
+"hata_tarih": "2026-11-04"
 },
 "aura": {
 "marka": "Aura Moda",
 "durum": "hata",
 "hata": "0 ürün geldi (önceki 0); eski katalog korundu",
-"hata_tarih": "2026-11-03"
+"hata_tarih": "2026-11-04"
 },
 "uttbasic": {
 "marka": "UTT Basic",
-"urun": 566,
-"tarih": "2026-11-03",
+"urun": 565,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 13,
-"yeni_gorsel": 37
+"sure": 14,
+"yeni_gorsel": 1
 },
 "toriasman": {
 "marka": "Torias Man",
-"urun": 842,
-"tarih": "2026-11-03",
+"urun": 858,
+"tarih": "2026-11-04",
 "durum": "ok",
-"sure": 9,
-"yeni_gorsel": 1
+"sure": 11,
+"yeni_gorsel": 20
 }
 },
-"son": "2026-11-03T16:21:17Z"
+"son": "2026-11-04T16:35:16Z"
 }

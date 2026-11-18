@@ -33,7 +33,11 @@ jobs:
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # yeni reklam eklenmediyse şifreli dosyaları yeniden yazma (depo şişmesin)
-          if git diff --quiet -- data/reklam_eklenen.json; then echo "Yeni reklam yok"; git checkout -- data; git clean -fdq data; exit 0; fi
+          if git diff --quiet -- data/reklam_eklenen.json; then
+            echo "Yeni reklam yok"; cp data/reklam_durum.json /tmp/durum.json; git checkout -- data; git clean -fdq data; cp /tmp/durum.json data/reklam_durum.json
+            git add data/reklam_durum.json; git commit -m "Reklam kontrolü: yeni reklam yok" || exit 0
+            for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done; exit 1
+          fi
           git add -A data/reklam_[0-9]*.bin data/reklam_ozet.bin data/reklam_eklenen.json data/reklam_durum.json
           git commit -m "Rakip reklamları siteye işlendi"
           for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done

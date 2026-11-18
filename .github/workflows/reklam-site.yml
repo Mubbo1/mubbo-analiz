@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Gerekli paketler
-        run: pip install --quiet cryptography
+        run: pip install --quiet cryptography pillow
       - name: Yeni reklamları ekle
         env:
           MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}

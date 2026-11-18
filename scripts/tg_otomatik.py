@@ -17,8 +17,8 @@ import gomme
 from artifact_tel import tur as urun_turu
 
 DATA = tg.DATA
-AYNI = float(os.environ.get('TG_AYNI', '0.93'))
-BENZER = float(os.environ.get('TG_BENZER', '0.80'))
+AYNI = float(os.environ.get('TG_AYNI', '1.01'))   # varsayılan: otomatik "aynı" kararı yok; aynı kararını Claude istenince verir
+BENZER = float(os.environ.get('TG_BENZER', '0.70'))
 YAKIN = {'kaban': {'trenckot', 'mont'}, 'trenckot': {'kaban'}, 'mont': {'kaban', 'ceket'}, 'ceket': {'mont'}, 'hirka': {'kazak'},
          'kazak': {'hirka'}, 'tisort': {'polo'}, 'polo': {'tisort'}, 'jean': {'pantolon'}, 'pantolon': {'jean'}, 'esofman': {'takim'}, 'takim': {'esofman'}}
 

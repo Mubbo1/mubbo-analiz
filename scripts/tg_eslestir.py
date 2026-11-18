@@ -55,6 +55,18 @@ def img(b64):
     return Image.open(io.BytesIO(base64.b64decode(b64))).convert('RGB')
 
 
+def gorsel(g, px=180):
+    """Katalog görseli küçük data URL'ye çevrilir; görsel yalnız adres (https://...) ise adres olduğu gibi kalır."""
+    if not g:
+        return None
+    if g.startswith('http') or g.startswith('//'):
+        return g
+    try:
+        return 'data:image/jpeg;base64,' + thumb_b64(img(g), px)
+    except Exception:
+        return None
+
+
 def thumb_b64(im, px=260, q=70):
     im = im.copy(); im.thumbnail((px, px)); o = io.BytesIO(); im.save(o, 'JPEG', quality=q); return base64.b64encode(o.getvalue()).decode()
 
@@ -254,7 +266,7 @@ def yaz(path):
                 if not a:
                     continue
                 g = kat.get(a['link'], {}).get('g')
-                out.append({**a, 'karar': karar, 'gorsel': ('data:image/jpeg;base64,' + thumb_b64(img(g), 180)) if g else kat.get(a['link'], {}).get('gurl')})
+                out.append({**a, 'karar': karar, 'gorsel': gorsel(g) or kat.get(a['link'], {}).get('gurl')})
             return out
         ayni = es(s.get('ayni', []), 'ayni')
         # aynı modelin diğer renkleri (ör. Ketench (E1867), Madmext E7207 gibi model kodları)
@@ -268,7 +280,7 @@ def yaz(path):
                 if r['m'] == a['marka'] and r['l'] not in gor and kod({'urun': r['u']}) == k:
                     gor.add(r['l']); g = r.get('g')
                     ayni.append({'no': 0, 'marka': r['m'], 'urun': r['u'], 'fiyat': r['f'], 'eski_fiyat': r.get('e'), 'link': r['l'], 'karar': 'ayni', 'renk_farkli': True,
-                                 'gorsel': ('data:image/jpeg;base64,' + thumb_b64(img(g), 180)) if g else r.get('gurl')})
+                                 'gorsel': gorsel(g) or r.get('gurl')})
         eski[s['id']] = {'id': s['id'], 'kanal': u['kanal'], 'toptanci': u['baslik'], 'tarih': u['tarih'], 'metin': u['metin'], 'post': u['post'],
                         'ozet': s.get('ozet', ''), 'tur': s.get('tur', ''), 'foto': 'data:image/jpeg;base64,' + thumb_b64(img(u['fotolar'][0]), 360),
                         'fotolar': ['data:image/jpeg;base64,' + thumb_b64(img(f), 200) for f in u['fotolar'][1:4]],

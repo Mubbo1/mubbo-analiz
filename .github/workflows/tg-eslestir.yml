@@ -1,0 +1,38 @@
+name: Telegram ürünlerini rakiplerle eşleştir
+
+# Toptancı ürünlerinin fotoğrafları rakip ürünlerin fotoğraflarıyla karşılaştırılır; her ürün için en benzer rakip
+# ürünler listelenir (Claude kredisi harcamaz). "Aynı ürün" kararı istenince Claude ile verilir.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 17 * * *'   # her gün 20.07 TR
+
+permissions:
+  contents: write
+
+concurrency:
+  group: depo-yaz
+  cancel-in-progress: false
+
+jobs:
+  eslestir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerekli paketler
+        run: pip install --quiet cryptography pillow numpy onnxruntime
+      - name: Eşleştir
+        env:
+          MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}
+          TG_EN_COK: '300'
+        run: python3 scripts/tg_otomatik.py
+      - name: Kaydet
+        run: |
+          git config user.name "mubbo-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/tg_sonuc.bin data/tg_toptan.bin data/tg_liste.bin data/tg_esles_durum.bin
+          git diff --cached --quiet && exit 0
+          git commit -m "Telegram ürünleri rakiplerle eşleştirildi"
+          for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          exit 1

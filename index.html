@@ -29,7 +29,7 @@
   color-scheme:dark;
 }
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,rgba(214,180,122,.07),transparent 60%),radial-gradient(900px 500px at 110% 10%,rgba(79,207,207,.04),transparent 60%),var(--color-bg) fixed;color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px;line-height:1.45}
+body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,rgba(214,180,122,.07),transparent 60%),radial-gradient(900px 500px at 110% 10%,rgba(79,207,207,.04),transparent 60%),var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);font-size:14px;line-height:1.45}
 #dash-root{padding-inline:max(16px,min(24px,2vw));padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));max-width:1400px;margin:0 auto}
 img{max-width:100%}
 [hidden]{display:none!important}
@@ -74,11 +74,18 @@ a{color:inherit}
     return await gunzip(await S.decrypt({name:'AES-GCM', iv:iv}, k, u.slice(17 + n)));
   }
   // data/x.json isteklerini şifreli data/x.bin dosyasından karşılar
-  window.MB_JSON = async function(path, opt){
+  // Aynı oturumda aynı dosya bir kez indirilip çözülür (sayfalar arası geçiş anında açılsın)
+  var MB_MEMO = {};
+  window.MB_JSON = function(path, opt){
     var p = path.replace(/\.json(\?|$)/, '.bin$1');
-    var r = await fetch(p, opt || {cache:'no-cache'});
-    if (!r.ok) throw new Error(r.status);
-    return JSON.parse(new TextDecoder().decode(await cozBin(await r.arrayBuffer())));
+    if (!opt && MB_MEMO[p]) return MB_MEMO[p];
+    var pr = (async function(){
+      var r = await fetch(p, opt || {cache:'no-cache'});
+      if (!r.ok) throw new Error(r.status);
+      return JSON.parse(new TextDecoder().decode(await cozBin(await r.arrayBuffer())));
+    })();
+    if (!opt) { MB_MEMO[p] = pr; pr.catch(function(){ delete MB_MEMO[p]; }); }
+    return pr;
   };
   window.MB_CIKIS = function(){ try { localStorage.removeItem(KEY); } catch(e){} location.reload(); };
 

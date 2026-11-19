@@ -253,6 +253,35 @@ def yakin(uid, nos):
         print(f"{a['no']}: {a['marka']} · {a['urun']} · {a['fiyat']}")
 
 
+def liste_yaz(rows, ozel):
+    """Telegram sayfası: fotoğrafsız hafif liste (tg_liste.bin, hızlı açılır) + kanal başına fotoğraf dosyası (tg_gorsel/<kanal>.bin,
+    yalnız o toptancı açılınca iner). Rakip ürün görseli adres (https) ise listede kalır, gömülü görseller fotoğraf dosyasına taşınır."""
+    def kucult(du, px):
+        try:
+            im = img(du.split(',', 1)[1]); im.thumbnail((px, px * 2))
+            b = io.BytesIO(); im.convert('RGB').save(b, 'WEBP', quality=62, method=5)
+            return 'data:image/webp;base64,' + base64.b64encode(b.getvalue()).decode()
+        except Exception:
+            return du
+    liste, gorsel = [], {}
+    for r in rows:
+        g = gorsel.setdefault(r.get('kanal') or '_', {})
+        kayit = {'foto': kucult(r['foto'], 300) if r.get('foto') else None, 'fotolar': [kucult(f, 160) for f in r.get('fotolar') or []], 'g': {}}
+        x = {k: v for k, v in r.items() if k not in ('foto', 'fotolar', 'ayni', 'benzer')}
+        for alan in ('ayni', 'benzer'):
+            x[alan] = []
+            for a in r.get(alan) or []:
+                a = dict(a); gs = a.get('gorsel') or ''
+                if gs.startswith('data:'):
+                    kayit['g'][a['link']] = kucult(gs, 140); a.pop('gorsel', None)
+                x[alan].append(a)
+        g[r['id']] = kayit; liste.append(x)
+    open(os.path.join(DATA, 'tg_liste.bin'), 'wb').write(sifrele(liste, ozel))
+    os.makedirs(os.path.join(DATA, 'tg_gorsel'), exist_ok=True)
+    for kanal, d in gorsel.items():
+        open(os.path.join(DATA, 'tg_gorsel', re.sub(r'[^A-Za-z0-9_.-]', '_', kanal) + '.bin'), 'wb').write(sifrele(d, ozel))
+
+
 def yaz(path):
     ozel = ozel_anahtar(); kat = {r['l']: r for r in katalog(ozel)}
     eski = {r['id']: r for r in sonuclar(ozel)}
@@ -290,8 +319,7 @@ def yaz(path):
     # Toptancılar sayfası için hafif kopya: yalnız rakipte aynısı bulunanlar, ek fotoğraflar ve benzerler olmadan (site hızlı açılsın)
     hafif = [{k: r[k] for k in ('tarih', 'toptanci', 'kanal', 'ozet', 'post', 'foto', 'ayni') if k in r} for r in rows if r.get('ayni')]
     open(os.path.join(DATA, 'tg_toptan.bin'), 'wb').write(sifrele(hafif, ozel))
-    # Telegram sayfası için ek fotoğrafsız liste (yarı boyut)
-    open(os.path.join(DATA, 'tg_liste.bin'), 'wb').write(sifrele([{k: v for k, v in r.items() if k != 'fotolar'} for r in rows], ozel))
+    liste_yaz(rows, ozel)
     try:
         from datetime import datetime, timezone
         hepsi = urunler(ozel); bitti = {r['id'] for r in rows}

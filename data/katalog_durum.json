@@ -2,10 +2,10 @@
 "markalar": {
 "tudors": {
 "marka": "Tudors",
-"urun": 4859,
+"urun": 4852,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 94,
+"sure": 87,
 "yeni_gorsel": 11
 },
 "outfitman": {
@@ -13,7 +13,7 @@
 "urun": 532,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 10,
+"sure": 11,
 "yeni_gorsel": 0
 },
 "lazzy": {
@@ -37,7 +37,7 @@
 "urun": 82,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 13,
+"sure": 15,
 "yeni_gorsel": 0
 },
 "madmext": {
@@ -45,7 +45,7 @@
 "urun": 4803,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 151,
+"sure": 131,
 "yeni_gorsel": 6
 },
 "ferell": {
@@ -53,7 +53,7 @@
 "urun": 947,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 12,
+"sure": 11,
 "yeni_gorsel": 0
 },
 "davidgerenzo": {
@@ -66,10 +66,10 @@
 },
 "grimelange": {
 "marka": "Grimelange",
-"urun": 1377,
+"urun": 1375,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 51,
+"sure": 46,
 "yeni_gorsel": 0
 },
 "forer": {
@@ -77,15 +77,15 @@
 "urun": 122,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 103,
+"sure": 88,
 "yeni_gorsel": 2
 },
 "nomarc": {
 "marka": "NOMARC",
-"urun": 2237,
+"urun": 2236,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 74,
+"sure": 66,
 "yeni_gorsel": 2
 },
 "flaw": {
@@ -101,7 +101,7 @@
 "urun": 899,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 204,
+"sure": 264,
 "yeni_gorsel": 1
 },
 "no362": {
@@ -109,15 +109,15 @@
 "urun": 1434,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 17,
+"sure": 15,
 "yeni_gorsel": 2
 },
 "semih": {
 "marka": "Semih Kurtulmuş",
-"urun": 632,
+"urun": 631,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 8,
+"sure": 7,
 "yeni_gorsel": 4
 },
 "bytagayman": {
@@ -125,7 +125,7 @@
 "urun": 175,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 103,
+"sure": 101,
 "yeni_gorsel": 0
 },
 "manstro": {
@@ -133,7 +133,7 @@
 "urun": 398,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 146,
+"sure": 112,
 "yeni_gorsel": 0
 },
 "hafka": {
@@ -141,7 +141,7 @@
 "urun": 1448,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 108,
+"sure": 105,
 "yeni_gorsel": 0
 },
 "ketench": {
@@ -149,7 +149,7 @@
 "urun": 1257,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 17,
+"sure": 15,
 "yeni_gorsel": 18
 },
 "livioferri": {
@@ -165,7 +165,7 @@
 "urun": 1351,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 42,
+"sure": 35,
 "yeni_gorsel": 11
 },
 "badbear": {
@@ -173,7 +173,7 @@
 "urun": 498,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 12,
+"sure": 10,
 "yeni_gorsel": 0
 },
 "bpm": {
@@ -181,7 +181,7 @@
 "urun": 1102,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 20,
+"sure": 16,
 "yeni_gorsel": 0
 },
 "labels": {
@@ -189,15 +189,15 @@
 "urun": 184,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 3,
+"sure": 2,
 "yeni_gorsel": 3
 },
 "respire": {
 "marka": "Respire",
-"urun": 884,
+"urun": 883,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 70,
+"sure": 46,
 "yeni_gorsel": 0
 },
 "slatra": {
@@ -205,7 +205,7 @@
 "urun": 422,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 14,
+"sure": 11,
 "yeni_gorsel": 1
 },
 "streetbox": {
@@ -213,7 +213,7 @@
 "urun": 209,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 4,
+"sure": 3,
 "yeni_gorsel": 0
 },
 "tarzcool": {
@@ -221,7 +221,7 @@
 "urun": 252,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 10,
+"sure": 8,
 "yeni_gorsel": 0
 },
 "catch": {
@@ -237,7 +237,7 @@
 "urun": 1044,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 3,
+"sure": 2,
 "yeni_gorsel": 4
 },
 "juniorcrime": {
@@ -261,7 +261,7 @@
 "urun": 691,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 7,
+"sure": 6,
 "yeni_gorsel": 0
 },
 "vamos": {
@@ -269,15 +269,15 @@
 "urun": 2439,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 7,
+"sure": 6,
 "yeni_gorsel": 0
 },
 "gangown": {
 "marka": "Gangown",
-"urun": 694,
+"urun": 695,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 274,
+"sure": 470,
 "yeni_gorsel": 0
 },
 "void": {
@@ -285,15 +285,15 @@
 "urun": 515,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 1051,
+"sure": 998,
 "yeni_gorsel": 0
 },
 "wunder": {
 "marka": "Wunder",
-"urun": 3258,
+"urun": 3255,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 692,
+"sure": 677,
 "yeni_gorsel": 3
 },
 "bylondon": {
@@ -301,7 +301,7 @@
 "urun": 717,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 110,
+"sure": 114,
 "yeni_gorsel": 0
 },
 "erdtrend": {
@@ -309,23 +309,23 @@
 "urun": 143,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 35,
+"sure": 30,
 "yeni_gorsel": 0
 },
 "kaft": {
 "marka": "Kaft",
-"urun": 298,
+"urun": 319,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 53,
+"sure": 45,
 "yeni_gorsel": 0
 },
 "tarzyeri": {
 "marka": "Tarz Yeri",
-"urun": 2139,
+"urun": 2132,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 865,
+"sure": 617,
 "yeni_gorsel": 0
 },
 "tommylife": {
@@ -333,7 +333,7 @@
 "urun": 1924,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 790,
+"sure": 620,
 "yeni_gorsel": 0
 },
 "voltaj": {
@@ -341,7 +341,7 @@
 "urun": 2029,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 310,
+"sure": 250,
 "yeni_gorsel": 0
 },
 "zaee": {
@@ -349,7 +349,7 @@
 "urun": 530,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 269,
+"sure": 341,
 "yeni_gorsel": 4
 },
 "zafoni": {
@@ -357,7 +357,7 @@
 "urun": 1483,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 298,
+"sure": 344,
 "yeni_gorsel": 0
 },
 "bybasicman": {
@@ -377,17 +377,17 @@
 "urun": 559,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 13,
+"sure": 12,
 "yeni_gorsel": 0
 },
 "toriasman": {
 "marka": "Torias Man",
-"urun": 879,
+"urun": 877,
 "tarih": "2026-11-19",
 "durum": "ok",
-"sure": 9,
+"sure": 10,
 "yeni_gorsel": 0
 }
 },
-"son": "2026-11-18T22:55:08Z"
+"son": "2026-11-19T00:33:08Z"
 }

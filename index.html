@@ -48,6 +48,28 @@ a{color:inherit}
 #giris button:disabled{opacity:.6}
 #giris-hata{color:#d9534f;min-height:1.2em;margin:0;font-size:.9rem}</style>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+// Rakip görselleri: sitelerin orijinal fotoğrafları 1-5 MB; bilinen görsel sunucularında küçük boy (≈30-150 KB) istenir
+(function(){
+  function kucuk(u){
+    if (typeof u !== 'string' || u.indexOf('http') !== 0) return u;
+    if (u.indexOf('/cdn-cgi/image/') > 0) return u.replace(/\/cdn-cgi\/image\/[^/]+\//, '/cdn-cgi/image/width=320,quality=75,format=webp/');
+    if (/^https:\/\/static\.ticimax\.cloud\/\d+\//.test(u)) return u.replace('https://static.ticimax.cloud/', 'https://static.ticimax.cloud/cdn-cgi/image/width=320,quality=75,format=webp/');
+    if (u.indexOf('cdn.myikas.com/images/') > 0) return u.replace(/\/(\d{3,4})\/([^/]+)$/, '/360/$2');
+    if (u.indexOf('cdn.shopify.com') > 0) return u.replace(/([?&])width=\d+&?/, '$1').replace(/[?&]$/, '') + (u.indexOf('?') > 0 ? '&' : '?') + 'width=320';
+    if (u.indexOf('large_default') > 0) return u.replace('large_default', 'home_default');
+    if (/witcdn\.|voltaj\.com\.tr/.test(u)) return u.replace(/-O\.(jpe?g|png|webp)/, '-K.$1');
+    if (u.indexOf('zafoni.com/i/l/') > 0) return u.replace('/i/l/', '/i/m/');
+    return u;
+  }
+  window.MB_KUCUK = kucuk;
+  try {
+    var d = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+    Object.defineProperty(HTMLImageElement.prototype, 'src', {configurable: true, enumerable: d.enumerable, get: d.get,
+      set: function(v){ try { this.decoding = 'async'; } catch(e){} d.set.call(this, kucuk(v)); }});
+  } catch (e) {}
+})();
+</script>
 <script>// Giriş ekranı ve şifreli verinin çözülmesi. Parola olmadan sayfa ve veriler okunamaz.
 (function(){
   var S = crypto.subtle, ozel = null, KEY = 'mubbo_k';

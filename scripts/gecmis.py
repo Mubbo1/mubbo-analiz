@@ -1,0 +1,279 @@
+#!/usr/bin/env python3
+"""Rakip ürünlerinin günlük geçmişi: fiyat değişiklikleri, tükenen ürünler ve hızla tükenmek üzere olanlar.
+
+Her katalog yenilemesinden sonra (GitHub Actions, MUBBO_SIFRE ile) çalışır:
+  data/gecmis/fiyat.bin  {link: [marka, ad, görsel, [[gün, fiyat, eski_fiyat], ...], ilk_gün, son_gün]}  (ürün detayı için)
+  data/gecmis/stok.bin   {link_özeti: [[gün, adet], ...]}  (son 21 gün; stok adedini gösteren siteler)
+  data/gecmis/olay.bin   [[gün, tür, link], ...]  (son 45 gün: 'dus' fiyat düştü, 'art' fiyat arttı, 'yeni', 'bitti' stoktan çıktı)
+  data/degisim.bin       siteye özet: son 7 günün olayları + tükenmek üzere olanlar + günlük sayılar
+İlk kurulum: python3 scripts/gecmis.py --git  (depo geçmişindeki günlük katalogları sırayla işler)
+"""
+import datetime as dt, glob, hashlib, json, os, subprocess, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tg_eslestir as t
+import yeni_urun as yu
+from artifact_tel import aksesuar
+
+DATA = t.DATA
+GD = os.path.join(DATA, 'gecmis')
+SUPHE = {'Ferell Moda', 'Torias Man'}   # stok sayıları gerçek görünmüyor
+
+
+def lh(l):
+    return hashlib.sha1(yu.norm(l).encode()).hexdigest()[:10]
+
+
+def oku(ad, o, bos):
+    p = os.path.join(GD, ad + '.bin')
+    try:
+        return t.coz(p, o)
+    except Exception:
+        return bos
+
+
+def yaz(ad, obj, o):
+    os.makedirs(GD, exist_ok=True)
+    open(os.path.join(GD, ad + '.bin'), 'wb').write(t.sifrele(obj, o))
+
+
+def uygula(gun, kat, durum, stok, F, S, O):
+    """Bir günlük anlık görüntüyü geçmişe işler. kat: {anahtar: [satırlar]}, durum: katalog_durum markaları, stok: {anahtar: {özet: adet}}"""
+    ok_marka = {m.get('marka') for k, m in durum.items() if m.get('durum') == 'ok' and k in kat}
+    simdi = set()
+    for key, rows in kat.items():
+        for r in rows:
+            l = r.get('l'); f = r.get('f')
+            if not l or not f or aksesuar(r.get('u') or ''):
+                continue
+            simdi.add(l); e = r.get('e') if (r.get('e') or 0) > f else None
+            g = r.get('g') if isinstance(r.get('g'), str) and r.get('g', '').startswith('http') else None
+            k = F.get(l)
+            if not k:
+                F[l] = [r.get('m'), r.get('u'), g, [[gun, f, e]], gun, gun]
+                if F.get('_ilk_gun') and F['_ilk_gun'] < gun:
+                    O.append([gun, 'yeni', l])
+                continue
+            k[0], k[1] = r.get('m'), r.get('u'); k[2] = g or k[2]
+            son_f = k[3][-1][1]
+            if abs(son_f - f) >= 0.5:
+                k[3].append([gun, f, e]); O.append([gun, 'dus' if f < son_f else 'art', l])
+            if k[5] != gun:
+                onceki = k[5]
+                k[5] = gun
+                if onceki and onceki < F.get('_son_gun', gun) and F.get('_son_gun') != gun:
+                    pass
+    # stoktan çıkanlar: dün vardı, bugün yok (markanın sitesi bugün de okunduysa)
+    dun = F.get('_son_gun')
+    if dun and dun < gun:
+        for l, k in F.items():
+            if l.startswith('_'):
+                continue
+            if k[5] == dun and l not in simdi and k[0] in ok_marka:
+                O.append([gun, 'bitti', l])
+    F['_son_gun'] = gun
+    F.setdefault('_ilk_gun', gun)
+    for key, st in (stok or {}).items():
+        for h, adet in st.items():
+            if adet is None:
+                continue
+            s = S.setdefault(h, [])
+            if not s or s[-1][0] != gun:
+                s.append([gun, adet])
+    sinir = (dt.date.fromisoformat(gun) - dt.timedelta(days=21)).isoformat()
+    for h in list(S):
+        S[h] = [x for x in S[h] if x[0] >= sinir]
+        if not S[h]:
+            del S[h]
+    sinir45 = (dt.date.fromisoformat(gun) - dt.timedelta(days=45)).isoformat()
+    O[:] = [x for x in O if x[0] >= sinir45]
+
+
+def supheli_markalar():
+    """Ürün başına günde 5'ten fazla satış çıkan markalar: sitedeki stok sayısı temsilî (Tudors, Madmext gibi)"""
+    sup = set(SUPHE)
+    try:
+        adlar = json.load(open(os.path.join(DATA, 'satis_gun.json')))[-7:]
+        o = t.ozel_anahtar(); top = {}
+        for a in adlar:
+            for r in t.coz(os.path.join(DATA, 'satis_gun', a[:-5] + '.bin'), o):
+                x = top.setdefault(r['marka'], [0, 0]); x[0] += r['adet']; x[1] += r.get('urun_sayisi') or 0
+        sup |= {m for m, (a, u) in top.items() if u and a / u >= 5}
+    except Exception as e:
+        print('satış oranı okunamadı', e)
+    return sup
+
+
+def ozet(F, S, O, kat_simdi, o):
+    gun = F.get('_son_gun')
+    sinir = (dt.date.fromisoformat(gun) - dt.timedelta(days=7)).isoformat()
+    sinir14 = (dt.date.fromisoformat(gun) - dt.timedelta(days=14)).isoformat()
+    def urun(l, **ek):
+        k = F.get(l)
+        if not k:
+            return None
+        p = k[3]
+        return dict(m=k[0], u=k[1], l=l, g=k[2], f=p[-1][1], e=p[-1][2], **ek)
+    # fiyatı sürekli gidip gelen ürünler (varyant/kur oynaması) güvenilmez: 14 günde 3+ değişiklik
+    oynak = {l for l, k in F.items() if not l.startswith('_') and sum(1 for x in k[3] if x[0] >= sinir14) >= 4}
+    # bir markanın ürünlerinin çoğu oynaksa o markanın fiyat değişiklikleri hiç gösterilmez
+    mt, mo = {}, {}
+    for l, k in F.items():
+        if l.startswith('_') or k[5] != gun:
+            continue
+        mt[k[0]] = mt.get(k[0], 0) + 1
+        if l in oynak: mo[k[0]] = mo.get(k[0], 0) + 1
+    oynak_marka = {m for m in mt if mo.get(m, 0) >= max(15, mt[m] * 0.15)}
+    # bir günde ürünlerinin %25'inden fazlası "bitti" görünen marka: site o gün eksik okunmuş sayılır
+    bitti_say = {}
+    for g, tur, l in O:
+        if tur == 'bitti' and l in F:
+            bitti_say[(g, F[l][0])] = bitti_say.get((g, F[l][0]), 0) + 1
+    eksik = {(g, m) for (g, m), n in bitti_say.items() if n > max(30, mt.get(m, 0) * 0.25)}
+    dus, art, bitti, yeni_say, gunluk = [], [], [], {}, {}
+    for l, k in F.items():
+        if l.startswith('_') or l in oynak or k[0] in oynak_marka or k[5] != gun:
+            continue
+        p = k[3]
+        if len(p) < 2 or p[-1][0] < sinir:
+            continue
+        onceki = next((x[1] for x in reversed(p[:-1]) if True), None)
+        simdi = p[-1][1]
+        if not onceki:
+            continue
+        yz = round(100 * (simdi - onceki) / onceki, 1)
+        if abs(yz) < 3 or abs(yz) > 80:
+            continue
+        u = urun(l, tarih=p[-1][0], onceki=onceki, yeni=simdi, yuzde=yz)
+        (dus if yz < 0 else art).append(u)
+    for g, tur, l in O:
+        if g < sinir or l not in F:
+            continue
+        m = F[l][0]
+        if tur == 'bitti':
+            if (g, m) in eksik or l in [x for x in ()]:
+                continue
+            if F[l][5] != gun:   # bugün de yok (geri gelmedi)
+                u = urun(l, tarih=g)
+                if u: bitti.append(u)
+            gunluk.setdefault(g, {'dus': 0, 'art': 0, 'yeni': 0, 'bitti': 0})['bitti'] += 1
+        elif tur == 'yeni':
+            yeni_say[m] = yeni_say.get(m, 0) + 1
+            gunluk.setdefault(g, {'dus': 0, 'art': 0, 'yeni': 0, 'bitti': 0})['yeni'] += 1
+        elif l not in oynak and m not in oynak_marka:
+            gunluk.setdefault(g, {'dus': 0, 'art': 0, 'yeni': 0, 'bitti': 0})[tur] += 1
+    def tekil(xs):   # aynı ürünün renkleri tek satır
+        d = {}
+        for x in xs:
+            d.setdefault((x['m'], x['u'], x.get('yeni')), x)
+        return list(d.values())
+    dus = sorted(tekil(dus), key=lambda x: x['yuzde'])[:300]
+    art = sorted(tekil(art), key=lambda x: -x['yuzde'])[:300]
+    bitti = sorted(tekil(bitti), key=lambda x: x['tarih'], reverse=True)[:300]
+    # hızla tükenenler: son 7 günde günde ortalama >= 1 satan ve stoğu 5 günden az yetecek ürünler
+    sup = supheli_markalar()
+    lmap = {lh(l): l for l, k in F.items() if not l.startswith('_') and k[5] == gun}
+    hizli = []
+    for h, s in S.items():
+        l = lmap.get(h)
+        if not l or len(s) < 3 or F[l][0] in sup:
+            continue
+        son7 = [x for x in s if x[0] >= sinir]
+        if len(son7) < 3:
+            continue
+        dusus = sum(max(0, a[1] - b[1]) for a, b in zip(son7, son7[1:]) if a[1] - b[1] < 500)
+        gunler = max(1, (dt.date.fromisoformat(son7[-1][0]) - dt.date.fromisoformat(son7[0][0])).days)
+        gs = dusus / gunler; stok = son7[-1][1]
+        if 1 <= gs <= 60 and 0 < stok <= gs * 5:
+            hizli.append(urun(l, stok=stok, gunluk=round(gs, 1), kalan_gun=round(stok / gs, 1)))
+    hizli = sorted(tekil([x for x in hizli if x]), key=lambda x: (x['kalan_gun'], -x['gunluk']))[:200]
+    return {'tarih': gun, 'dus': dus, 'art': art, 'bitti': bitti, 'hizli': hizli, 'yeni_marka': yeni_say,
+            'oynak_marka': sorted(oynak_marka), 'supheli': sorted(sup),
+            'gunluk': [dict(gun=g, **v) for g, v in sorted(gunluk.items())]}
+
+
+def anlik():
+    durum = json.load(open(os.path.join(DATA, 'katalog_durum.json'))).get('markalar', {})
+    return durum
+
+
+def katalog_oku(o, kaynak=None):
+    """kaynak None: diskteki dosyalar; değilse git commit'i"""
+    kat, stok = {}, {}
+    if kaynak is None:
+        durum = json.load(open(os.path.join(DATA, 'katalog_durum.json'))).get('markalar', {})
+        for f in glob.glob(os.path.join(DATA, 'katalog', '*.bin')):
+            try: kat[os.path.basename(f)[:-4]] = t.coz(f, o)
+            except Exception: pass
+        for f in glob.glob(os.path.join(DATA, 'satis', '*.json')):
+            try: stok[os.path.basename(f)[:-5]] = json.load(open(f)).get('stok', {})
+            except Exception: pass
+        return durum, kat, stok
+    def goster(p):
+        return subprocess.run(['git', 'show', f'{kaynak}:{p}'], capture_output=True, cwd=os.path.dirname(DATA)).stdout
+    durum = json.loads(goster('data/katalog_durum.json') or b'{}').get('markalar', {})
+    for k in durum:
+        b = goster(f'data/katalog/{k}.bin')
+        if b:
+            try: kat[k] = coz_bytes(b, o)
+            except Exception: pass
+        s = goster(f'data/satis/{k}.json')
+        if s:
+            try: stok[k] = json.loads(s).get('stok', {})
+            except Exception: pass
+    return durum, kat, stok
+
+
+def coz_bytes(b, o):
+    import tempfile
+    with tempfile.NamedTemporaryFile(suffix='.bin', delete=False) as f:
+        f.write(b); p = f.name
+    try:
+        return t.coz(p, o)
+    finally:
+        os.remove(p)
+
+
+def gun_of(iso_tr):
+    # katalog işi gece yarısını geçebiliyor: TR saatiyle 06:00'dan önceki çalıştırma önceki güne sayılır
+    d = dt.datetime.fromisoformat(iso_tr)
+    return (d - dt.timedelta(hours=6)).date().isoformat()
+
+
+def main():
+    o = t.ozel_anahtar()
+    if '--ozet' in sys.argv:
+        F = oku('fiyat', o, {}); S = oku('stok', o, {}); O = oku('olay', o, [])
+        oz = ozet(F, S, O, {}, o); open(os.path.join(DATA, 'degisim.bin'), 'wb').write(t.sifrele(oz, o))
+        print('özet:', oz['tarih'], 'düşen', len(oz['dus']), 'artan', len(oz['art']), 'tükenen', len(oz['bitti']), 'hızlı', len(oz['hizli']), oz['oynak_marka'], oz['supheli']); return
+    if '--git' in sys.argv:
+        F, S, O = {}, {}, []
+        satirlar = subprocess.run(['git', 'log', '--reverse', '--format=%H %ad', '--date=iso-strict', '--', 'data/katalog_durum.json'],
+                                  capture_output=True, text=True, cwd=os.path.dirname(DATA)).stdout.split('\n')
+        son = {}
+        for s in satirlar:
+            if not s.strip():
+                continue
+            h, tarih = s.split(' ', 1)
+            tr = dt.datetime.fromisoformat(tarih).astimezone(dt.timezone(dt.timedelta(hours=3)))
+            son[gun_of(tr.replace(tzinfo=None).isoformat())] = h
+        for gun in sorted(son):
+            durum, kat, stok = katalog_oku(o, son[gun])
+            uygula(gun, kat, durum, stok, F, S, O)
+            print(gun, len(kat), 'marka', len(O), 'olay', flush=True)
+    else:
+        F = oku('fiyat', o, {}); S = oku('stok', o, {}); O = oku('olay', o, [])
+        durum, kat, stok = katalog_oku(o)
+        gun = gun_of((dt.datetime.utcnow() + dt.timedelta(hours=3)).replace(microsecond=0).isoformat())
+        uygula(gun, kat, durum, stok, F, S, O)
+    # 60 günden uzun süredir görülmeyen ürünler geçmişten silinir (dosya büyümesin)
+    sinir = (dt.date.fromisoformat(F['_son_gun']) - dt.timedelta(days=60)).isoformat()
+    for l in [l for l, k in F.items() if not l.startswith('_') and k[5] < sinir]:
+        del F[l]
+    yaz('fiyat', F, o); yaz('stok', S, o); yaz('olay', O, o)
+    oz = ozet(F, S, O, {}, o)
+    open(os.path.join(DATA, 'degisim.bin'), 'wb').write(t.sifrele(oz, o))
+    print('özet:', oz['tarih'], 'düşen', len(oz['dus']), 'artan', len(oz['art']), 'tükenen', len(oz['bitti']), 'hızlı', len(oz['hizli']))
+
+
+if __name__ == '__main__':
+    main()

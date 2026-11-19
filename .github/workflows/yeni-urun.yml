@@ -19,14 +19,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Gerekli paket
-        run: pip install --quiet cryptography
+        run: pip install --quiet cryptography pillow
       - name: Rakip siteleri tara
         run: python3 scripts/yeni_urun.py
+      - name: Küçük parçaları birleştir
+        env:
+          MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}
+        run: python3 scripts/site_paket.py yeni || true
       - name: Sonuçları kaydet
         run: |
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/yeni_durum.bin data/yeni_state.json data/yeni_parcalar.json data/yeni 2>/dev/null || git add data/yeni_durum.bin data/yeni_state.json
+          git add -A data/yeni_durum.bin data/yeni_state.json data/yeni_parcalar.json data/yeni 2>/dev/null || git add data/yeni_durum.bin data/yeni_state.json
           git diff --cached --quiet && exit 0
           git commit -m "Yeni ürün kontrolü"
           for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done

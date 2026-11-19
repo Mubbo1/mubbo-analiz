@@ -169,7 +169,10 @@ a{color:inherit}
     var st = cache[id] = {status:'loading', data:[], columns:[], meta:[]};
     var q = load.bust && load.bust[id] ? '?t=' + load.bust[id] : '';
     var p = id === 'katalog_idx'
-      ? fetch('data/katalog_durum.json', {cache:'no-cache'}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      ? window.MB_JSON('data/katalog_site.json').then(function(d){   // tek dosya: stoğu bilinmeyen rakipler ve aksesuarlar sunucuda ayıklanmış
+          if (!d || !d.rows) throw new Error('paket yok');
+          window.MB_STALE = d.eski || []; var rs = d.rows; rs._aks = 1; return rs; })
+        .catch(function(){ return fetch('data/katalog_durum.json', {cache:'no-cache'}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
           .then(function(d){
             // stok bilgisi 1 günden eski olan (sitesi açılmayan) rakipler gösterilmez: stokta mı bilinemiyor
             var sinir = new Date(Date.now() - 864e5).toISOString().slice(0, 10), eski = [];
@@ -177,7 +180,7 @@ a{color:inherit}
             window.MB_STALE = eski;
             return Promise.all(keys.map(function(k){ return window.MB_JSON('data/katalog/' + k + '.json').catch(function(){ return []; }); })); })
           .then(function(parts){ return [].concat.apply([], parts); })
-          .catch(function(){ return window.MB_JSON('data/katalog_idx.json'); })
+          .catch(function(){ return window.MB_JSON('data/katalog_idx.json'); }); })
       : window.MB_JSON('data/' + encodeURIComponent(id) + '.json' + q);
     if (id === 'toptanci') p = p.then(function(base){   // Telegram eşleşmeleri: toptancının attığı ürünün aynısı rakipte satılıyor
       return window.MB_JSON('data/tg_toptan.json').catch(function(){ return window.MB_JSON('data/tg_sonuc.json'); }).catch(function(){ return []; }).then(function(tg){
@@ -202,7 +205,7 @@ a{color:inherit}
     });
     p
       .then(function(d){ if (!Array.isArray(d)) d = d.rows || d.data || d.results || d;
-        if (AKS_DS[id] && Array.isArray(d)) d = d.filter(function(r){ return !aksesuar(r && (r.u || r.urun || r.model || r.ad)); });
+        if (AKS_DS[id] && Array.isArray(d) && !d._aks) d = d.filter(function(r){ return !aksesuar(r && (r.u || r.urun || r.model || r.ad)); });
         st.status = 'ok'; st.data = d; st.columns = Array.isArray(d) && d[0] ? Object.keys(d[0]) : []; notify(); })
       .catch(function(e){ st.status = 'error'; st.message = String(e); notify(); });
     return st;

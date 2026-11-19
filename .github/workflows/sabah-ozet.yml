@@ -1,0 +1,29 @@
+name: Sabah özeti (Telegram)
+
+# Her sabah rakip özetini Telegram botuyla gönderir. Claude kullanmaz, ücretsizdir.
+# Gereken sırlar (Settings > Secrets and variables > Actions): MUBBO_SIFRE, TG_BOT_TOKEN (TG_CHAT_ID isteğe bağlı).
+# TG_BOT_TOKEN tanımlı değilse hiçbir şey göndermez.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '13 6 * * *'   # her gün 09.13 TR
+
+permissions:
+  contents: read
+
+jobs:
+  gonder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerekli paketler
+        run: pip install --quiet cryptography
+      - name: Özeti gönder
+        env:
+          MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          if [ -z "$TG_BOT_TOKEN" ]; then echo "Telegram sırları henüz eklenmedi; atlanıyor."; exit 0; fi
+          python3 scripts/telegram_ozet.py

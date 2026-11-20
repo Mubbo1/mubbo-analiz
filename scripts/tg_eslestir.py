@@ -132,10 +132,10 @@ def katalog(ozel):
         idx = []
         for f in sorted(glob.glob(os.path.join(DATA, 'katalog', '*.bin'))):   # günlük yenilenen marka katalogları
             idx += coz(f, ozel)
-        from takip import TAKIP
-        idx = [r for r in idx if r.get('m') in TAKIP] or idx
         if not idx:
             idx = coz(os.path.join(DATA, 'katalog_idx.bin'), ozel)
+        from takip import TAKIP   # toptancı eşleştirmesi yalnız 5 ana rakibe göre
+        idx = [r for r in idx if r.get('m') in TAKIP]
         shards = {}
         for f in glob.glob(os.path.join(DATA, 'kimg', '*.bin')) + glob.glob(os.path.join(DATA, 'kimg_ek', '*.bin')):
             shards.update(coz(f, ozel))
@@ -148,7 +148,7 @@ def katalog(ozel):
                 yeni += coz(os.path.join(DATA, 'yeni', f[:-5] + '.bin'), ozel)
             seen = {r['l'] for r in idx}
             for y in yeni:
-                if y.get('link') and y['link'] not in seen and y.get('durum') == 'Yeni':
+                if y.get('link') and y['link'] not in seen and y.get('durum') == 'Yeni' and y.get('marka') in TAKIP:
                     idx.append({'m': y['marka'], 'u': y['urun'], 'f': y.get('fiyat'), 'e': y.get('eski_fiyat'), 'l': y['link'], 'g': None, 'gurl': y.get('gorsel'), 't': fold(y['urun'])})
         except Exception:
             pass
@@ -265,9 +265,17 @@ def liste_yaz(rows, ozel):
             return 'data:image/webp;base64,' + base64.b64encode(b.getvalue()).decode()
         except Exception:
             return du
+    # ürün türüne göre 5 ana rakibin fiyatları: benzeri bulunamayan üründe kâr hesabı bunlara göre yapılır
+    from artifact_tel import tur as urun_turu
+    kt = {}
+    for k in katalog(ozel):
+        if k.get('f'): kt.setdefault(urun_turu(k['u']), []).append(k['f'])
+    kat = {t: {'orta': sorted(v)[len(v) // 2], 'min': sorted(v)[len(v) // 10], 'max': sorted(v)[len(v) * 9 // 10], 'n': len(v)} for t, v in kt.items() if len(v) >= 10 and t not in ('diger', 'aksesuar')}
     liste, gorsel = [], {}
     for r in rows:
         g = gorsel.setdefault(r.get('kanal') or '_', {})
+        tk = r.get('tur') if r.get('tur') in kat else urun_turu((r.get('ozet') or '') + ' ' + (r.get('tur') or ''))
+        if tk in kat: r = dict(r, tur_k=tk, kat=kat[tk])
         kayit = {'foto': kucult(r['foto'], 300) if r.get('foto') else None, 'fotolar': [kucult(f, 160) for f in r.get('fotolar') or []], 'g': {}}
         x = {k: v for k, v in r.items() if k not in ('foto', 'fotolar', 'ayni', 'benzer')}
         for alan in ('ayni', 'benzer'):

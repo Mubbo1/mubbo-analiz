@@ -77,6 +77,82 @@ def ara(model, rows, mat, fotolar, metin):
     return (k if k not in ('diger', 'aksesuar') else ''), [(float(sim[i]), rows[i]) for i in sira if sim[i] > 0]
 
 
+ALT = {'pantolon', 'jean', 'sort'}
+
+
+def _lab(im, alt=False):
+    """Ürünün durduğu bölgenin ortanca rengi (Lab): üst giyimde gövde, alt giyimde bacak bölgesi"""
+    im = im.convert('RGB')
+    if im.width > im.height * 1.15:   # bazı katalog küçük resimleri yan yatık kaydedilmiş
+        im = im.rotate(-90, expand=True)
+    w, h = im.size
+    y0, y1 = (.55, .85) if alt else (.22, .5)
+    im = im.crop((int(w * .36), int(h * y0), int(w * .64), int(h * y1))).resize((24, 24))
+    a = np.asarray(im, dtype=np.float32).reshape(-1, 3) / 255.0
+    a = np.where(a > 0.04045, ((a + 0.055) / 1.055) ** 2.4, a / 12.92)
+    xyz = a @ np.array([[0.4124, 0.3576, 0.1805], [0.2126, 0.7152, 0.0722], [0.0193, 0.1192, 0.9505]]).T
+    xyz /= np.array([0.9505, 1.0, 1.089])
+    f = np.where(xyz > 0.008856, np.cbrt(xyz), 7.787 * xyz + 16 / 116)
+    lab = np.stack([116 * f[:, 1] - 16, 500 * (f[:, 0] - f[:, 1]), 200 * (f[:, 1] - f[:, 2])], 1)
+    return np.median(lab, 0)
+
+
+_RENK = {}
+def renk_rakip(r, alt=False):
+    l = (r['l'], alt)
+    if l not in _RENK:
+        g = r.get('g'); v = None
+        if g and not str(g).startswith('http'):
+            try: v = _lab(tg.img(g), alt)
+            except Exception: v = None
+        _RENK[l] = v
+    return _RENK[l]
+
+
+ESIK = float(os.environ.get('TG_BENZER_ESIK', '0.80'))
+RENK_FARK = float(os.environ.get('TG_RENK_FARK', '20'))
+
+
+def sec_benzer(model, rows, mat, fotolar, metin, adet=6):
+    """Toptancı ürününe rakipte gerçekten benzeyenler: aynı tür, görüntü benzerliği yüksek, rengi yakın.
+    Tür metinden çıkmazsa en benzer 12 ürünün çoğunluk türü kullanılır."""
+    q = foto_vektor(model, fotolar)
+    if q is None:
+        return '', []
+    sim = (mat @ q.T).max(axis=1)
+    k = urun_turu(metin or '')
+    if k in ('diger', 'aksesuar'):
+        k = ''
+    if not k:
+        say = {}
+        for j, i in enumerate(np.argsort(-sim)[:12]):
+            t = rows[i]['k']
+            if t not in ('diger', 'aksesuar'): say[t] = say.get(t, 0) + (12 - j)
+        if say:
+            en = max(say, key=say.get)
+            if say[en] >= sum(say.values()) * 0.5: k = en
+    if k:
+        sim = np.where(np.array([r['k'] == k for r in rows]), sim, -1)
+    alt = k in ALT
+    try:
+        hl = _lab(tg.img(fotolar[0]), alt)
+    except Exception:
+        hl = None
+    aday = []
+    for i in np.argsort(-sim)[:80]:
+        s = float(sim[i])
+        if s < ESIK: break
+        r = rows[i]; fark = 0.0
+        if hl is not None:
+            rl = renk_rakip(r, alt)
+            if rl is not None:
+                fark = float(np.linalg.norm(rl - hl))
+                if fark > RENK_FARK: continue
+        aday.append((s - fark / 400, s, r))
+    aday.sort(key=lambda x: -x[0])
+    return k, [(s, r) for _, s, r in aday[:adet]]
+
+
 def kalibre():
     ozel = tg.ozel_anahtar(); rows, mat = havuz(ozel); model = gomme.Model()
     linkler = {r['l'] for r in rows}
@@ -107,8 +183,8 @@ def main():
     out = []
     for b in bek:
         d = os.path.join(tg.WORK, b['id']); u = json.load(open(os.path.join(d, 'urun.json')))
-        k, ad = ara(model, rows, mat, u['fotolar'], u['metin'])
-        sec = [(s, r) for s, r in ad if s >= BENZER][:12]
+        k, ad = sec_benzer(model, rows, mat, u['fotolar'], u['metin'], adet=12)   # aynı tür, yüksek benzerlik, yakın renk
+        sec = ad
         json.dump([{'no': i + 1, 'marka': r['m'], 'urun': r['u'], 'fiyat': r['f'], 'eski_fiyat': r.get('e'), 'link': r['l'], 'benzerlik': round(s, 3)}
                    for i, (s, r) in enumerate(sec)], open(os.path.join(d, 'aday.json'), 'w'), ensure_ascii=False)
         ayni = [i + 1 for i, (s, r) in enumerate(sec) if s >= AYNI][:3]

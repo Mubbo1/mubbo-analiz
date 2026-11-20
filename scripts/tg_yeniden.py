@@ -16,8 +16,8 @@ def main():
         u = U.get(r['id'])
         if not u:
             r['benzer'] = [b for b in (r.get('benzer') or []) if b.get('marka') in TAKIP]; continue
-        _, ad = ot.ara(model, rows, mat, u['fotolar'], u['metin'] + ' ' + (r.get('ozet') or ''))
-        sec = [(s, x) for s, x in ad if s >= ot.BENZER and x['l'] not in gor][:6]
+        r['tur'], ad = ot.sec_benzer(model, rows, mat, u['fotolar'], u['metin'] + ' ' + (r.get('ozet') or ''))
+        sec = [(s, x) for s, x in ad if x['l'] not in gor][:6]
         r['benzer'] = [{'no': j + 1, 'marka': x['m'], 'urun': x['u'], 'fiyat': x['f'], 'eski_fiyat': x.get('e'), 'link': x['l'], 'benzerlik': round(s, 3),
                         'karar': 'benzer', 'gorsel': tg.gorsel(x.get('g')) or x.get('gurl')} for j, (s, x) in enumerate(sec)]
         if i % 50 == 0: print(i, len(S), flush=True)

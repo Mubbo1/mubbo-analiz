@@ -7,7 +7,8 @@ def rakip_fiyat(r):
     """Telegram ürününün rakip karşılıkları: aynı ürün varsa onlar, yoksa benzerler"""
     ref = [a for a in (r.get('ayni') or []) if a.get('fiyat')] or [a for a in (r.get('benzer') or []) if a.get('fiyat')]
     if not ref:
-        return None
+        k = r.get('kat')
+        return {'kaynak': 'tur', 'ort': k['orta'], 'orta': k['orta'], 'min': k['min'], 'max': k['max'], 'min_m': '', 'max_m': '', 'marka': 5} if k else None
     f = sorted(a['fiyat'] for a in ref)
     return {'kaynak': 'ayni' if r.get('ayni') else 'benzer', 'ort': sum(f) / len(f), 'orta': f[len(f) // 2], 'min': f[0], 'max': f[-1],
             'min_m': min(ref, key=lambda a: a['fiyat'])['marka'], 'max_m': max(ref, key=lambda a: a['fiyat'])['marka'], 'marka': len({a['marka'] for a in ref})}

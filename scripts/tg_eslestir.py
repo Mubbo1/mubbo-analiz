@@ -301,6 +301,16 @@ def liste_yaz(rows, ozel):
                 x[alan].append(a)
         g[r['id']] = kayit; liste.append(x)
     open(os.path.join(DATA, 'tg_liste.bin'), 'wb').write(sifrele(liste, ozel))
+    # Kâr analizi için ürün başına küçük, şifreli fotoğraf dosyası (data/tg_k/<id>.bin, ~10 KB): kart ekrana gelince
+    # yalnız o ürünün fotoğrafları iner, sayfa anında açılır
+    kd = os.path.join(DATA, 'tg_k'); os.makedirs(kd, exist_ok=True); yaz_ = set()
+    for kanal, d in gorsel.items():
+        for i, k in d.items():
+            ad = re.sub(r'[^A-Za-z0-9_.-]', '_', i) + '.bin'; yaz_.add(ad)
+            x = {'f': kucult(k['foto'], 200) if k.get('foto') else None, 'r': {l: kucult(g, 90) for l, g in (k.get('g') or {}).items()}}
+            open(os.path.join(kd, ad), 'wb').write(sifrele(x, ozel))
+    for f in os.listdir(kd):
+        if f not in yaz_: os.remove(os.path.join(kd, f))
     os.makedirs(os.path.join(DATA, 'tg_gorsel'), exist_ok=True)
     for kanal, d in gorsel.items():
         open(os.path.join(DATA, 'tg_gorsel', re.sub(r'[^A-Za-z0-9_.-]', '_', kanal) + '.bin'), 'wb').write(sifrele(d, ozel))

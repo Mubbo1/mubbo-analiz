@@ -64,13 +64,23 @@ def main():
     tok, chat = os.environ.get('TG_BOT_TOKEN'), os.environ.get('TG_CHAT_ID')
     if not tok:
         print('TG_BOT_TOKEN sırrı tanımlı değil; mesaj gönderilmedi.'); return
-    if not chat:   # sohbet numarası verilmediyse bota en son yazan kişiye gönder (bota bir kez /start yazmak yeter)
+    yol = os.path.join(DATA, 'tg_sohbet.bin'); o = t.ozel_anahtar()
+    if not chat:   # sohbet numarası: önce kayıtlı (şifreli) dosyadan, yoksa bota en son yazan kişiden
         up = json.load(urllib.request.urlopen(f'https://api.telegram.org/bot{tok}/getUpdates', timeout=30)).get('result', [])
         ids = [(u.get('message') or u.get('my_chat_member') or {}).get('chat', {}).get('id') for u in up]
         ids = [i for i in ids if i]
-        if not ids:
+        if ids:
+            chat = ids[-1]
+            try:
+                eski = t.coz(yol, o).get('chat') if os.path.exists(yol) else None
+            except Exception:
+                eski = None
+            if eski != chat:
+                open(yol, 'wb').write(t.sifrele({'chat': chat}, o))
+        elif os.path.exists(yol):
+            chat = t.coz(yol, o).get('chat')
+        if not chat:
             print('Bota henüz kimse yazmadı: Telegram\'da bota /start yazın.'); return
-        chat = ids[-1]
     veri = urllib.parse.urlencode({'chat_id': chat, 'text': m, 'parse_mode': 'HTML', 'disable_web_page_preview': 'true'}).encode()
     r = json.load(urllib.request.urlopen(f'https://api.telegram.org/bot{tok}/sendMessage', veri, timeout=30))
     print('gönderildi' if r.get('ok') else r)

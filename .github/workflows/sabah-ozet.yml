@@ -9,7 +9,7 @@ on:
     - cron: '13 6 * * *'   # her gün 09.13 TR
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   gonder:
@@ -27,3 +27,10 @@ jobs:
         run: |
           if [ -z "$TG_BOT_TOKEN" ]; then echo "Telegram sırları henüz eklenmedi; atlanıyor."; exit 0; fi
           python3 scripts/telegram_ozet.py
+      - name: Sohbet numarasını kaydet
+        run: |
+          if git status --porcelain data/tg_sohbet.bin | grep -q .; then
+            git config user.name "mubbo-bot"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/tg_sohbet.bin; git commit -m "Telegram sohbet numarası kaydedildi"
+            for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done
+          fi

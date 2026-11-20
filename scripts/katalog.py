@@ -185,7 +185,7 @@ def harita(site):
 
 def tsoft(site):
     # T-Soft altyapısı (ByBasicMan): site haritasındaki her kategori sayfası + sayfalama servisi (yalnız stoktakiler)
-    sm = get(site + '/sitemap.xml', 'application/xml')
+    sm = get(site + '/sitemap.xml', '*/*')
     kats = [u for u in re.findall(r'<loc>([^<]+)</loc>', sm) if re.match(re.escape(site) + r'/[a-z0-9-]+$', u)
             and not re.search(r'/(blog|urunara|markalar|musteri-hizmetleri|iletisim|hakkimizda|sss|kampanyalar|uyelik|sepet)$', u)]
     out, gor = [], set()
@@ -202,7 +202,7 @@ def tsoft(site):
                         'gurl': (site + im.group(1)) if im and im.group(1).startswith('/') else (im.group(1) if im else None), 'cat': ''})
     for k in kats:
         try:
-            h = get(k, 'text/html')
+            h = get(k, 'text/html,*/*')
         except Exception:
             continue
         oku(h)
@@ -216,7 +216,7 @@ def tsoft(site):
         for n in range(2, min(int(P.get('TotalPage') or 1), 60) + 1):
             q = urllib.parse.urlencode({'NextPageNumber': n, 'PageQueryParams': json.dumps(P, separators=(',', ':'))})
             try:
-                oku(get(site + '/store/svc/prd-list-svc.aspx?18112&' + q, 'text/html'))
+                oku(get(site + '/store/svc/prd-list-svc.aspx?18112&' + q, 'text/html,*/*'))
             except Exception:
                 break
             time.sleep(0.3)

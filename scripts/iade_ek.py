@@ -6,7 +6,6 @@ import yeni_urun as yu
 from iade_tara import al, metin
 
 SITELER = {
-    'Tudors': ['https://www.tudors.com/iade-sartlari', 'https://www.tudors.com/sikca-sorulan-sorular', 'https://www.tudors.com/'],
     'Ferell Moda': ['https://www.ferellmoda.com/'],
     'Gangown': ['https://gangown.com.tr/'],
     'Bpm Wear': ['https://www.bpmonlinestore.com/'],

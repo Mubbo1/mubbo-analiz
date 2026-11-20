@@ -18,7 +18,7 @@ INSTAGRAM = [["Ketench", "ketenchcom"], ["Ferell Moda", "ferellmoda"], ["Semih K
              ["Kaft", "kaft"], ["Labels Wear", "labelswearr"], ["Lazzy Shoes & Wear", "lazy_shoes"], ["Madmext", "madmext"], ["No 362 Clo", "no362clo"],
              ["NOMARC", "nomarctr"], ["Outfit-Man", "outfittman"], ["Papel Giyim", "papelgiyim"], ["Piedraman", "piedramann"], ["Respire", "respireclo"],
              ["Slatra", "slatra.official"], ["Streetbox", "streetboxcomtr"], ["Tarz Adam", "tarzadam"], ["Tarz Yeri", "tarzyericom"], ["The Champ", "thechamponline"],
-             ["The Manstro", "themanstro"], ["Tommylife", "tommylifecomtr"], ["Tudors", "tudorsofficial"], ["Vamos Clo", "vamosclo"], ["Voltaj Giyim", "voltajerkekgiyim"],
+             ["The Manstro", "themanstro"], ["Vamos Clo", "vamosclo"], ["Voltaj Giyim", "voltajerkekgiyim"],
              ["Wunder", "wunder"], ["Zafoni", "zafonicom"], ["DeepSEA", "deepsea.com.tr"], ["Livio Ferri", "livioferri"], ["UTT Basic", "uttbasic"], ["Torias Man", "toriasman"]]
 TIKTOK = [["Ferell Moda", "ferelmoda"], ["Semih Kurtulmuş", "semihkurtulmuss"], ["Abluka Online", "abluka.online"], ["Flaw Wear", "flawwear"],
           ["Kaft", "kaftcom"], ["Ketench", "ketench"]]   # Bpm Wear'in TikTok hesabı bulunamadı

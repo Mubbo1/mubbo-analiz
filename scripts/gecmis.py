@@ -103,7 +103,12 @@ def supheli_markalar():
     return sup
 
 
+KALDIR = {'Tudors', 'Tommylife'}   # takipten çıkarılan rakipler
+
+
 def ozet(F, S, O, kat_simdi, o):
+    F = {l: k for l, k in F.items() if l.startswith('_') or k[0] not in KALDIR}
+    O = [x for x in O if x[2] in F]
     gun = F.get('_son_gun')
     sinir = (dt.date.fromisoformat(gun) - dt.timedelta(days=7)).isoformat()
     sinir14 = (dt.date.fromisoformat(gun) - dt.timedelta(days=14)).isoformat()
@@ -206,7 +211,7 @@ def ozet(F, S, O, kat_simdi, o):
     art = sorted(tekil(art), key=lambda x: -x['yuzde'])[:300]
     bitti = sorted(tekil(bitti), key=lambda x: x['tarih'], reverse=True)[:300]
     # hızla tükenenler: son 7 günde günde ortalama >= 1 satan ve stoğu 5 günden az yetecek ürünler
-    sup = supheli_markalar()
+    sup = supheli_markalar() - KALDIR
     lmap = {lh(l): l for l, k in F.items() if not l.startswith('_') and k[5] == gun}
     hizli = []
     for h, s in S.items():

@@ -16,7 +16,7 @@ import yeni_urun as yu   # site haritası ve ürün sayfası okuyucuları
 MARKALAR = [  # anahtar, marka, site, altyapı
     ('ketench', 'Ketench', 'https://ketench.com', 'ticimax'), ('uttbasic', 'UTT Basic', 'https://www.uttbasic.com', 'ticimax'), ('toriasman', 'Torias Man', 'https://toriasman.com', 'ticimax'), ('ferell', 'Ferell Moda', 'https://www.ferellmoda.com', 'ticimax'),
     ('semih', 'Semih Kurtulmuş', 'https://semihkurtulmusfashion.com', 'ticimax'), ('madmext', 'Madmext', 'https://www.madmext.com', 'ticimax'),
-    ('tudors', 'Tudors', 'https://www.tudors.com', 'ticimax'), ('hafka', 'Hafka Giyim', 'https://www.hafkagiyim.com', 'ticimax'),
+    ('hafka', 'Hafka Giyim', 'https://www.hafkagiyim.com', 'ticimax'),
     ('nomarc', 'NOMARC', 'https://www.nomarc.com.tr', 'ticimax'), ('no362', 'No 362 Clo', 'https://www.no362clo.com', 'ticimax'),
     ('abluka', 'Abluka Online', 'https://www.ablukaonline.com.tr', 'ticimax'), ('grimelange', 'Grimelange', 'https://www.grimelange.com.tr', 'ticimax'),
     ('flaw', 'Flaw Wear', 'https://www.flawwears.com', 'ticimax'), ('outfitman', 'Outfit-Man', 'https://www.outfit-man.com', 'ticimax'),
@@ -36,7 +36,7 @@ MARKALAR = [  # anahtar, marka, site, altyapı
     ('gangown', 'Gangown', 'https://gangown.com.tr', 'harita'), ('void', 'VOID TR', 'https://voidtr.com', 'harita'), ('wunder', 'Wunder', 'https://wunder.com.tr', 'harita'),
     ('bylondon', 'By London Butik', 'https://www.bylondonbutik.com', 'harita'), ('erdtrend', 'ErdTrend', 'https://erdtrend.com', 'harita'),
     ('kaft', 'Kaft', 'https://www.kaft.com', 'harita'), ('tarzyeri', 'Tarz Yeri', 'https://tarzyeri.com', 'harita'),
-    ('tommylife', 'Tommylife', 'https://www.tommylife.com.tr', 'harita'), ('voltaj', 'Voltaj Giyim', 'https://www.voltaj.com.tr', 'harita'),
+    ('voltaj', 'Voltaj Giyim', 'https://www.voltaj.com.tr', 'harita'),
     ('zaee', 'Zaee Giyim', 'https://zaeegiyim.com.tr', 'harita'), ('zafoni', 'Zafoni', 'https://zafoni.com', 'harita'),
     ('bybasicman', 'ByBasicMan', 'https://bybasicman.com', 'trendyol:155222'), ('aura', 'Aura Moda', 'https://auramoda.com.tr', 'harita'),
 ]

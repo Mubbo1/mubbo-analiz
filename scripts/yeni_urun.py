@@ -43,7 +43,7 @@ RAKIPLER = [
     ["Piedraman", "piedraman.com"], ["Respire", "respire.com.tr"], ["Slatra", "slatra.com.tr"],
     ["Streetbox", "streetbox.com.tr"], ["Studio8 Online", "studio8online.com"], ["Tarz Adam", "tarzadam.com"],
     ["Tarz Cool", "tarzcool.com"], ["Tarz Yeri", "tarzyeri.com"], ["The Champ", "thechamp.com.tr"],
-    ["The Manstro", "themanstro.com"], ["Tommylife", "tommylife.com.tr"], ["Tudors", "tudors.com"],
+    ["The Manstro", "themanstro.com"], 
     ["Vamos Clo", "vamosclo.com"], ["VOID TR", "voidtr.com"], ["Voltaj Giyim", "voltaj.com.tr"],
     ["Wunder", "wunder.com.tr"], ["Zaee Giyim", "zaeegiyim.com.tr"], ["Zafoni", "zafoni.com"],
 ]

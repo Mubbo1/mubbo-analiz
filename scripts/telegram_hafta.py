@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tg_eslestir as t
 import telegram_ozet as oz
 from artifact_tel import aksesuar
+from takip import TAKIP
 
 DATA = t.DATA
 KALDIR = {'Tudors', 'Tommylife', 'Aura Moda'}
@@ -34,7 +35,7 @@ def mesaj():
             m, u = {}, {}
             for g in gs:
                 for x in g:
-                    if x['marka'] in sup: continue
+                    if x['marka'] in sup or x['marka'] not in TAKIP: continue
                     m[x['marka']] = m.get(x['marka'], 0) + x['adet']
                     for ad, a, f in x.get('en_cok') or []:
                         if aksesuar(ad): continue

@@ -22,6 +22,8 @@ INSTAGRAM = [["Ketench", "ketenchcom"], ["Ferell Moda", "ferellmoda"], ["Semih K
              ["Wunder", "wunder"], ["Zafoni", "zafonicom"], ["DeepSEA", "deepsea.com.tr"], ["Livio Ferri", "livioferri"], ["UTT Basic", "uttbasic"], ["Torias Man", "toriasman"]]
 TIKTOK = [["Ferell Moda", "ferelmoda"], ["Semih Kurtulmuş", "semihkurtulmuss"], ["Abluka Online", "abluka.online"], ["Flaw Wear", "flawwear"],
           ["Kaft", "kaftcom"], ["Ketench", "ketench"]]   # Bpm Wear'in TikTok hesabı bulunamadı
+from takip import TAKIP
+INSTAGRAM = [x for x in INSTAGRAM if x[0] in TAKIP]; TIKTOK = [x for x in TIKTOK if x[0] in TAKIP]
 
 
 def get(url, accept='text/html'):

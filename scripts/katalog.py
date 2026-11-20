@@ -40,6 +40,8 @@ MARKALAR = [  # anahtar, marka, site, altyapı
     ('zaee', 'Zaee Giyim', 'https://zaeegiyim.com.tr', 'harita'), ('zafoni', 'Zafoni', 'https://zafoni.com', 'harita'),
     ('bybasicman', 'ByBasicMan', 'https://www.bybasicman.com', 'tsoft'),
 ]
+from takip import TAKIP
+MARKALAR = [x for x in MARKALAR if x[1] in TAKIP]   # yalnız takip edilen 5 rakip
 KADIN = re.compile(r'kad[ıi]n|bayan|elbise|\betek\b|bluz|crop|tayt|\bbody\b|büstiyer|mad girls|\bmg\d|kız', re.I)
 UA = yu.UA
 

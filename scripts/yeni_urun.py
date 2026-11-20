@@ -47,6 +47,9 @@ RAKIPLER = [
     ["Vamos Clo", "vamosclo.com"], ["VOID TR", "voidtr.com"], ["Voltaj Giyim", "voltaj.com.tr"],
     ["Wunder", "wunder.com.tr"], ["Zaee Giyim", "zaeegiyim.com.tr"], ["Zafoni", "zafoni.com"],
 ]
+from takip import TAKIP as _TAKIP
+TUM_RAKIPLER = RAKIPLER
+RAKIPLER = [r for r in RAKIPLER if r[0] in _TAKIP]   # yalnız takip edilen 5 rakip
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36'
 TIMEOUT = 25
 MAX_DOGRULA = 40        # bir çalışmada bir marka için açılacak en fazla yeni ürün sayfası

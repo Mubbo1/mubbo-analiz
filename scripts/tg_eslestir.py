@@ -132,6 +132,8 @@ def katalog(ozel):
         idx = []
         for f in sorted(glob.glob(os.path.join(DATA, 'katalog', '*.bin'))):   # günlük yenilenen marka katalogları
             idx += coz(f, ozel)
+        from takip import TAKIP
+        idx = [r for r in idx if r.get('m') in TAKIP] or idx
         if not idx:
             idx = coz(os.path.join(DATA, 'katalog_idx.bin'), ozel)
         shards = {}

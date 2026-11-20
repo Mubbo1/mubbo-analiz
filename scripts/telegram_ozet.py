@@ -10,6 +10,7 @@ import html, json, os, sys, urllib.parse, urllib.request
 import datetime as dt
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tg_eslestir as t
+from takip import TAKIP
 from artifact_tel import aksesuar
 
 DATA = t.DATA
@@ -64,7 +65,7 @@ def mesaj():
     # satış tahmini
     try:
         st = t.coz(os.path.join(DATA, 'satis_toplu.bin'), o); gg = [g for g in st['gunler'] if g]
-        sg = sorted([x for x in gg[-1] if x['marka'] not in sup and x['marka'] not in ('Tudors', 'Tommylife', 'Aura Moda')], key=lambda x: -x['adet'])[:8]
+        sg = sorted([x for x in gg[-1] if x['marka'] not in sup and x['marka'] in TAKIP], key=lambda x: -x['adet'])[:8]
         if sg:
             s += ['', '<b>💰 Son 24 saatte en çok satan rakipler</b> <i>(stoktaki düşüşe göre tahmin)</i>']
             for i, x in enumerate(sg, 1):

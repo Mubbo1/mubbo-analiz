@@ -6,7 +6,7 @@ name: Sabah özeti (Telegram)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '13 6 * * *'   # her gün 09.13 TR
+    - cron: '0 6 * * *'   # her gün 09.00 TR
 
 permissions:
   contents: write

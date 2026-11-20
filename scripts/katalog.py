@@ -163,8 +163,10 @@ def harita(site):
     host = urllib.parse.urlsplit(site).netloc
     urls = sorted(yu.sitemap(host))
     out = []
-    def bir(u):
+    hatali = []
+    def bir(u, yavas=False):
         try:
+            if yavas: time.sleep(0.6)
             r = yu.urun_sayfasi(u)
             if not r:
                 return None
@@ -176,11 +178,19 @@ def harita(site):
             return {'u': r['urun'], 'f': f, 'e': r.get('eski_fiyat'), 'l': re.sub(r'(https?://[^/]+)/en/', r'\1/', r['link']), 'gurl': r.get('gorsel'), 'cat': '', 'kur': k,
                     'stokyok': r.get('stok') is False}
         except Exception:
+            if not yavas: hatali.append(u)
             return None
     with cf.ThreadPoolExecutor(8) as ex:
         for r in ex.map(bir, urls[:6000]):
             if r:
                 out.append(r)
+    # site çok istek gelince engelliyorsa (By London, Tarz Yeri): okunamayanlar yavaşça bir kez daha denenir
+    if hatali and len(hatali) > len(urls[:6000]) * 0.2:
+        print(f'  {host}: {len(hatali)} sayfa okunamadı, yavaş tekrar deneniyor', flush=True)
+        with cf.ThreadPoolExecutor(2) as ex:
+            for r in ex.map(lambda u: bir(u, True), hatali):
+                if r:
+                    out.append(r)
     return out
 
 

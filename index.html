@@ -100,7 +100,7 @@ a{color:inherit}
   var MB_MEMO = {};
   // Takipten çıkarılan rakipler: hiçbir sayfada görünmez
   var KALDIR = {'Tudors': 1, 'Tommylife': 1};
-  window.MB_KALDIR = KALDIR;
+  window.MB_KALDIR = KALDIR; window.MB_TEMIZLE = function(x){ return temizle(x); };
   function kaldirMi(e){ return e != null && ((typeof e === 'string' && KALDIR[e]) || (Array.isArray(e) && typeof e[0] === 'string' && KALDIR[e[0]]) ||
     (typeof e === 'object' && !Array.isArray(e) && (KALDIR[e.marka] || KALDIR[e.m] || KALDIR[e.brand]))); }
   function temizle(x){
@@ -214,7 +214,7 @@ a{color:inherit}
         .then(function(parts){ var seen = {}; base.forEach(function(r){ seen[r.link] = 1; }); parts.forEach(function(pt){ pt.forEach(function(r){ if (!seen[r.link]) { seen[r.link] = 1; base.push(r); } }); }); return base; });
     });
     p
-      .then(function(d){ if (!Array.isArray(d)) d = d.rows || d.data || d.results || d; d = temizle(d);
+      .then(function(d){ if (!Array.isArray(d)) d = d.rows || d.data || d.results || d; d = window.MB_TEMIZLE(d);
         if (AKS_DS[id] && Array.isArray(d) && !d._aks) d = d.filter(function(r){ return !aksesuar(r && (r.u || r.urun || r.model || r.ad)); });
         st.status = 'ok'; st.data = d; st.columns = Array.isArray(d) && d[0] ? Object.keys(d[0]) : []; notify(); })
       .catch(function(e){ st.status = 'error'; st.message = String(e); notify(); });

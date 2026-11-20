@@ -103,7 +103,7 @@ def supheli_markalar():
     return sup
 
 
-KALDIR = {'Tudors', 'Tommylife'}   # takipten çıkarılan rakipler
+KALDIR = {'Tudors', 'Tommylife', 'Aura Moda'}   # takipten çıkarılan rakipler
 
 
 def ozet(F, S, O, kat_simdi, o):

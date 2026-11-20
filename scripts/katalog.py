@@ -38,7 +38,7 @@ MARKALAR = [  # anahtar, marka, site, altyapı
     ('kaft', 'Kaft', 'https://www.kaft.com', 'harita'), ('tarzyeri', 'Tarz Yeri', 'https://tarzyeri.com', 'harita'),
     ('voltaj', 'Voltaj Giyim', 'https://www.voltaj.com.tr', 'harita'),
     ('zaee', 'Zaee Giyim', 'https://zaeegiyim.com.tr', 'harita'), ('zafoni', 'Zafoni', 'https://zafoni.com', 'harita'),
-    ('bybasicman', 'ByBasicMan', 'https://www.bybasicman.com', 'tsoft'), ('aura', 'Aura Moda', 'https://auramoda.com.tr', 'harita'),
+    ('bybasicman', 'ByBasicMan', 'https://www.bybasicman.com', 'tsoft'),
 ]
 KADIN = re.compile(r'kad[ıi]n|bayan|elbise|\betek\b|bluz|crop|tayt|\bbody\b|büstiyer|mad girls|\bmg\d|kız', re.I)
 UA = yu.UA

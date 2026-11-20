@@ -99,7 +99,7 @@ a{color:inherit}
   // Aynı oturumda aynı dosya bir kez indirilip çözülür (sayfalar arası geçiş anında açılsın)
   var MB_MEMO = {};
   // Takipten çıkarılan rakipler: hiçbir sayfada görünmez
-  var KALDIR = {'Tudors': 1, 'Tommylife': 1};
+  var KALDIR = {'Tudors': 1, 'Tommylife': 1, 'Aura Moda': 1};
   window.MB_KALDIR = KALDIR; window.MB_TEMIZLE = function(x){ return temizle(x); };
   function kaldirMi(e){ return e != null && ((typeof e === 'string' && KALDIR[e]) || (Array.isArray(e) && typeof e[0] === 'string' && KALDIR[e[0]]) ||
     (typeof e === 'object' && !Array.isArray(e) && (KALDIR[e.marka] || KALDIR[e.m] || KALDIR[e.brand]))); }

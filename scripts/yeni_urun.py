@@ -31,7 +31,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, 'data')
 RAKIPLER = [
     ["Ketench", "ketench.com"], ["UTT Basic", "uttbasic.com"], ["Torias Man", "toriasman.com"], ["Ferell Moda", "ferellmoda.com"], ["Semih Kurtulmuş", "semihkurtulmusfashion.com"],
-    ["Abluka Online", "ablukaonline.com.tr"], ["Aura Moda", "auramoda.com.tr"], ["Bad Bear", "badbear.com.tr"],
+    ["Abluka Online", "ablukaonline.com.tr"], ["Bad Bear", "badbear.com.tr"],
     ["Bpm Wear", "bpmonlinestore.com"], ["By London Butik", "bylondonbutik.com"], ["ByBasicMan", "bybasicman.com"],
     ["Bytagayman", "bytagayman.com"], ["Catch Jeans", "catch.com.tr"], ["David Gerenzo", "davidgerenzo.com"],
     ["DeepSEA", "deepsea.com.tr"], ["ErdTrend", "erdtrend.com"], ["Flaw Wear", "flawwears.com"],

@@ -40,6 +40,7 @@ def uygula(gun, kat, durum, stok, F, S, O):
     """Bir günlük anlık görüntüyü geçmişe işler. kat: {anahtar: [satırlar]}, durum: katalog_durum markaları, stok: {anahtar: {özet: adet}}"""
     ok_marka = {m.get('marka') for k, m in durum.items() if m.get('durum') == 'ok' and k in kat}
     simdi = set()
+    marka_var = {k[0] for l, k in F.items() if not l.startswith('_')}   # ilk kez okunan markanın bütün ürünleri "yeni" sayılmaz
     for key, rows in kat.items():
         for r in rows:
             l = r.get('l'); f = r.get('f')
@@ -50,7 +51,7 @@ def uygula(gun, kat, durum, stok, F, S, O):
             k = F.get(l)
             if not k:
                 F[l] = [r.get('m'), r.get('u'), g, [[gun, f, e]], gun, gun]
-                if F.get('_ilk_gun') and F['_ilk_gun'] < gun:
+                if F.get('_ilk_gun') and F['_ilk_gun'] < gun and r.get('m') in marka_var:
                     O.append([gun, 'yeni', l])
                 continue
             k[0], k[1] = r.get('m'), r.get('u'); k[2] = g or k[2]

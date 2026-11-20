@@ -36,7 +36,8 @@ jobs:
           MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}
         run: |
           python3 scripts/site_paket.py katalog || true
-          python3 scripts/gecmis.py || true
+          # tek marka için elle çalıştırılınca günlük geçmişe işlenmez (o günün tam taramasını bozmasın)
+          if [ -z "${{ github.event.inputs.markalar }}" ]; then python3 scripts/gecmis.py || true; fi
       - name: Kaydet
         run: |
           git config user.name "mubbo-bot"

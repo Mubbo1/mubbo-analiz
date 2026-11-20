@@ -38,7 +38,7 @@ MARKALAR = [  # anahtar, marka, site, altyapı
     ('kaft', 'Kaft', 'https://www.kaft.com', 'harita'), ('tarzyeri', 'Tarz Yeri', 'https://tarzyeri.com', 'harita'),
     ('voltaj', 'Voltaj Giyim', 'https://www.voltaj.com.tr', 'harita'),
     ('zaee', 'Zaee Giyim', 'https://zaeegiyim.com.tr', 'harita'), ('zafoni', 'Zafoni', 'https://zafoni.com', 'harita'),
-    ('bybasicman', 'ByBasicMan', 'https://bybasicman.com', 'trendyol:155222'), ('aura', 'Aura Moda', 'https://auramoda.com.tr', 'harita'),
+    ('bybasicman', 'ByBasicMan', 'https://www.bybasicman.com', 'tsoft'), ('aura', 'Aura Moda', 'https://auramoda.com.tr', 'harita'),
 ]
 KADIN = re.compile(r'kad[ıi]n|bayan|elbise|\betek\b|bluz|crop|tayt|\bbody\b|büstiyer|mad girls|\bmg\d|kız', re.I)
 UA = yu.UA
@@ -183,6 +183,46 @@ def harita(site):
     return out
 
 
+def tsoft(site):
+    # T-Soft altyapısı (ByBasicMan): site haritasındaki her kategori sayfası + sayfalama servisi (yalnız stoktakiler)
+    sm = get(site + '/sitemap.xml', 'application/xml')
+    kats = [u for u in re.findall(r'<loc>([^<]+)</loc>', sm) if re.match(re.escape(site) + r'/[a-z0-9-]+$', u)
+            and not re.search(r'/(blog|urunara|markalar|musteri-hizmetleri|iletisim|hakkimizda|sss|kampanyalar|uyelik|sepet)$', u)]
+    out, gor = [], set()
+    def oku(h):
+        for b in h.split('<div class="product relative">')[1:]:
+            a = re.search(r'class="product-name"><a href="([^"]+)"[^>]*>\s*([^<]+?)\s*</a>', b)
+            if not a or a.group(1) in gor:
+                continue
+            gor.add(a.group(1))
+            f = re.search(r'class="price-sales">([^<]+)<', b); e = re.search(r'class="price-old"[^>]*>([^<]+)<', b)
+            im = re.search(r'<img src="([^"]+)"', b)
+            fv = tl(f.group(1)) if f else None; ev = tl(e.group(1)) if e else None
+            out.append({'u': html.unescape(a.group(2)), 'f': fv, 'e': ev if ev and fv and ev > fv else None, 'l': site + a.group(1),
+                        'gurl': (site + im.group(1)) if im and im.group(1).startswith('/') else (im.group(1) if im else None), 'cat': ''})
+    for k in kats:
+        try:
+            h = get(k, 'text/html')
+        except Exception:
+            continue
+        oku(h)
+        pq = re.search(r'PageQueryParams\s*=\s*\{', h)
+        if not pq:
+            continue
+        try:
+            P = json.JSONDecoder().raw_decode(h, pq.end() - 1)[0]
+        except Exception:
+            continue
+        for n in range(2, min(int(P.get('TotalPage') or 1), 60) + 1):
+            q = urllib.parse.urlencode({'NextPageNumber': n, 'PageQueryParams': json.dumps(P, separators=(',', ':'))})
+            try:
+                oku(get(site + '/store/svc/prd-list-svc.aspx?18112&' + q, 'text/html'))
+            except Exception:
+                break
+            time.sleep(0.3)
+    return out
+
+
 def trendyol(mid):
     # Kendi sitesi açılmayan markalar: Trendyol'daki mağaza ürünleri
     out = []
@@ -267,7 +307,7 @@ def main():
         eski = durum['markalar'].get(key, {})
         t0 = time.time()
         try:
-            rows = trendyol(alt.split(':')[1]) if alt.startswith('trendyol:') else {'ticimax': ticimax, 'shopify': shopify, 'harita': harita}[alt](site)
+            rows = trendyol(alt.split(':')[1]) if alt.startswith('trendyol:') else {'ticimax': ticimax, 'shopify': shopify, 'harita': harita, 'tsoft': tsoft}[alt](site)
             rows = [r for r in rows if r.get('u') and r.get('l') and not KADIN.search((r.get('u') or '') + ' ' + (r.get('cat') or ''))]
             uniq = {}
             for r in rows:

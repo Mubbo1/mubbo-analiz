@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '*/15 * * * *'
-  workflow_run:
-    workflows: ['Rakip katalog yenileme']
+  workflow_run:   # 15 dakikalık zamanlayıcı GitHub'da güvenilir değil: saatlik yeni ürün ve telegram işlerinden sonra da çalışır
+    workflows: ['Rakip katalog yenileme', 'Rakip yeni ürün kontrolü', 'Telegram toptancı paylaşımları']
     types: [completed]
 
 permissions:
@@ -31,7 +31,7 @@ jobs:
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
         run: |
           if [ -z "$TG_BOT_TOKEN" ]; then echo "TG_BOT_TOKEN yok"; exit 0; fi
-          if [ "${{ github.event_name }}" = "workflow_run" ]; then python3 scripts/tg_takip.py --kontrol; else python3 scripts/tg_takip.py; fi
+          if [ "${{ github.event.workflow_run.name }}" = "Rakip katalog yenileme" ]; then python3 scripts/tg_takip.py --kontrol; else python3 scripts/tg_takip.py; fi
       - name: Kaydet
         run: |
           if git status --porcelain data/tg_takip.bin | grep -q .; then

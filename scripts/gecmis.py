@@ -129,6 +129,38 @@ def ozet(F, S, O, kat_simdi, o):
         if tur == 'bitti' and l in F:
             bitti_say[(g, F[l][0])] = bitti_say.get((g, F[l][0]), 0) + 1
     eksik = {(g, m) for (g, m), n in bitti_say.items() if n > max(30, mt.get(m, 0) * 0.25)}
+    def yuzde_gun(l, g):   # ürünün g günündeki fiyat değişimi (%)
+        p = F[l][3]
+        for i in range(1, len(p)):
+            if p[i][0] == g and p[i - 1][1]:
+                return round(100 * (p[i][1] - p[i - 1][1]) / p[i - 1][1], 1)
+        return None
+    # bir marka aynı gün çok sayıda ürünü AYNI fiyata çektiyse (ör. hepsi 731 ₺) bu da toplu değişikliktir
+    tek = {}
+    for g, tur, l in O:
+        if g < sinir or tur not in ('dus', 'art') or l not in F or l in oynak:
+            continue
+        p = F[l][3]; yeni_f = next((x[1] for x in p if x[0] == g), None)
+        if yeni_f: tek.setdefault((g, F[l][0], round(yeni_f)), set()).add(l)
+    tek_l = {}
+    for (g, m, f), ls in tek.items():
+        if len(ls) >= 15:
+            for l in ls: tek_l[(g, l)] = f
+    # toplu fiyat değişikliği: bir marka aynı gün ürünlerinin çoğunun fiyatını değiştirdiyse ürün ürün değil tek satır gösterilir
+    ham = {}
+    for g, tur, l in O:
+        if g < sinir or tur not in ('dus', 'art') or l not in F or l in oynak:
+            continue
+        yz = yuzde_gun(l, g)
+        if yz is None or abs(yz) < 3 or abs(yz) > 80:
+            continue
+        ham.setdefault((g, F[l][0], tur), []).append(yz)
+    toplu, toplu_k = [], set()
+    for (g, m, tur), v in ham.items():
+        if len(v) >= max(50, mt.get(m, 0) * 0.3):
+            toplu_k.add((g, m, tur))
+            v2 = sorted(v); toplu.append(dict(gun=g, m=m, tur=tur, n=len(v), orta=v2[len(v2) // 2]))
+    toplu.sort(key=lambda x: (x['gun'], x['n']), reverse=True)
     dus, art, bitti, yeni_say, gunluk = [], [], [], {}, {}
     for l, k in F.items():
         if l.startswith('_') or l in oynak or k[0] in oynak_marka or k[5] != gun:
@@ -142,6 +174,8 @@ def ozet(F, S, O, kat_simdi, o):
             continue
         yz = round(100 * (simdi - onceki) / onceki, 1)
         if abs(yz) < 3 or abs(yz) > 80:
+            continue
+        if (p[-1][0], k[0], 'dus' if yz < 0 else 'art') in toplu_k or (p[-1][0], l) in tek_l:
             continue
         u = urun(l, tarih=p[-1][0], onceki=onceki, yeni=simdi, yuzde=yz)
         (dus if yz < 0 else art).append(u)
@@ -159,8 +193,10 @@ def ozet(F, S, O, kat_simdi, o):
         elif tur == 'yeni':
             yeni_say[m] = yeni_say.get(m, 0) + 1
             gunluk.setdefault(g, {'dus': 0, 'art': 0, 'yeni': 0, 'bitti': 0})['yeni'] += 1
-        elif l not in oynak and m not in oynak_marka:
-            gunluk.setdefault(g, {'dus': 0, 'art': 0, 'yeni': 0, 'bitti': 0})[tur] += 1
+        elif l not in oynak and m not in oynak_marka and (g, m, tur) not in toplu_k:
+            yz = yuzde_gun(l, g)
+            if yz is not None and 3 <= abs(yz) <= 80 and (g, l) not in tek_l:
+                gunluk.setdefault(g, {'dus': 0, 'art': 0, 'yeni': 0, 'bitti': 0})[tur] += 1
     def tekil(xs):   # aynı ürünün renkleri tek satır
         d = {}
         for x in xs:
@@ -186,7 +222,9 @@ def ozet(F, S, O, kat_simdi, o):
         if 1 <= gs <= 60 and 0 < stok <= gs * 5:
             hizli.append(urun(l, stok=stok, gunluk=round(gs, 1), kalan_gun=round(stok / gs, 1)))
     hizli = sorted(tekil([x for x in hizli if x]), key=lambda x: (x['kalan_gun'], -x['gunluk']))[:200]
-    return {'tarih': gun, 'dus': dus, 'art': art, 'bitti': bitti, 'hizli': hizli, 'yeni_marka': yeni_say,
+    yeni_son = [urun(l) for g, tur, l in O if tur == 'yeni' and g == gun and l in F and F[l][5] == gun]
+    yeni_son = tekil([x for x in yeni_son if x])
+    return {'tarih': gun, 'dus': dus, 'art': art, 'bitti': bitti, 'hizli': hizli, 'yeni_marka': yeni_say, 'toplu': toplu, 'yeni_son': yeni_son[:300],
             'oynak_marka': sorted(oynak_marka), 'supheli': sorted(sup),
             'gunluk': [dict(gun=g, **v) for g, v in sorted(gunluk.items())]}
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rakiplerin Şikayetvar sayfalarını okur (Claude kullanmaz, GitHub'da ücretsiz çalışır).
+"""Rakiplerin Şikayetvar sayfalarını okur. NOT: Şikayetvar GitHub sunucularını engelliyor (403); veri kullanıcının tarayıcısından alınıyor.
 
 Her rakip için: Şikayetvar puanı (/100), değerlendirme sayısı, toplam şikâyet sayısı, son şikâyetlerin başlığı/tarihi,
 konu dağılımı (kargo, iade, beden, kalite...). Sayfa adresi bir kez aramayla bulunur ve data/sikayet_sayfalar.json'da saklanır.
@@ -125,6 +125,8 @@ def main():
             print('HATA', marka, ex, flush=True)
             out.append({'marka': marka, 'hata': str(ex)[:80]})
         time.sleep(1.5)
+    if not any(x.get('sikayet') is not None for x in out):
+        sys.exit('Hiçbir sayfa okunamadı (Şikayetvar sunucuyu engelliyor olabilir); eski veri korunuyor.')
     json.dump(sayfa, open(SAYFA, 'w'), ensure_ascii=False, indent=1)
     open(CIKTI, 'wb').write(t.sifrele({'tarih': bugun.isoformat(), 'markalar': out, 'gecmis': gec}, o))
     print(sum(1 for x in out if x.get('sikayet') is not None), 'marka okundu')

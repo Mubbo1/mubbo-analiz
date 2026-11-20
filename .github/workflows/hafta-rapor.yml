@@ -1,0 +1,27 @@
+name: Haftalık rapor (Telegram)
+
+# Her pazartesi sabahı geçen haftanın rakip özetini Telegram botuyla gönderir. Claude kullanmaz, ücretsizdir.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 6 * * 1'   # pazartesi 09.10 TR (günlük rapordan hemen sonra)
+
+permissions:
+  contents: read
+
+jobs:
+  gonder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerekli paketler
+        run: pip install --quiet cryptography pillow numpy
+      - name: Raporu gönder
+        env:
+          MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          if [ -z "$TG_BOT_TOKEN" ]; then echo "TG_BOT_TOKEN yok"; exit 0; fi
+          python3 scripts/telegram_hafta.py

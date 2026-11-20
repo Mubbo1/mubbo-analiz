@@ -12,7 +12,7 @@ import datetime as dt, glob, hashlib, json, os, subprocess, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tg_eslestir as t
 import yeni_urun as yu
-from artifact_tel import aksesuar
+from artifact_tel import aksesuar, tur as urun_turu
 
 DATA = t.DATA
 GD = os.path.join(DATA, 'gecmis')
@@ -228,9 +228,80 @@ def ozet(F, S, O, kat_simdi, o):
         if 1 <= gs <= 60 and 0 < stok <= gs * 5:
             hizli.append(urun(l, stok=stok, gunluk=round(gs, 1), kalan_gun=round(stok / gs, 1)))
     hizli = sorted(tekil([x for x in hizli if x]), key=lambda x: (x['kalan_gun'], -x['gunluk']))[:200]
+    # ---- Black Friday / kampanya takibi: indirim oranı, önce zam sonra indirim ----
+    def nokta(p, g):   # g gününde geçerli fiyat noktası
+        v = None
+        for x in p:
+            if x[0] <= g: v = x
+            else: break
+        return v
+    g14 = (dt.date.fromisoformat(gun) - dt.timedelta(days=14)).isoformat()
+    g30 = (dt.date.fromisoformat(gun) - dt.timedelta(days=30)).isoformat()
+    bf = {}
+    for l, k in F.items():
+        if l.startswith('_') or k[5] != gun or k[0] in oynak_marka or l in oynak:
+            continue
+        p = k[3]; f = p[-1][1]; e = p[-1][2]; m = k[0]
+        b = bf.setdefault(m, {'marka': m, 'urun': 0, 'indirimli': 0, 'oranlar': [], 'once_urun': 0, 'once_indirimli': 0, 'sahte': 0, 'ornek': []})
+        b['urun'] += 1
+        if e and e > f:
+            b['indirimli'] += 1; b['oranlar'].append(100 * (e - f) / e)
+        o = nokta(p, g14)
+        if o and k[4] <= g14:
+            b['once_urun'] += 1
+            if o[2] and o[2] > o[1]: b['once_indirimli'] += 1
+        # önce zam sonra indirim: son 30 günde %8+ zam, ardından indirim; şimdiki fiyat zam öncesine göre ucuz değil
+        for i in range(1, len(p)):
+            if p[i][0] < g30 or not p[i - 1][1]:
+                continue
+            if e and e > f and p[i - 1][1] * 1.08 <= p[i][1] <= p[i - 1][1] * 1.8 and any(x[1] < p[i][1] * 0.97 for x in p[i + 1:]) and f >= p[i - 1][1] * 0.97:
+                b['sahte'] += 1
+                if len(b['ornek']) < 8 and not any(o_['u'] == k[1] and o_['simdi'] == f for o_ in b['ornek']):
+                    b['ornek'].append(dict(m=m, u=k[1], l=l, g=k[2], once=p[i - 1][1], zam=p[i][1], simdi=f, zam_gun=p[i][0]))
+                break
+    bfl = []
+    for m, b in bf.items():
+        if b['urun'] < 10:
+            continue
+        o = sorted(b.pop('oranlar'))
+        b['indirim_orani'] = round(100 * b['indirimli'] / b['urun']); b['ort_indirim'] = round(o[len(o) // 2]) if o else 0
+        b['once_orani'] = round(100 * b['once_indirimli'] / b['once_urun']) if b['once_urun'] >= 10 else None
+        b['kampanya'] = sorted({x['gun'] for x in toplu if x['m'] == m and x['tur'] == 'dus'})
+        bfl.append(b)
+    bfl.sort(key=lambda b: (-(b['indirim_orani'] - (b['once_orani'] or b['indirim_orani'])), -b['sahte']))
+    # ---- ürün türüne göre haftalık fiyat (ortanca) ----
+    haftalar = [(dt.date.fromisoformat(gun) - dt.timedelta(days=7 * i)).isoformat() for i in range(5, -1, -1)]
+    haftalar = [h for h in haftalar if h >= F.get('_ilk_gun', gun)]
+    tt = {}
+    for l, k in F.items():
+        if l.startswith('_'):
+            continue
+        tr = urun_turu(k[1])
+        if tr in ('diger', 'aksesuar'):
+            continue
+        for h in haftalar:
+            if k[4] <= h <= k[5]:
+                v = nokta(k[3], h)
+                if v: tt.setdefault(tr, {}).setdefault(h, []).append(v[1])
+    tur_trend = {}
+    for tr, hs in tt.items():
+        sat = []
+        for h in haftalar:
+            v = sorted(hs.get(h, []))
+            if len(v) >= 30: sat.append([h, round(v[len(v) // 2]), len(v)])
+        if len(sat) >= 2: tur_trend[tr] = sat
+    # ---- kaba satış göstergesi: son 7 günde stoktan çıkan ve eklenen ürün ----
+    kaba = {}
+    for g, tr, l in O:
+        if g < sinir or l not in F or tr not in ('bitti', 'yeni'):
+            continue
+        m = F[l][0]
+        if tr == 'bitti' and (g, m) in eksik:
+            continue
+        x = kaba.setdefault(m, {'bitti7': 0, 'yeni7': 0, 'urun': mt.get(m, 0)}); x[tr + '7'] += 1
     yeni_son = [urun(l) for g, tur, l in O if tur == 'yeni' and g == gun and l in F and F[l][5] == gun]
     yeni_son = tekil([x for x in yeni_son if x])
-    return {'tarih': gun, 'dus': dus, 'art': art, 'bitti': bitti, 'hizli': hizli, 'yeni_marka': yeni_say, 'toplu': toplu, 'yeni_son': yeni_son[:300],
+    return {'tarih': gun, 'dus': dus, 'art': art, 'bitti': bitti, 'hizli': hizli, 'yeni_marka': yeni_say, 'toplu': toplu, 'yeni_son': yeni_son[:300], 'bf': bfl, 'tur_trend': tur_trend, 'haftalar': haftalar, 'kaba': kaba,
             'oynak_marka': sorted(oynak_marka), 'supheli': sorted(sup),
             'gunluk': [dict(gun=g, **v) for g, v in sorted(gunluk.items())]}
 

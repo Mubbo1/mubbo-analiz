@@ -135,8 +135,8 @@ def mesaj():
     return out
 
 
-def main():
-    mlar = mesaj()
+def main(uret=None):
+    mlar = (uret or mesaj)()
     if '--dene' in sys.argv:
         print('\n\n=====\n\n'.join(mlar)); print([len(m) for m in mlar]); return
     tok, chat = os.environ.get('TG_BOT_TOKEN'), os.environ.get('TG_CHAT_ID')

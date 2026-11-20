@@ -9,7 +9,7 @@ Sonuçlar tg_eslestir.yaz() ile sitedeki dosyalara yazılır.
 Kullanım: MUBBO_SIFRE=... python3 scripts/tg_otomatik.py [--kalibre]
   --kalibre: daha önce Claude'un karar verdiği ürünlerle eşikleri dener, hiçbir dosya yazmaz.
 """
-import base64, glob, hashlib, io, json, os, struct, sys
+import base64, glob, re, hashlib, io, json, os, struct, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tg_eslestir as tg
@@ -80,21 +80,84 @@ def ara(model, rows, mat, fotolar, metin):
 ALT = {'pantolon', 'jean', 'sort'}
 
 
-def _lab(im, alt=False):
-    """Ürünün durduğu bölgenin ortanca rengi (Lab): üst giyimde gövde, alt giyimde bacak bölgesi"""
-    im = im.convert('RGB')
-    if im.width > im.height * 1.15:   # bazı katalog küçük resimleri yan yatık kaydedilmiş
-        im = im.rotate(-90, expand=True)
-    w, h = im.size
-    y0, y1 = (.55, .85) if alt else (.22, .5)
-    im = im.crop((int(w * .36), int(h * y0), int(w * .64), int(h * y1))).resize((24, 24))
+def _lab_px(im):
     a = np.asarray(im, dtype=np.float32).reshape(-1, 3) / 255.0
     a = np.where(a > 0.04045, ((a + 0.055) / 1.055) ** 2.4, a / 12.92)
     xyz = a @ np.array([[0.4124, 0.3576, 0.1805], [0.2126, 0.7152, 0.0722], [0.0193, 0.1192, 0.9505]]).T
     xyz /= np.array([0.9505, 1.0, 1.089])
     f = np.where(xyz > 0.008856, np.cbrt(xyz), 7.787 * xyz + 16 / 116)
-    lab = np.stack([116 * f[:, 1] - 16, 500 * (f[:, 0] - f[:, 1]), 200 * (f[:, 1] - f[:, 2])], 1)
-    return np.median(lab, 0)
+    return np.stack([116 * f[:, 1] - 16, 500 * (f[:, 0] - f[:, 1]), 200 * (f[:, 1] - f[:, 2])], 1)
+
+
+def _lab(im, alt=False):
+    """Ürünün rengi (Lab): üst giyimde gövde, alt giyimde bacak bölgesi; arka plan ve ten rengi pikselleri atılır"""
+    im = im.convert('RGB')
+    if im.width > im.height * 1.15:   # bazı katalog küçük resimleri yan yatık kaydedilmiş
+        im = im.rotate(-90, expand=True)
+    w, h = im.size
+    k = im.resize((48, 64))
+    tum = _lab_px(k).reshape(64, 48, 3)
+    arka = np.median(np.concatenate([tum[:6, :6].reshape(-1, 3), tum[:6, -6:].reshape(-1, 3), tum[-4:, :4].reshape(-1, 3), tum[-4:, -4:].reshape(-1, 3)]), 0)
+    y0, y1 = (.55, .85) if alt else (.22, .5)
+    bol = tum[int(64 * y0):int(64 * y1), int(48 * .36):int(48 * .64)].reshape(-1, 3)
+    d = np.linalg.norm(bol - arka, axis=1)
+    ten = (bol[:, 1] > 8) & (bol[:, 2] > 12) & (bol[:, 0] > 45) & (bol[:, 0] < 85) & (bol[:, 2] > bol[:, 1])   # yüz, el, ten
+    kal = bol[(d > 10) & ~ten]
+    if len(kal) < len(bol) * 0.15:
+        kal = bol
+    return np.median(kal, 0)
+
+
+# ---- renk sınıfı: rakip ürün adındaki renk kelimesi (güvenilir) ile toptancı fotoğrafından tahmin edilen renk karşılaştırılır ----
+RENKLER = {'siyah': (12, 0, 0), 'antrasit': (32, 0, -3), 'gri': (58, 0, -2), 'beyaz': (93, 0, 3), 'krem': (82, 2, 14), 'kahve': (32, 12, 18),
+           'lacivert': (20, 4, -22), 'mavi': (55, -2, -28), 'yesil': (42, -14, 18), 'bordo': (27, 30, 10), 'kirmizi': (45, 55, 35)}
+KOMSU = {'siyah': {'antrasit'}, 'antrasit': {'siyah', 'gri'}, 'gri': {'antrasit'}, 'beyaz': {'krem'}, 'krem': {'beyaz'}, 'kahve': set(),
+         'lacivert': set(), 'mavi': set(), 'yesil': set(), 'bordo': {'kirmizi'}, 'kirmizi': {'bordo'}}
+AD_RENK = [('siyah', r'siyah|black|\bsiyh'), ('antrasit', r'antrasit|anthracite|füme|fume|koyu gri'), ('gri', r'\bgri\b|grey|gray|melanj'),
+           ('beyaz', r'beyaz|white|optik'), ('krem', r'krem|ekru|bej|beige|taş|tas rengi|stone|vizon|kum|sand|cream|ivory'),
+           ('kahve', r'kahve|brown|taba|camel|kiremit|tarçın|tarcin|mocha|choco|çikolata|cikolata'), ('lacivert', r'lacivert|navy'),
+           ('mavi', r'mavi|blue|indigo|denim'), ('yesil', r'yeşil|yesil|haki|green|khaki|olive|zeytin|mint|çağla|cagla'),
+           ('bordo', r'bordo|burgundy|bordeaux|mürdüm|murdum|şarap|sarap'), ('kirmizi', r'kırmızı|kirmizi|\bred\b')]
+
+
+def renk_ad(ad):
+    t = (ad or '').lower(); en, poz = None, -1
+    for k, rx in AD_RENK:
+        for m in re.finditer(rx, t):
+            if m.start() > poz: en, poz = k, m.start()
+    return en
+
+
+def renk_sinif(lab):
+    """Fotoğraftan ölçülen rengi sınıflara çevirir. Ölçüm kesin olmadığından yakın sınıflar birlikte döner
+    (açık nötr: beyaz/krem/gri), ama koyu ile açık, lacivert ile kahve, bordo ile siyah asla birlikte dönmez."""
+    L, a, b = float(lab[0]), float(lab[1]), float(lab[2]); C = (a * a + b * b) ** 0.5
+    if L >= 60:
+        if a < -1 and b > 8: return {'yesil', 'krem'}
+        if C < 10: return {'beyaz', 'krem', 'gri'}
+        if b > 7 and a < 15: return {'krem', 'kahve'} if L < 70 else {'krem'}
+        if b < -6: return {'mavi'}
+        return {'krem'}
+    if L >= 38:
+        if b < -6 and -b > a: return {'mavi', 'lacivert'}
+        if a > 12 and b < a * 0.6: return {'kirmizi', 'bordo'}
+        if b > 15 and a < 3: return {'yesil', 'kahve'}
+        if a < -3 and b > 0: return {'yesil'}
+        if a > 4 and b > 8: return {'kahve'}
+        if C < 8: return {'gri', 'antrasit'}
+        return set()
+    # koyu renkler: ton (a, b) belirleyici
+    if b < -5 and -b > a: return {'lacivert'}
+    if a > 12 and b < a * 0.6: return {'bordo'}
+    if a > 4 and b > 4: return {'kahve'}
+    if a < -3 and b > 2: return {'yesil'}
+    if C < 5: return {'siyah', 'antrasit'} | ({'kahve'} if a > 2.5 and b > 0 else set())
+    return set()
+
+
+def renk_uyar(hs, rs):
+    """hs: toptancı renk sınıfları, rs: rakip renk sınıfı"""
+    return any(rs == h or rs in KOMSU[h] for h in hs)
 
 
 _RENK = {}
@@ -109,8 +172,8 @@ def renk_rakip(r, alt=False):
     return _RENK[l]
 
 
-ESIK = float(os.environ.get('TG_BENZER_ESIK', '0.80'))
-RENK_FARK = float(os.environ.get('TG_RENK_FARK', '20'))
+ESIK = float(os.environ.get('TG_BENZER_ESIK', '0.83'))
+RENK_FARK = float(os.environ.get('TG_RENK_FARK', '24'))
 
 
 def sec_benzer(model, rows, mat, fotolar, metin, adet=6):
@@ -133,22 +196,26 @@ def sec_benzer(model, rows, mat, fotolar, metin, adet=6):
             if say[en] >= sum(say.values()) * 0.5: k = en
     if k:
         sim = np.where(np.array([r['k'] == k for r in rows]), sim, -1)
+    # Renk: toptancı fotoğrafından ölçülür; rakibin rengi ürün adından (yoksa fotoğrafından) alınır. Renk uyuşmayan rakip ürün
+    # gösterilmez; toptancının rengi ölçülemezse hiçbir benzer gösterilmez (yanlış ürün göstermektense hiç göstermemek).
     alt = k in ALT
     try:
-        hl = _lab(tg.img(fotolar[0]), alt)
+        hs = renk_sinif(_lab(tg.img(fotolar[0]), alt))
     except Exception:
-        hl = None
+        hs = set()
+    if not hs:
+        return k, []
     aday = []
-    for i in np.argsort(-sim)[:80]:
+    for i in np.argsort(-sim)[:150]:
         s = float(sim[i])
         if s < ESIK: break
-        r = rows[i]; fark = 0.0
-        if hl is not None:
-            rl = renk_rakip(r, alt)
-            if rl is not None:
-                fark = float(np.linalg.norm(rl - hl))
-                if fark > RENK_FARK: continue
-        aday.append((s - fark / 400, s, r))
+        r = rows[i]
+        rs = renk_ad(r['u'])
+        if rs is None:
+            rl = renk_rakip(r, alt); rc = renk_sinif(rl) if rl is not None else set()
+            if not rc or not (rc & hs) or len(rc) > 2: continue
+        elif rs not in hs: continue
+        aday.append((s, s, r))
     aday.sort(key=lambda x: -x[0])
     return k, [(s, r) for _, s, r in aday[:adet]]
 
@@ -183,8 +250,8 @@ def main():
     out = []
     for b in bek:
         d = os.path.join(tg.WORK, b['id']); u = json.load(open(os.path.join(d, 'urun.json')))
-        k, ad = sec_benzer(model, rows, mat, u['fotolar'], u['metin'], adet=12)   # aynı tür, yüksek benzerlik, yakın renk
-        sec = ad
+        k, ad = sec_benzer(model, rows, mat, u['fotolar'], u['metin'], adet=12)   # aynı tür, yüksek benzerlik, aynı renk
+        RED = tg.red(); sec = [(s_, x) for s_, x in ad if x['l'] not in RED.get(b['id'], ())]
         json.dump([{'no': i + 1, 'marka': r['m'], 'urun': r['u'], 'fiyat': r['f'], 'eski_fiyat': r.get('e'), 'link': r['l'], 'benzerlik': round(s, 3)}
                    for i, (s, r) in enumerate(sec)], open(os.path.join(d, 'aday.json'), 'w'), ensure_ascii=False)
         ayni = [i + 1 for i, (s, r) in enumerate(sec) if s >= AYNI][:3]

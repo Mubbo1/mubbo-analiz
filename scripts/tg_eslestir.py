@@ -98,6 +98,12 @@ def urunler(ozel):
     return out
 
 
+def red():
+    """Elle gözden geçirilip yanlış bulunan eşleşmeler: {toptancı ürün id: [reddedilen rakip linkleri]}"""
+    p = os.path.join(DATA, 'tg_red.json')
+    return json.load(open(p)) if os.path.exists(p) else {}
+
+
 def sonuclar(ozel):
     p = os.path.join(DATA, 'tg_sonuc.bin')
     return coz(p, ozel) if os.path.exists(p) else []
@@ -271,16 +277,24 @@ def liste_yaz(rows, ozel):
     for k in katalog(ozel):
         if k.get('f'): kt.setdefault(urun_turu(k['u']), []).append(k['f'])
     kat = {t: {'orta': sorted(v)[len(v) // 2], 'min': sorted(v)[len(v) // 10], 'max': sorted(v)[len(v) * 9 // 10], 'n': len(v)} for t, v in kt.items() if len(v) >= 10 and t not in ('diger', 'aksesuar')}
+    try:   # aynı ürünün tekrar/renk gönderileri (tg_grupla.py)
+        grup = coz(os.path.join(DATA, 'tg_grup.bin'), ozel)
+    except Exception:
+        grup = {}
+    _RED = red()
     liste, gorsel = [], {}
     for r in rows:
         g = gorsel.setdefault(r.get('kanal') or '_', {})
+        if grup.get(r['id'], r['id']) != r['id']: r = dict(r, grup=grup[r['id']])
         tk = r.get('tur') if r.get('tur') in kat else urun_turu((r.get('ozet') or '') + ' ' + (r.get('tur') or ''))
         if tk in kat: r = dict(r, tur_k=tk, kat=kat[tk])
         kayit = {'foto': kucult(r['foto'], 300) if r.get('foto') else None, 'fotolar': [kucult(f, 160) for f in r.get('fotolar') or []], 'g': {}}
         x = {k: v for k, v in r.items() if k not in ('foto', 'fotolar', 'ayni', 'benzer')}
+        RR = set(_RED.get(r['id'], ()))
         for alan in ('ayni', 'benzer'):
             x[alan] = []
             for a in r.get(alan) or []:
+                if a.get('link') in RR: continue
                 a = dict(a); gs = a.get('gorsel') or ''
                 if gs.startswith('data:'):
                     kayit['g'][a['link']] = kucult(gs, 140); a.pop('gorsel', None)

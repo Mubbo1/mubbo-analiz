@@ -29,12 +29,16 @@ jobs:
         env:
           MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}
           TG_EN_COK: '300'
-        run: python3 scripts/tg_otomatik.py
+        run: |
+          python3 scripts/tg_otomatik.py
+          # aynı ürünün tekrar / renk gönderilerini grupla ve listeyi yeniden yaz
+          python3 scripts/tg_grupla.py
+          python3 -c "import sys; sys.path.insert(0,'scripts'); import tg_eslestir as t; o=t.ozel_anahtar(); t.liste_yaz(t.sonuclar(o), o)"
       - name: Kaydet
         run: |
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/tg_sonuc.bin data/tg_toptan.bin data/tg_liste.bin data/tg_esles_durum.bin data/tg_gorsel
+          git add data/tg_sonuc.bin data/tg_toptan.bin data/tg_liste.bin data/tg_esles_durum.bin data/tg_gorsel data/tg_grup.bin data/tg_vek.npz
           git diff --cached --quiet && exit 0
           git commit -m "Telegram ürünleri rakiplerle eşleştirildi"
           for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done

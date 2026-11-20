@@ -87,7 +87,7 @@ def mesaj():
             sinir = (dt.datetime.utcnow() - dt.timedelta(days=3)).isoformat()
             al = []
             for r in L:
-                if r['id'] not in fiy or str(r.get('tarih', '')) < sinir: continue
+                if r.get('grup') or r['id'] not in fiy or str(r.get('tarih', '')) < sinir: continue
                 rk = K.rakip_fiyat(r); sf = K.oneri(fiy[r['id']], rk); net, yz = K.kar(fiy[r['id']], sf)
                 if yz >= esik: al.append((yz, net, sf, r, rk))
             if al:

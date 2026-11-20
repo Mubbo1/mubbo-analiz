@@ -4,8 +4,11 @@ name: Telegram ürünlerini rakiplerle eşleştir
 # ürünler listelenir (Claude kredisi harcamaz). "Aynı ürün" kararı istenince Claude ile verilir.
 on:
   workflow_dispatch:
+  workflow_run:            # toptancı kanalları her toplandığında (3 saatte bir) yeni ürünler hemen eşleşsin
+    workflows: ['Telegram toptancı paylaşımları']
+    types: [completed]
   schedule:
-    - cron: '7 17 * * *'   # her gün 20.07 TR
+    - cron: '7 17 * * *'   # yedek: her gün 20.07 TR
 
 permissions:
   contents: write

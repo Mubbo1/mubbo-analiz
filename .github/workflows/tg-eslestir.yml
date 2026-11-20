@@ -38,7 +38,7 @@ jobs:
         run: |
           git config user.name "mubbo-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/tg_sonuc.bin data/tg_toptan.bin data/tg_liste.bin data/tg_esles_durum.bin data/tg_gorsel data/tg_grup.bin data/tg_vek.npz
+          git add data/tg_sonuc.bin data/tg_toptan.bin data/tg_liste.bin data/tg_esles_durum.bin data/tg_gorsel data/tg_k data/tg_grup.bin data/tg_vek.npz
           git diff --cached --quiet && exit 0
           git commit -m "Telegram ürünleri rakiplerle eşleştirildi"
           for i in 1 2 3; do git pull --rebase -X theirs && git push && exit 0; sleep 5; done

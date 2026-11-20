@@ -114,6 +114,18 @@ def main():
             else:
                 yaz(tok, chat, 'Bu numarada ürün yok. /liste yazıp numaraya bak.')
             continue
+        # Kâr analizi: siteden kopyalanan "fiyat <ürün kodu> <toptan fiyat>" satırları ve "alarm <kâr yüzdesi>"
+        fy = re.findall(r'(?im)^\s*fiyat\s+([A-Za-z0-9_.-]+)\s+(\d+(?:[.,]\d+)?)\s*$', metin)
+        al = re.search(r'(?im)^\s*alarm\s+%?(\d{1,3})\s*$', metin)
+        if fy or al:
+            S.setdefault('fiyat', {})
+            for kod_, v in fy:
+                S['fiyat'][kod_] = float(v.replace(',', '.'))
+            if al:
+                S['alarm'] = int(al.group(1))
+            degisti = True
+            yaz(tok, chat, f'💾 Kaydedildi: {len(fy)} toptan fiyat' + (f', kâr alarmı %{S["alarm"]}' if al else '') + '. Sitedeki Kâr Analizi her cihazda bu fiyatları gösterecek.')
+            continue
         linkler = re.findall(r'https?://\S+', metin)
         if linkler:
             for l0 in linkler:

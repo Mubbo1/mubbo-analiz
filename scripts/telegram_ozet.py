@@ -77,6 +77,24 @@ def mesaj():
     except Exception as ex:
         print('satış okunamadı:', ex)
     bl.append(s)
+    # Kâr alarmı: fiyatı girilmiş yeni toptancı ürünlerinden belirlenen kâr oranını geçenler
+    try:
+        import kar as K
+        tk = t.coz(os.path.join(DATA, 'tg_takip.bin'), o); fiy = tk.get('fiyat') or {}; esik = tk.get('alarm')
+        if fiy and esik is not None:
+            L = t.coz(os.path.join(DATA, 'tg_liste.bin'), o)
+            sinir = (dt.datetime.utcnow() - dt.timedelta(days=3)).isoformat()
+            al = []
+            for r in L:
+                if r['id'] not in fiy or str(r.get('tarih', '')) < sinir: continue
+                rk = K.rakip_fiyat(r); sf = K.oneri(fiy[r['id']], rk); net, yz = K.kar(fiy[r['id']], sf)
+                if yz >= esik: al.append((yz, net, sf, r, rk))
+            if al:
+                bl.append(['<b>💸 Kâr alarmı</b> <i>(kâr oranı %' + str(esik) + ' üstü yeni ürünler)</i>'] +
+                          [f'• <b>{e(r["toptanci"])}</b> · <a href="{e(r["post"])}">{e(kisa(r.get("ozet") or (r.get("metin") or "").strip().split(chr(10))[0] or "ürün", 50))}</a>\n   toptan {tl(fiy[r["id"]])} → öneri {tl(sf)}: <b>{tl(net)} kâr (%{yz:.0f})</b>' + (f', {rk["marka"]} rakip satıyor' if rk else '')
+                           for yz, net, sf, r, rk in sorted(al, key=lambda x: -x[1])[:10]])
+    except Exception as ex:
+        print('kâr alarmı:', ex)
     # 2) indirim ve zamlar
     s = []
     dus = [x for x in d.get('dus', []) if x.get('tarih') == gun_][:10]

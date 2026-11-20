@@ -5,7 +5,7 @@
    ve aksesuarlar (çorap, iç çamaşırı, çanta, kemer, takı...) çıkarılmış. Site 49 dosya yerine bunu indirir.
 2) data/yeni/arsiv.bin: saatlik "yeni ürün" parçaları birleştirilir (yüzlerce küçük dosya yerine bir dosya).
 """
-import datetime as dt, glob, json, os, sys
+import hashlib, datetime as dt, glob, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tg_eslestir as t
 from artifact_tel import aksesuar, tur as urun_turu
@@ -31,6 +31,7 @@ def katalog(o):
             continue
         for r in t.coz(f, o):
             if r.get('u') and not giyim_degil(r):
+                r['h'] = hashlib.sha1(r['l'].encode()).hexdigest()[:16]   # fotoğraf vektörü anahtarı (tarayıcı hesaplamasın)
                 rows.append(r)
     open(os.path.join(DATA, 'katalog_site.bin'), 'wb').write(t.sifrele({'son': durum.get('son'), 'eski': eski, 'rows': rows}, o))
     print('katalog_site:', len(rows), 'ürün;', 'okunamayan:', eski)

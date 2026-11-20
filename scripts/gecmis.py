@@ -108,7 +108,7 @@ KALDIR = {'Tudors', 'Tommylife', 'Aura Moda'}   # takipten çıkarılan rakipler
 
 
 def ozet(F, S, O, kat_simdi, o):
-    F = {l: k for l, k in F.items() if l.startswith('_') or k[0] not in KALDIR}
+    F = {l: k for l, k in F.items() if l.startswith('_') or (k[0] not in KALDIR and not aksesuar(k[1] or '') and (k[3][-1][1] or 0) >= 30)}
     O = [x for x in O if x[2] in F]
     gun = F.get('_son_gun')
     sinir = (dt.date.fromisoformat(gun) - dt.timedelta(days=7)).isoformat()

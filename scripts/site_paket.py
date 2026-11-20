@@ -8,7 +8,13 @@
 import datetime as dt, glob, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tg_eslestir as t
-from artifact_tel import aksesuar
+from artifact_tel import aksesuar, tur as urun_turu
+
+
+def giyim_degil(r):
+    """Sitede yalnız kıyafet, pantolon ve ayakkabı: aksesuar, çorap, iç çamaşırı, takı ve türü belli olmayan ucuz ürünler çıkar"""
+    f = r.get('f') or 0
+    return aksesuar(r.get('u') or '') or f < 30 or (f < 150 and urun_turu(r.get('u') or '') == 'diger')
 
 DATA = t.DATA
 
@@ -24,7 +30,7 @@ def katalog(o):
         if not os.path.exists(f):
             continue
         for r in t.coz(f, o):
-            if r.get('u') and not aksesuar(r['u']):
+            if r.get('u') and not giyim_degil(r):
                 rows.append(r)
     open(os.path.join(DATA, 'katalog_site.bin'), 'wb').write(t.sifrele({'son': durum.get('son'), 'eski': eski, 'rows': rows}, o))
     print('katalog_site:', len(rows), 'ürün;', 'okunamayan:', eski)

@@ -350,9 +350,11 @@
 },
 "bybasicman": {
 "marka": "ByBasicMan",
-"durum": "hata",
-"hata": "HTTP Error 406: Not Acceptable",
-"hata_tarih": "2026-11-20"
+"urun": 11300,
+"tarih": "2026-11-20",
+"durum": "ok",
+"sure": 328,
+"yeni_gorsel": 13
 },
 "aura": {
 "marka": "Aura Moda",
@@ -377,5 +379,5 @@
 "yeni_gorsel": 16
 }
 },
-"son": "2026-11-20T15:02:52Z"
+"son": "2026-11-20T15:11:19Z"
 }

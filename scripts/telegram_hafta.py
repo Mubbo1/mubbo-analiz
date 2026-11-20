@@ -35,7 +35,7 @@ def mesaj():
             m, u = {}, {}
             for g in gs:
                 for x in g:
-                    if x['marka'] in sup or x['marka'] not in TAKIP: continue
+                    if x['marka'] in sup or x['marka'] in KALDIR: continue
                     m[x['marka']] = m.get(x['marka'], 0) + x['adet']
                     for ad, a, f in x.get('en_cok') or []:
                         if aksesuar(ad): continue

@@ -25,8 +25,6 @@ def katalog(o):
     sinir = (dt.datetime.utcnow() - dt.timedelta(days=1)).strftime('%Y-%m-%d')
     rows, eski = [], []
     for k, m in (durum.get('markalar') or {}).items():
-        if m.get('marka') not in TAKIP:
-            continue
         if not (m.get('durum') == 'ok' or (m.get('tarih') or '') >= sinir):
             eski.append(m.get('marka')); continue
         f = os.path.join(DATA, 'katalog', k + '.bin')

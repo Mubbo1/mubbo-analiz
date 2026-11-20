@@ -99,10 +99,8 @@ a{color:inherit}
   // Aynı oturumda aynı dosya bir kez indirilip çözülür (sayfalar arası geçiş anında açılsın)
   var MB_MEMO = {};
   // Takipten çıkarılan rakipler: hiçbir sayfada görünmez
-  // Yalnız takip edilen 5 rakip gösterilir; diğer markalar hiçbir sayfada görünmez
-  var TAKIP = {'Ketench': 1, 'Ferell Moda': 1, 'Semih Kurtulmuş': 1, 'UTT Basic': 1, 'Torias Man': 1};
-  var KALDIR = {}; ["Abluka Online", "Aura Moda", "Bad Bear", "Bpm Wear", "By London Butik", "ByBasicMan", "Bytagayman", "Catch Jeans", "David Gerenzo", "DeepSEA", "ErdTrend", "Ferell Moda", "Flaw Wear", "Forer Wear", "Gangown", "Giesto", "Grimelange", "Hafka Giyim", "JuniorCrime", "Kaft", "Ketench", "Labels Wear", "Lazzy Shoes & Wear", "Livio Ferri", "Madmext", "NOMARC", "No 362 Clo", "Outfit-Man", "Papel Giyim", "Piedraman", "Respire", "Semih Kurtulmuş", "Slatra", "Streetbox", "Studio8 Online", "Tarz Adam", "Tarz Cool", "Tarz Yeri", "The Champ", "The Manstro", "Tommylife", "Torias Man", "Tudors", "UTT Basic", "VOID TR", "Vamos Clo", "Voltaj Giyim", "Wunder", "Zaee Giyim", "Zafoni"].forEach(function(m){ if (!TAKIP[m]) KALDIR[m] = 1; });
-  window.MB_KALDIR = KALDIR; window.MB_TAKIP = TAKIP; window.MB_TEMIZLE = function(x){ return temizle(x); };
+  var KALDIR = {'Tudors': 1, 'Tommylife': 1, 'Aura Moda': 1};
+  window.MB_KALDIR = KALDIR; window.MB_TEMIZLE = function(x){ return temizle(x); };
   function kaldirMi(e){ return e != null && ((typeof e === 'string' && KALDIR[e]) || (Array.isArray(e) && typeof e[0] === 'string' && KALDIR[e[0]]) ||
     (typeof e === 'object' && !Array.isArray(e) && (KALDIR[e.marka] || KALDIR[e.m] || KALDIR[e.brand]))); }
   function temizle(x){

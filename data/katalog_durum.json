@@ -292,11 +292,11 @@
 },
 "bylondon": {
 "marka": "By London Butik",
-"urun": 717,
-"tarih": "2026-11-19",
+"urun": 720,
+"tarih": "2026-11-21",
 "durum": "ok",
-"sure": 647,
-"yeni_gorsel": 6
+"sure": 561,
+"yeni_gorsel": 4
 },
 "erdtrend": {
 "marka": "ErdTrend",
@@ -371,5 +371,5 @@
 "yeni_gorsel": 0
 }
 },
-"son": "2026-11-21T17:02:24Z"
+"son": "2026-11-21T17:13:22Z"
 }

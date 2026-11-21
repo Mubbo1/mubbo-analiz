@@ -292,13 +292,11 @@
 },
 "bylondon": {
 "marka": "By London Butik",
-"urun": 717,
-"tarih": "2026-11-19",
-"durum": "hata",
-"sure": 114,
-"yeni_gorsel": 0,
-"hata": "358 ürün geldi (önceki 717); eski katalog korundu",
-"hata_tarih": "2026-11-21"
+"urun": 252,
+"tarih": "2026-11-21",
+"durum": "ok",
+"sure": 647,
+"yeni_gorsel": 6
 },
 "erdtrend": {
 "marka": "ErdTrend",
@@ -318,13 +316,11 @@
 },
 "tarzyeri": {
 "marka": "Tarz Yeri",
-"urun": 2132,
-"tarih": "2026-11-19",
-"durum": "hata",
-"sure": 617,
-"yeni_gorsel": 0,
-"hata": "831 ürün geldi (önceki 2132); eski katalog korundu",
-"hata_tarih": "2026-11-21"
+"urun": 2090,
+"tarih": "2026-11-21",
+"durum": "ok",
+"sure": 2953,
+"yeni_gorsel": 0
 },
 "voltaj": {
 "marka": "Voltaj Giyim",
@@ -375,5 +371,5 @@
 "yeni_gorsel": 0
 }
 },
-"son": "2026-11-21T00:43:21Z"
+"son": "2026-11-21T17:02:24Z"
 }

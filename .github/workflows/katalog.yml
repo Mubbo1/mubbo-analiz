@@ -30,6 +30,8 @@ jobs:
       - name: Gerekli paketler
         run: pip install --quiet cryptography pillow
       - name: Katalogları çek
+        env:
+          MUBBO_SIFRE: ${{ secrets.MUBBO_SIFRE }}
         run: python3 scripts/katalog.py ${{ github.event.inputs.markalar }}
       - name: Site paketi (tek dosya katalog)
         env:

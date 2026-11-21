@@ -185,13 +185,31 @@ def harita(site):
             if r:
                 out.append(r)
     # site çok istek gelince engelliyorsa (By London, Tarz Yeri): okunamayanlar yavaşça bir kez daha denenir
+    harita.okunamayan = set()
     if hatali and len(hatali) > len(urls[:6000]) * 0.2:
         print(f'  {host}: {len(hatali)} sayfa okunamadı, yavaş tekrar deneniyor', flush=True)
         with cf.ThreadPoolExecutor(2) as ex:
-            for r in ex.map(lambda u: bir(u, True), hatali):
+            for u, r in zip(hatali, ex.map(lambda u: bir(u, True), hatali)):
                 if r:
                     out.append(r)
+                else:
+                    harita.okunamayan.add(yu.norm(u))
     return out
+
+
+def onceki_ile_tamamla(key, rows, okunamayan):
+    """Site isteklerin bir kısmını engellediyse: o gün açılamayan ürün sayfaları için bir önceki kataloğun kaydı kullanılır
+    (sayfası açılıp tükendiği görülen ürünler bu listeye girmez, onlar gerçekten çıkarılır)"""
+    if not okunamayan or not os.environ.get('MUBBO_SIFRE'):
+        return rows, 0
+    try:
+        import tg_eslestir as tg
+        eski = tg.coz(os.path.join(DATA, 'katalog', key + '.bin'), tg.ozel_anahtar())
+    except Exception as e:
+        print('  önceki katalog okunamadı:', e, flush=True); return rows, 0
+    var = {yu.norm(r['l']) for r in rows}
+    ek = [dict(r, eski=1) for r in eski if r.get('l') and yu.norm(r['l']) in okunamayan and yu.norm(r['l']) not in var]
+    return rows + ek, len(ek)
 
 
 def tsoft(site):
@@ -319,6 +337,9 @@ def main():
         t0 = time.time()
         try:
             rows = trendyol(alt.split(':')[1]) if alt.startswith('trendyol:') else {'ticimax': ticimax, 'shopify': shopify, 'harita': harita, 'tsoft': tsoft}[alt](site)
+            if alt == 'harita' and getattr(harita, 'okunamayan', None):
+                rows, n_ek = onceki_ile_tamamla(key, rows, harita.okunamayan)
+                if n_ek: print(f'  {key}: {len(harita.okunamayan)} sayfa açılamadı; {n_ek} ürün önceki katalogdan alındı', flush=True)
             rows = [r for r in rows if r.get('u') and r.get('l') and not KADIN.search((r.get('u') or '') + ' ' + (r.get('cat') or ''))]
             uniq = {}
             for r in rows:
